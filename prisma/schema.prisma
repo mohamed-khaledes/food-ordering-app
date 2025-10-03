@@ -14,18 +14,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// user
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  password      String
+  name          String
+  image         String?
+  phone         String?
+  streetAddress String?
+  postalCode    String?
+  city          String?
+  country       String?
+  // role          UserRole       @default(USER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  orders        OrderProduct[]
+  // accounts      Account[]
+  // sessions      Session[]
+}
+
 // product model 
 model Product {
-  id          String   @id @default(cuid())
+  id          String         @id @default(cuid())
   name        String
   description String
   image       String
   order       Int
   basePrice   Float
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
   sizes       Sizes[]
   extras      Extras[]
+  category    Category       @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  orders      OrderProduct[]
+}
+
+// sizes model
+model Category {
+  id      String    @id @default(cuid())
+  name    String
+  order   Int       @default(autoincrement())
+  Product Product[]
 }
 
 // sizes model
@@ -43,6 +74,35 @@ model Extras {
   name      ExtraIngredients
   price     Float
   Product   Product          @relation(fields: [productId], references: [id])
+  productId String
+}
+
+model Order {
+  id            String         @id @default(uuid())
+  paid          Boolean        @default(false)
+  subTotal      Float
+  deliveryFee   Float
+  totalPrice    Float
+  userEmail     String
+  phone         String
+  streetAddress String
+  postalCode    String
+  city          String
+  country       String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  products      OrderProduct[]
+}
+
+model OrderProduct {
+  id       String @id @default(cuid())
+  quantity Int
+
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   String
+  userId    String?
+  User      User?   @relation(fields: [userId], references: [id])
+  Product   Product @relation(fields: [productId], references: [id])
   productId String
 }
 

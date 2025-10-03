@@ -2,6 +2,7 @@ import Link from '@/components/link'
 import React from 'react'
 import Navbar from './navbar'
 import { Button } from '@/components/ui/button'
+import CartButton from './cart-button'
 
 const Header = () => {
   return (
@@ -12,6 +13,7 @@ const Header = () => {
         </Link>
         <div className='flex items-center gap-6 flex-1 justify-end'>
           <Navbar />
+          <CartButton />
           <div className='hidden lg:flex lg:items-center lg:gap-6 '>
             <Button>Login</Button>
           </div>

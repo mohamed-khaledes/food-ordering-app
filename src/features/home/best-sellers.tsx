@@ -1,64 +1,9 @@
-import Menu from '@/components/menu'
+import Menu from '@/features/menu'
 import MainHead from '@/components/ui/main-head'
-import { db } from '@/lib/prisma'
+import { getBestSellers } from '@/server/db/products'
 
 async function BestSellers() {
-  const products = await db.product.findMany()
-
-  const bestSellers = [
-    {
-      id: crypto.randomUUID(),
-      name: 'pizza',
-      description: "Craving pizza? We've got you covered with fresh ingredients, endless flavors",
-      basePrice: 12,
-      image: '/assets/images/pizza.png',
-      sizes: [
-        { id: crypto.randomUUID(), name: 'small', price: 20 },
-        { id: crypto.randomUUID(), name: 'medium', price: 40 },
-        { id: crypto.randomUUID(), name: 'large', price: 50 }
-      ],
-      extras: [
-        { id: crypto.randomUUID(), name: 'tomato', price: 20 },
-        { id: crypto.randomUUID(), name: 'union', price: 40 },
-        { id: crypto.randomUUID(), name: 'veg', price: 50 }
-      ]
-    },
-    {
-      id: crypto.randomUUID(),
-      name: 'pizza',
-      description: "Craving pizza? We've got you covered with fresh ingredients, endless flavors",
-      basePrice: 12,
-      image: '/assets/images/pizza.png',
-      sizes: [
-        { id: crypto.randomUUID(), name: 'small', price: 20 },
-        { id: crypto.randomUUID(), name: 'medium', price: 40 },
-        { id: crypto.randomUUID(), name: 'large', price: 50 }
-      ],
-      extras: [
-        { id: crypto.randomUUID(), name: 'tomato', price: 20 },
-        { id: crypto.randomUUID(), name: 'union', price: 40 },
-        { id: crypto.randomUUID(), name: 'veg', price: 50 }
-      ]
-    },
-    {
-      id: crypto.randomUUID(),
-      name: 'pizza',
-      description: "Craving pizza? We've got you covered with fresh ingredients, endless flavors",
-      basePrice: 12,
-      image: '/assets/images/pizza.png',
-      sizes: [
-        { id: crypto.randomUUID(), name: 'small', price: 20 },
-        { id: crypto.randomUUID(), name: 'medium', price: 40 },
-        { id: crypto.randomUUID(), name: 'large', price: 50 }
-      ],
-      extras: [
-        { id: crypto.randomUUID(), name: 'tomato', price: 20 },
-        { id: crypto.randomUUID(), name: 'union', price: 40 },
-        { id: crypto.randomUUID(), name: 'veg', price: 50 }
-      ]
-    }
-  ]
-
+  const products = await getBestSellers(3)
   return (
     <section className='section-gap'>
       <div className='container'>

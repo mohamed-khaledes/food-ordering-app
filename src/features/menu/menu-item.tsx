@@ -1,8 +1,9 @@
 import Image from 'next/image'
 import { formatCurrency } from '@/lib/helpers'
 import AddToCart from './add-to-cart'
+import { ProductWithRelations } from './type'
 
-function MenuItem({ item }: { item: any }) {
+function MenuItem({ item }: { item: ProductWithRelations }) {
   return (
     <li
       className='p-6 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-100 

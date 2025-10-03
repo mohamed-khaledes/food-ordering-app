@@ -68,8 +68,9 @@ function Navbar() {
           <li key={link.id}>
             <Link
               onClick={() => setOpenMenu(false)}
-              href={`/${locale}/${link.href}`}
-              className={`hover:text-primary capitalize duration-200 transition-colors font-semibold`}
+              // href={`/${locale}/${link.href}`}
+              href={`/${link.href}`}
+              className={`hover:text-primary uppercase duration-200 transition-colors font-semibold`}
             >
               {link.title}
             </Link>
