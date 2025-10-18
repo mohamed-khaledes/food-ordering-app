@@ -1,10 +1,14 @@
 import { buttonVariants } from '@/components/ui/button'
 import MainHead from '@/components/ui/main-head'
 import { Routes } from '@/constants/enums'
+import { getTrans } from '@/lib/translations/server'
 import { ArrowRightCircle } from 'lucide-react'
 import Link from 'next/link'
 
 async function About() {
+  const {
+    home: { about }
+  } = await getTrans()
   return (
     <section
       className='relative section-gap bg-gradient-to-b from-white via-gray-50 to-white'
@@ -17,24 +21,18 @@ async function About() {
 
       <div className='container text-center'>
         {/* Heading */}
-        <MainHead subTitle='our story' title='about us' />
+        <MainHead subTitle={about.ourStory} title={about.aboutUs} />
 
         {/* Content */}
         <div className='mt-8 max-w-3xl mx-auto text-start text-gray-600 flex flex-col gap-6 leading-relaxed tracking-wide'>
           <p className='transition-all duration-300 hover:text-gray-800'>
-            Welcome to our pizzeria, where we serve the finest pizzas made with the freshest
-            ingredients. Every slice is a masterpiece, crafted with care to deliver the perfect
-            balance of flavors. From classic favorites to unique creations, there's something for
-            every pizza lover!
+            {about.descriptions.one}
           </p>
           <p className='transition-all duration-300 hover:text-gray-800'>
-            Our chefs blend tradition with creativity, ensuring every bite is bursting with taste
-            and authenticity. We believe in quality over quantity, and that passion is reflected in
-            every pizza we serve.
+            {about.descriptions.two}
           </p>
           <p className='transition-all duration-300 hover:text-gray-800'>
-            Whether you’re dining in with friends, grabbing a quick bite, or celebrating a special
-            moment, we promise a warm atmosphere, friendly service, and pizza you’ll never forget.
+            {about.descriptions.three}
           </p>
         </div>
 
@@ -46,7 +44,7 @@ async function About() {
               size: 'lg'
             })} space-x-2 !px-4 !rounded-full uppercase w-fit`}
           >
-            explore our menus
+            {about.exploreOurMenus}
             <ArrowRightCircle className={`!w-5 !h-5 `} />
           </Link>
         </div>

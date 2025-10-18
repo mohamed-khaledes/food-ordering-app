@@ -1,3 +1,4 @@
+'use client'
 import { Extras, Sizes } from '@/generated/prisma'
 import { RootState } from '@/redux/store'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
@@ -15,7 +16,7 @@ export type CartItem = {
 type CartState = {
   items: CartItem[]
 }
-const initialCartItems = localStorage.getItem('cartItems')
+const initialCartItems = typeof window !== 'undefined' ? localStorage?.getItem('cartItems') : ''
 
 const initialState: CartState = {
   items: initialCartItems ? JSON.parse(initialCartItems) : []

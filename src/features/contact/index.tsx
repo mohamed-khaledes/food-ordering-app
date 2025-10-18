@@ -1,10 +1,14 @@
 import { buttonVariants } from '@/components/ui/button'
 import MainHead from '@/components/ui/main-head'
 import { Routes } from '@/constants/enums'
+import { getTrans } from '@/lib/translations/server'
 import { ArrowRightCircle } from 'lucide-react'
 import Link from 'next/link'
 
 const Contact = async () => {
+  const {
+    home: { contact }
+  } = await getTrans()
   return (
     <section
       className='relative section-gap bg-gradient-to-b from-white via-gray-50 to-white'
@@ -12,8 +16,8 @@ const Contact = async () => {
     >
       <div className='container grid grid-cols-1 md:grid-cols-3 gap-12 items-center'>
         {/* Left: Contact Info */}
-        <div className='col-span-1 text-center md:text-left'>
-          <MainHead subTitle="Don't Hesitate" title='Contact Us' />
+        <div className='col-span-1 text-start'>
+          <MainHead subTitle={contact["Don'tHesitate"]} title={contact.contactUs} />
 
           <div className='mt-8 flex flex-col gap-3'>
             {/* Phone */}
@@ -44,7 +48,7 @@ const Contact = async () => {
                 size: 'lg'
               })} space-x-2 !px-4 !rounded-full uppercase w-fit`}
             >
-              order now
+              {contact.orderNow}
               <ArrowRightCircle className={`!w-5 !h-5 `} />
             </Link>
           </div>

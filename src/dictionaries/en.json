@@ -13,6 +13,7 @@
     },
     "about": {
       "ourStory": "Our story",
+      "exploreOurMenus": "explore our menus",
       "aboutUs": "About us",
       "descriptions": {
         "one": "Welcome to our pizzeria, where we serve the finest pizzas made with the freshest ingredients. Every slice is a masterpiece, crafted with care to deliver the perfect balance of flavors. From classic favorites to unique creations, there's something for every pizza lover!",
@@ -22,7 +23,8 @@
     },
     "contact": {
       "Don'tHesitate": "Don't hesitate",
-      "contactUs": "Contact us"
+      "contactUs": "Contact us",
+      "orderNow": "order now"
     }
   },
   "navbar": {
@@ -235,7 +237,34 @@
     "title": "Shopping Cart",
     "noItemsInCart": "There are no items in your cart. Add some"
   },
-  "copyRight": "© 2024 All rights reserved",
   "noProductsFound": "No products found",
-  "noCategoriesFound": "No categories found"
+  "noCategoriesFound": "No categories found",
+  "global": {
+    "cart": "cart",
+    "checkout": "checkOut",
+    "phone": "phone",
+    "enter your phone number": "enter your phone number",
+    "street address": "street address",
+    "postal code": "postal code",
+    "city": "city",
+    "country": "country",
+    "pay now": "pay now",
+    "total": "total",
+    "subtotal": "Subtotal",
+    "delivery": "Delivery",
+    "quantity": "Quantity",
+    "extras": "Extras",
+    "size": "Size",
+    "Your cart is empty": "Your cart is empty. Start adding some delicious items!",
+    "copyRight": "© 2024 All rights reserved",
+    "home": "Home",
+    "about": "About",
+    "menu": "Menu",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "signOut": "Sign Out",
+    "profile": "Profile",
+    "admin": "Admin"
+  }
 }

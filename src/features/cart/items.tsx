@@ -8,12 +8,13 @@ import { useEffect } from 'react'
 import { removeItemFromCart, selectCartItems } from './slice'
 import { formatCurrency } from '@/lib/helpers'
 import { deliveryFee, getSubTotal } from './hooks'
+import { useTrans } from '@/lib/translations/client'
 
 function CartItems() {
   const cart = useAppSelector(selectCartItems)
   const dispatch = useAppDispatch()
   const subTotal = getSubTotal(cart)
-
+  const { global } = useTrans()
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cart))
   }, [cart])
@@ -21,9 +22,7 @@ function CartItems() {
   if (!cart || cart.length === 0) {
     return (
       <div className='text-center py-12'>
-        <p className='text-gray-500 text-lg'>
-          🛒 Your cart is empty. Start adding some delicious items!
-        </p>
+        <p className='text-gray-500 text-lg'>🛒 {global['Your cart is empty']}</p>
       </div>
     )
   }
@@ -49,11 +48,15 @@ function CartItems() {
               <div>
                 <h4 className='font-semibold text-lg text-gray-900'>{item.name}</h4>
 
-                {item.size && <p className='text-sm text-accent'>Size: {item.size.name}</p>}
+                {item.size && (
+                  <p className='text-sm text-accent'>
+                    {global.size}: {item.size.name}
+                  </p>
+                )}
 
                 {item.extras && item.extras.length > 0 && (
                   <div className='mt-1'>
-                    <span className='text-sm font-medium text-gray-700'>Extras: </span>
+                    <span className='text-sm font-medium text-gray-700'>{global.extras}: </span>
                     <ul className='list-disc list-inside text-sm text-accent'>
                       {item.extras.map(extra => (
                         <li key={extra.id}>
@@ -65,7 +68,7 @@ function CartItems() {
                 )}
 
                 <span className='inline-block mt-2 text-sm font-medium text-gray-600'>
-                  Quantity: <strong className='text-black'>x{item.quantity}</strong>
+                  {global.quantity}: <strong className='text-black'>x{item.quantity}</strong>
                 </span>
               </div>
             </div>
@@ -90,14 +93,16 @@ function CartItems() {
       {/* Totals */}
       <div className='bg-gray-50 border border-gray-200 rounded-xl p-6 text-start space-y-2'>
         <p className='text-gray-600'>
-          Subtotal: <span className='font-semibold text-gray-900'>{formatCurrency(subTotal)}</span>
+          {global.subtotal}:{' '}
+          <span className='font-semibold text-gray-900'>{formatCurrency(subTotal)}</span>
         </p>
         <p className='text-gray-600'>
-          Delivery:{' '}
+          {global.delivery}:{' '}
           <span className='font-semibold text-gray-900'>{formatCurrency(deliveryFee)}</span>
         </p>
         <p className='text-lg font-bold text-gray-900'>
-          Total: <span className='text-accent'>{formatCurrency(subTotal + deliveryFee)}</span>
+          {global.total}:{' '}
+          <span className='text-accent'>{formatCurrency(subTotal + deliveryFee)}</span>
         </p>
       </div>
     </div>

@@ -5,24 +5,21 @@ import { useState } from 'react'
 import { Menu, XIcon } from 'lucide-react'
 import { useParams, usePathname } from 'next/navigation'
 // import AuthButtons from "./auth-buttons";
-// import LanguageSwitcher from "./language-switcher";
 // import { Translations } from "@/types/translations";
 // import { Session } from "next-auth";
 // import { useClientSession } from "@/hooks/useClientSession";
 // import { UserRole } from "@prisma/client";
 import { Button } from '@/components/ui/button'
 import Link from '@/components/link'
+import LanguageSwitcher from './language-switcher'
+import { useTrans } from '@/lib/translations/client'
 
-// {
-//   translations,
-//   initialSession,
-// }: {
-//   translations: Translations;
-//   initialSession: Session | null;
-// }
-function Navbar() {
+function Navbar({}: // initialSession,
+{
+  // initialSession: Session | null;
+}) {
   //   const session = useClientSession(initialSession);
-
+  const translations = useTrans()
   const [openMenu, setOpenMenu] = useState(false)
   const { locale } = useParams()
   const pathname = usePathname()
@@ -30,17 +27,17 @@ function Navbar() {
   const links = [
     {
       id: crypto.randomUUID(),
-      title: 'menu',
+      title: translations.navbar.menu,
       href: Routes.MENU
     },
     {
       id: crypto.randomUUID(),
-      title: 'about',
+      title: translations.navbar.about,
       href: Routes.ABOUT
     },
     {
       id: crypto.randomUUID(),
-      title: 'contact',
+      title: translations.navbar.contact,
       href: Routes.CONTACT
     }
   ]
@@ -68,23 +65,13 @@ function Navbar() {
           <li key={link.id}>
             <Link
               onClick={() => setOpenMenu(false)}
-              // href={`/${locale}/${link.href}`}
               href={`/${link.href}`}
-              className={`hover:text-primary uppercase duration-200 transition-colors font-semibold`}
-            >
-              {link.title}
-            </Link>
-            {/* <Link
-              onClick={() => setOpenMenu(false)}
-              href={`/${locale}/${link.href}`}
               className={`hover:text-primary duration-200 transition-colors font-semibold ${
-                pathname.startsWith(`/${locale}/${link.href}`)
-                  ? "text-primary"
-                  : "text-accent"
+                pathname.startsWith(`/${locale}/${link.href}`) ? 'text-primary' : 'text-accent'
               }`}
             >
               {link.title}
-            </Link> */}
+            </Link>
           </li>
         ))}
         {/* {session.data?.user && (
@@ -111,16 +98,16 @@ function Navbar() {
                 : translations.navbar.profile}
             </Link>
           </li>
-        )}
-        <li className="lg:hidden flex flex-col gap-4">
-          <div onClick={() => setOpenMenu(false)}>
+        )} */}
+        <li className='lg:hidden flex flex-col gap-4'>
+          {/* <div onClick={() => setOpenMenu(false)}>
             <AuthButtons
               translations={translations}
               initialSession={initialSession}
             />
-          </div>
-          <LanguageSwitcher />
-        </li> */}
+          </div> */}
+        </li>
+        <LanguageSwitcher />
       </ul>
     </nav>
   )

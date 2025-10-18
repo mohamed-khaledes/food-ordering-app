@@ -1,17 +1,15 @@
 import Link from '@/components/link'
 import { buttonVariants } from '@/components/ui/button'
-import { Routes } from '@/constants/enums'
+import { Languages, Routes } from '@/constants/enums'
+import { getCurrentLocale, getTrans } from '@/lib/translations/server'
 import { ArrowRightCircle } from 'lucide-react'
 import Image from 'next/image'
 
 async function Hero() {
-  const hero = {
-    title: 'Slice into Happiness',
-    description:
-      "Craving pizza? we've got you covered with fresh ingredients, endless flavors, and the fastest delivery.",
-    orderNow: 'Order now',
-    learnMore: 'Learn more'
-  }
+  const {
+    home: { hero }
+  } = await getTrans()
+  const locale = await getCurrentLocale()
   return (
     <section className='section-gap'>
       <div className='container grid grid-cols-1 md:grid-cols-2'>
@@ -26,14 +24,18 @@ async function Hero() {
               })} space-x-2 !px-4 !rounded-full uppercase`}
             >
               {hero.orderNow}
-              <ArrowRightCircle className={`!w-5 !h-5 `} />
+              <ArrowRightCircle
+                className={`!w-5 !h-5 ${locale === Languages.ARABIC ? 'rotate-180 ' : ''}`}
+              />
             </Link>
             <Link
               href={`/${Routes.ABOUT}`}
               className='flex gap-2 items-center text-black hover:text-primary duration-200 transition-colors font-semibold'
             >
               {hero.learnMore}
-              <ArrowRightCircle className={`!w-5 !h-5`} />
+              <ArrowRightCircle
+                className={`!w-5 !h-5 ${locale === Languages.ARABIC ? 'rotate-180 ' : ''}`}
+              />
             </Link>
           </div>
         </div>
