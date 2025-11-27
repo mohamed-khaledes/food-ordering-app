@@ -6,6 +6,7 @@ import Footer from '@/components/layouts/footer'
 import ReduxProvider from '@/providers/redux-provider'
 import { Directions, Languages } from '@/constants/enums'
 import { Locale } from '@/i18n.config'
+import NextAuthSessionProvider from '@/providers/NextAuthSessionProvider'
 
 export async function generateStaticParams() {
   return [{ locale: Languages.ARABIC }, { locale: Languages.ENGLISH }]
@@ -38,11 +39,13 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={locale === Languages.ARABIC ? Directions.RTL : Directions.LTR}>
       <body className={locale === Languages.ARABIC ? cairo.className : roboto.className}>
-        <ReduxProvider>
-          <Header />
-          <main className='min-h-screen'>{children}</main>
-          <Footer />
-        </ReduxProvider>
+        <NextAuthSessionProvider>
+          <ReduxProvider>
+            <Header />
+            <main className='min-h-screen'>{children}</main>
+            <Footer />
+          </ReduxProvider>
+        </NextAuthSessionProvider>
       </body>
     </html>
   )

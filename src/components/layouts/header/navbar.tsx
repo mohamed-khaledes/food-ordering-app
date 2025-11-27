@@ -4,21 +4,16 @@ import { Routes } from '@/constants/enums'
 import { useState } from 'react'
 import { Menu, XIcon } from 'lucide-react'
 import { useParams, usePathname } from 'next/navigation'
-// import AuthButtons from "./auth-buttons";
-// import { Translations } from "@/types/translations";
-// import { Session } from "next-auth";
-// import { useClientSession } from "@/hooks/useClientSession";
-// import { UserRole } from "@prisma/client";
+import { Session } from 'next-auth'
 import { Button } from '@/components/ui/button'
 import Link from '@/components/link'
 import LanguageSwitcher from './language-switcher'
 import { useTrans } from '@/lib/translations/client'
+import AuthButtons from './auth-buttons'
+import { useClientSession } from '@/hooks/useClientSession'
 
-function Navbar({}: // initialSession,
-{
-  // initialSession: Session | null;
-}) {
-  //   const session = useClientSession(initialSession);
+function Navbar({ initialSession }: { initialSession: Session | null }) {
+  const session = useClientSession(initialSession)
   const translations = useTrans()
   const [openMenu, setOpenMenu] = useState(false)
   const { locale } = useParams()
@@ -42,7 +37,7 @@ function Navbar({}: // initialSession,
     }
   ]
 
-  //   const isAdmin = session.data?.user.role === UserRole.ADMIN;
+  // const isAdmin = session?.data?.user?.role === UserRole?.ADMIN;
   return (
     <nav className='order-last lg:order-none p-3'>
       <Button variant='secondary' size='sm' className='lg:hidden' onClick={() => setOpenMenu(true)}>
@@ -100,12 +95,9 @@ function Navbar({}: // initialSession,
           </li>
         )} */}
         <li className='lg:hidden flex flex-col gap-4'>
-          {/* <div onClick={() => setOpenMenu(false)}>
-            <AuthButtons
-              translations={translations}
-              initialSession={initialSession}
-            />
-          </div> */}
+          <div onClick={() => setOpenMenu(false)}>
+            <AuthButtons translations={translations} initialSession={initialSession} />
+          </div>
         </li>
         <LanguageSwitcher />
       </ul>
