@@ -42,7 +42,7 @@ export default async function RootLayout({
         <NextAuthSessionProvider>
           <ReduxProvider>
             <Header />
-            <main className='min-h-screen'>{children}</main>
+            <main className='min-h-[80vh]'>{children}</main>
             <Footer />
           </ReduxProvider>
         </NextAuthSessionProvider>

@@ -7,41 +7,93 @@ import { loginSchema, signUpSchema } from '@/validations/auth'
 import bcrypt from 'bcrypt'
 import { revalidatePath } from 'next/cache'
 
-export const login = async (credentials: Record<'email' | 'password', string> | undefined) => {
+// export const login = async (credentials: Record<'email' | 'password', string> | undefined) => {
+//   const translations = await getTrans()
+//   const result = loginSchema(translations).safeParse(credentials)
+
+//   if (result.success === false) {
+//     return {
+//       error: result.error,
+//       status: 400
+//     }
+//   }
+//   try {
+//     const user = await db.user.findUnique({
+//       where: {
+//         email: result.data.email
+//       }
+//     })
+//     if (!user) {
+//       return { message: translations.messages.userNotFound, status: 401 }
+//     }
+//     const hashedPassword = user.password
+//     const isValidPassword = await bcrypt.compare(result.data.password, hashedPassword)
+//     if (!isValidPassword) {
+//       return {
+//         message: translations.messages.incorrectPassword,
+//         status: 401
+//       }
+//     }
+//     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//     const { password, ...userWithoutPassword } = user
+//     return {
+//       user: userWithoutPassword,
+//       status: 200,
+//       message: translations.messages.loginSuccessful
+//     }
+//   } catch (error) {
+//     console.error(error)
+//     return {
+//       status: 500,
+//       message: translations.messages.unexpectedError
+//     }
+//   }
+// }
+export const login = async (credentials: { email: string; password: string } | undefined) => {
   const translations = await getTrans()
-  const result: any = loginSchema(translations).safeParse(credentials)
-  if (result.success === false) {
+
+  // Validate input
+  const result = loginSchema(translations).safeParse(credentials)
+
+  if (!result.success) {
     return {
-      error: result.error.formErrors.fieldErrors,
-      status: 400
+      status: 400,
+      error: result.error.flatten().fieldErrors
     }
   }
+
   try {
     const user = await db.user.findUnique({
-      where: {
-        email: result.data.email
-      }
+      where: { email: result.data.email }
     })
+
     if (!user) {
-      return { message: translations.messages.userNotFound, status: 401 }
+      return {
+        status: 401,
+        message: translations.messages.userNotFound
+      }
     }
-    const hashedPassword = user.password
-    const isValidPassword = await bcrypt.compare(result.data.password, hashedPassword)
+
+    const isValidPassword = await bcrypt.compare(result.data.password, user.password)
+
     if (!isValidPassword) {
       return {
-        message: translations.messages.incorrectPassword,
-        status: 401
+        status: 401,
+        message: translations.messages.incorrectPassword
       }
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+    // Strip password safely
     const { password, ...userWithoutPassword } = user
+
     return {
-      user: userWithoutPassword,
       status: 200,
+      user: userWithoutPassword,
       message: translations.messages.loginSuccessful
     }
   } catch (error) {
     console.error(error)
+
     return {
       status: 500,
       message: translations.messages.unexpectedError

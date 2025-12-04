@@ -11,7 +11,7 @@ function SigninForm() {
   const { getFormFields, onSubmit, error, isLoading, translations, formRef } = useSigninForm()
   return (
     <form onSubmit={onSubmit} ref={formRef}>
-      {getFormFields().map((field: IFormField) => (
+      {getFormFields()?.map((field: IFormField) => (
         <div key={field.name} className='mb-3'>
           <FormFields {...field} error={error} />
         </div>

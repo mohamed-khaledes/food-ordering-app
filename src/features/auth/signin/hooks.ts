@@ -17,6 +17,7 @@ export const useSigninForm = () => {
     slug: Pages.LOGIN,
     translations
   })
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formRef.current) return
@@ -32,6 +33,7 @@ export const useSigninForm = () => {
         password: data.password,
         redirect: false
       })
+      console.log(res)
       if (res?.error) {
         const validationError = JSON.parse(res?.error).validationError
         setError(validationError)
