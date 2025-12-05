@@ -25,17 +25,6 @@ export const authOptions: NextAuthOptions = {
         },
         password: { label: 'Password', type: 'password' }
       },
-      // authorize: async credentials => {
-      //   const res = await login(credentials)
-      //   console.log(res)
-      //   if (res.status === 200 && res.user) {
-      //     return res.user
-      //   } else {
-      //     throw new Error(
-      //       JSON.stringify({ validationError: res.error, responseError: res.message })
-      //     )
-      //   }
-      // }
       authorize: async (credentials, req) => {
         const currentUrl = req?.headers?.referer
         const locale = currentUrl?.split('/')[3] as Locale

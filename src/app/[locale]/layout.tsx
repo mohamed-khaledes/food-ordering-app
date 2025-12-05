@@ -7,6 +7,7 @@ import ReduxProvider from '@/providers/redux-provider'
 import { Directions, Languages } from '@/constants/enums'
 import { Locale } from '@/i18n.config'
 import NextAuthSessionProvider from '@/providers/NextAuthSessionProvider'
+import { Toaster } from '@/components/ui/toast'
 
 export async function generateStaticParams() {
   return [{ locale: Languages.ARABIC }, { locale: Languages.ENGLISH }]
@@ -44,6 +45,7 @@ export default async function RootLayout({
             <Header />
             <main className='min-h-[80vh]'>{children}</main>
             <Footer />
+            <Toaster />
           </ReduxProvider>
         </NextAuthSessionProvider>
       </body>

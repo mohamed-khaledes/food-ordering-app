@@ -1,3 +1,4 @@
+import Toast from '@/components/ui/toast'
 import { Pages, Routes } from '@/constants/enums'
 import useFormFields from '@/hooks/useFormFields'
 import { toast } from '@/hooks/useToast'
@@ -33,16 +34,12 @@ export const useSigninForm = () => {
         password: data.password,
         redirect: false
       })
-      console.log(res)
       if (res?.error) {
         const validationError = JSON.parse(res?.error).validationError
         setError(validationError)
         const responseError = JSON.parse(res?.error).responseError
         if (responseError) {
-          toast({
-            title: responseError,
-            className: 'text-destructive'
-          })
+          Toast(responseError, 'error')
         }
       }
       if (res?.ok) {
