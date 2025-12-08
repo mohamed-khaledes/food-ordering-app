@@ -12,7 +12,7 @@ const CartButton = () => {
   const cartQuantity = getCartQuantity(cart)
   return (
     <Link href={`/${Routes.CART}`} className='block relative group'>
-      <span className='absolute -top-4 start-4 w-5 h-5 text-sm bg-primary rounded-full text-white text-center'>
+      <span className='absolute -top-4 start-4 w-5 h-5 text-sm bg-primary rounded-full text-black text-center'>
         {cartQuantity}
       </span>
       <ShoppingCartIcon

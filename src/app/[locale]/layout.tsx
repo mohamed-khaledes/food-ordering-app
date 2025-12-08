@@ -1,13 +1,17 @@
-import type { Metadata } from 'next'
-import { Roboto, Cairo } from 'next/font/google'
+import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
 import '../globals.css'
+import type { Metadata } from 'next'
+import { Locale } from '@/i18n.config'
+import { Toaster } from '@/components/ui/toast'
+import { Roboto, Cairo } from 'next/font/google'
 import Header from '@/components/layouts/header'
-import Footer from '@/components/layouts/footer'
+import { LoadingPage } from '@/components/ui/loading'
 import ReduxProvider from '@/providers/redux-provider'
 import { Directions, Languages } from '@/constants/enums'
-import { Locale } from '@/i18n.config'
+import ScrollToTopBtn from '@/components/ui/scroll-to-top'
 import NextAuthSessionProvider from '@/providers/NextAuthSessionProvider'
-import { Toaster } from '@/components/ui/toast'
+const Footer = dynamic(() => import('@/components/layouts/footer'))
 
 export async function generateStaticParams() {
   return [{ locale: Languages.ARABIC }, { locale: Languages.ENGLISH }]
@@ -40,14 +44,17 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={locale === Languages.ARABIC ? Directions.RTL : Directions.LTR}>
       <body className={locale === Languages.ARABIC ? cairo.className : roboto.className}>
-        <NextAuthSessionProvider>
-          <ReduxProvider>
-            <Header />
-            <main className='min-h-[80vh]'>{children}</main>
-            <Footer />
-            <Toaster />
-          </ReduxProvider>
-        </NextAuthSessionProvider>
+        <Suspense fallback={<LoadingPage />}>
+          <NextAuthSessionProvider>
+            <ReduxProvider>
+              <Header />
+              <main className='min-h-screen'>{children}</main>
+              <Footer />
+              <Toaster />
+              <ScrollToTopBtn />
+            </ReduxProvider>
+          </NextAuthSessionProvider>
+        </Suspense>
       </body>
     </html>
   )

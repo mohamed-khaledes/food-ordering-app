@@ -31,13 +31,14 @@ function AuthButtons({
       {!session.data?.user && (
         <div className='flex items-center gap-6'>
           <Button
-            className={`${
-              pathname.startsWith(`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`)
-                ? 'text-primary'
-                : 'text-accent'
-            } hover:text-primary duration-200 transition-colors font-semibold hover:no-underline !px-0`}
+            className='!px-8 !rounded-full'
+            // className={`${
+            //   pathname.startsWith(`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`)
+            //     ? 'text-primary'
+            //     : 'text-accent'
+            // } hover:text-primary duration-200 transition-colors font-semibold hover:no-underline !px-0`}
+            // variant='link'
             size='lg'
-            variant='link'
             onClick={() => router.push(`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`)}
           >
             {translations.navbar.login}

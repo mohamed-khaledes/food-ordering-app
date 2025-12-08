@@ -265,6 +265,17 @@
     "register": "Register",
     "signOut": "Sign Out",
     "profile": "Profile",
-    "admin": "Admin"
+    "admin": "Admin",
+    "company": "Company",
+    "careers": "Careers",
+    "blog": "Blog",
+    "meals": "Meals",
+    "plans": "Plans",
+    "pricing": "Pricing",
+    "support": "Support",
+    "faq": "FAQ",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "followUs": "Follow Us"
   }
 }

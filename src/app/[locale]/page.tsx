@@ -1,7 +1,4 @@
-import About from '@/features/about'
-import Contact from '@/features/contact'
-import BestSellers from '@/features/home/best-sellers'
-import Hero from '@/features/home/hero'
+import Landing from '@/features/home'
 import { db } from '@/lib/prisma'
 
 export default async function Home() {
@@ -15,10 +12,7 @@ export default async function Home() {
   // })
   return (
     <main>
-      <Hero />
-      <BestSellers />
-      <About />
-      <Contact />
+      <Landing />
     </main>
   )
 }

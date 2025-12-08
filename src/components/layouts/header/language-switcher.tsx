@@ -17,11 +17,11 @@ const LanguageSwitcher = () => {
   return (
     <div className='flex'>
       {locale === Languages.ARABIC ? (
-        <Button variant='outline' onClick={() => switchLanguage(Languages.ENGLISH)}>
+        <Button className='cursor-pointer' onClick={() => switchLanguage(Languages.ENGLISH)}>
           English
         </Button>
       ) : (
-        <Button variant='outline' onClick={() => switchLanguage(Languages.ARABIC)}>
+        <Button className='cursor-pointer' onClick={() => switchLanguage(Languages.ARABIC)}>
           العربية
         </Button>
       )}

@@ -1,5 +1,4 @@
 'use client'
-
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,28 +10,26 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import Image from 'next/image'
-
 import { Label } from '@/components/ui/label'
 import { formatCurrency } from '@/lib/helpers'
-
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Checkbox } from '../../components/ui/checkbox'
+import { Checkbox } from '../../../components/ui/checkbox'
 import { useState } from 'react'
-import { ProductWithRelations } from './type'
+import { ProductWithRelations } from '../../home/featured/type'
 import { Extras, ProductSizes, Sizes } from '@/generated/prisma'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-import { getItemQuantity } from '../cart/hooks'
-import { addCartItem, removeCartItem, removeItemFromCart, selectCartItems } from '../cart/slice'
+import { getItemQuantity } from '../../cart/hooks'
+import { addCartItem, removeCartItem, removeItemFromCart, selectCartItems } from '../../cart/slice'
 
 export default function AddToCart({ item }: { item: ProductWithRelations }) {
   const cart = useAppSelector(selectCartItems)
   const quantity = getItemQuantity(item.id, cart)
   const dispatch = useAppDispatch()
   const defaultSize =
-    cart.find(element => element.id === item.id)?.size ||
-    item.sizes.find(size => size.name === ProductSizes.SMALL)
+    cart?.find((element: any) => element.id === item.id)?.size ||
+    item?.sizes?.find(size => size.name === ProductSizes.SMALL)
 
-  const defaultExtras = cart.find(element => element.id === item.id)?.extras || []
+  const defaultExtras = cart?.find(element => element.id === item.id)?.extras || []
 
   const [selectedSize, setSelectedSize] = useState<Sizes>(defaultSize!)
   const [selectedExtras, setSelectedExtras] = useState<Extras[]>(defaultExtras)
@@ -67,14 +64,9 @@ export default function AddToCart({ item }: { item: ProductWithRelations }) {
           <span>Add To Cart</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className='sm:w-[425px] md:w-[500px] max-h-[80vh] overflow-y-auto no-scrollbar'>
+      <DialogContent className='sm:w-[425px] md:w-[600px] max-h-[80vh] overflow-y-auto no-scrollbar'>
         <DialogHeader className='flex items-center'>
-          <Image
-            src={item.image || '/assets/images/pizza.png'}
-            alt={item.name}
-            width={200}
-            height={200}
-          />
+          <Image src={item.image || ''} alt={item.name} width={200} height={200} loading='lazy' />
           <DialogTitle>{item.name}</DialogTitle>
           <DialogDescription className='text-center'>{item.description}</DialogDescription>
         </DialogHeader>

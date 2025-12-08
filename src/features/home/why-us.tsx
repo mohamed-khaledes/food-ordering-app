@@ -1,0 +1,53 @@
+'use client'
+import React from 'react'
+import { motion } from 'framer-motion'
+
+const WhyUs = () => {
+  const data = [
+    {
+      title: 'Fresh Ingredients',
+      text: 'We use high‑quality, farm‑fresh ingredients to prepare your meals daily.'
+    },
+    {
+      title: 'Healthy & Balanced',
+      text: 'Nutritious meals crafted by experts to fuel your lifestyle.'
+    },
+    {
+      title: 'Delivered Daily',
+      text: 'Your food arrives fresh at your doorstep every single day.'
+    }
+  ]
+  return (
+    <section className='py-24 bg-gray-50'>
+      <div className='container mx-auto px-6 text-center'>
+        <motion.h2
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className='text-4xl font-bold mb-12'
+        >
+          Why Choose Us
+        </motion.h2>
+
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-12'>
+          {data.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.1, ease: 'easeOut' }}
+              className='p-8 bg-white rounded-3xl shadow-md hover:shadow-lg transition'
+            >
+              <h3 className='text-2xl font-semibold mb-4'>{item.title}</h3>
+              <p className='text-gray-600 text-lg'>{item.text}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export default WhyUs

@@ -7,7 +7,6 @@ import { useParams, usePathname } from 'next/navigation'
 import { Session } from 'next-auth'
 import { Button } from '@/components/ui/button'
 import Link from '@/components/link'
-import LanguageSwitcher from './language-switcher'
 import { useTrans } from '@/lib/translations/client'
 import AuthButtons from './auth-buttons'
 import { useClientSession } from '@/hooks/useClientSession'
@@ -39,13 +38,13 @@ function Navbar({ initialSession }: { initialSession: Session | null }) {
 
   // const isAdmin = session?.data?.user?.role === UserRole?.ADMIN;
   return (
-    <nav className='order-last lg:order-none p-3'>
+    <nav className='order-last lg:order-none p-2 md:p-3'>
       <Button variant='secondary' size='sm' className='lg:hidden' onClick={() => setOpenMenu(true)}>
         <Menu className='!w-6 !h-6' />
       </Button>
       <ul
         className={`fixed lg:static ${
-          openMenu ? 'left-0 z-50' : '-left-full'
+          openMenu ? 'left-0 z-50' : 'left-[-200%]'
         } top-0 px-10 py-20 lg:p-0 bg-background lg:bg-transparent transition-all duration-200 h-full lg:h-auto flex-col lg:flex-row w-full lg:w-auto flex items-start lg:items-center gap-10`}
       >
         <Button
@@ -61,8 +60,8 @@ function Navbar({ initialSession }: { initialSession: Session | null }) {
             <Link
               onClick={() => setOpenMenu(false)}
               href={`/${link.href}`}
-              className={`hover:text-primary duration-200 transition-colors font-semibold ${
-                pathname.startsWith(`/${locale}/${link.href}`) ? 'text-primary' : 'text-accent'
+              className={`hover:text-primary duration-200 transition-colors font-semibold uppercase ${
+                pathname.startsWith(`/${locale}/${link.href}`) ? 'text-primary' : 'text-gray-900'
               }`}
             >
               {link.title}
@@ -99,7 +98,6 @@ function Navbar({ initialSession }: { initialSession: Session | null }) {
             <AuthButtons translations={translations} initialSession={initialSession} />
           </div>
         </li>
-        <LanguageSwitcher />
       </ul>
     </nav>
   )
