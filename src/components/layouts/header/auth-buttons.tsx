@@ -1,6 +1,5 @@
 'use client'
 
-import { signOut } from 'next-auth/react'
 import { Translations } from '@/types/translations'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import { Pages, Routes } from '@/constants/enums'
@@ -21,30 +20,22 @@ function AuthButtons({
   const { locale } = useParams()
   return (
     <div>
-      {session.data?.user && (
-        <div className='flex items-center gap-10'>
-          <Button className='!px-8 !rounded-full' size='lg' onClick={() => signOut()}>
-            {translations.navbar.signOut}
-          </Button>
-        </div>
-      )}
       {!session.data?.user && (
-        <div className='flex items-center gap-6'>
+        <div className='flex items-center gap-2'>
           <Button
-            className='!px-8 !rounded-full'
-            // className={`${
-            //   pathname.startsWith(`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`)
-            //     ? 'text-primary'
-            //     : 'text-accent'
-            // } hover:text-primary duration-200 transition-colors font-semibold hover:no-underline !px-0`}
-            // variant='link'
+            className='!px-4 !rounded-full'
+            variant={
+              pathname.startsWith(`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`)
+                ? 'outline'
+                : 'default'
+            }
             size='lg'
             onClick={() => router.push(`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`)}
           >
             {translations.navbar.login}
           </Button>
           <Button
-            className='!px-8 !rounded-full'
+            className='!px-4 !rounded-full'
             size='lg'
             onClick={() => router.push(`/${locale}/${Routes.AUTH}/${Pages.Register}`)}
           >

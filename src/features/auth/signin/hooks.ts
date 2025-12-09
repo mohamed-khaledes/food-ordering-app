@@ -1,7 +1,6 @@
 import Toast from '@/components/ui/toast'
 import { Pages, Routes } from '@/constants/enums'
 import useFormFields from '@/hooks/useFormFields'
-import { toast } from '@/hooks/useToast'
 import { useTrans } from '@/lib/translations/client'
 import { signIn } from 'next-auth/react'
 import { useParams, useRouter } from 'next/navigation'
@@ -43,10 +42,7 @@ export const useSigninForm = () => {
         }
       }
       if (res?.ok) {
-        toast({
-          title: translations.messages.loginSuccessful,
-          className: 'text-green-400'
-        })
+        Toast(translations.messages.loginSuccessful, 'success')
         router.replace(`/${locale}/${Routes.PROFILE}`)
       }
     } catch (error) {

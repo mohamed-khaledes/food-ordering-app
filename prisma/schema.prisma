@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -26,7 +25,7 @@ model User {
   postalCode    String?
   city          String?
   country       String?
-  // role          UserRole       @default(USER)
+  role          UserRole       @default(USER)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   orders        OrderProduct[]
@@ -92,7 +91,7 @@ model Product {
   orders      OrderProduct[]
 }
 
-// sizes model
+// category model
 model Category {
   id      String    @id @default(cuid())
   name    String
@@ -160,4 +159,9 @@ enum ExtraIngredients {
   TOMATO
   ONION
   PEPPER
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }

@@ -5,8 +5,9 @@ import CartButton from './cart-button'
 import { getTrans } from '@/lib/translations/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/server/auth'
-import { Button } from '@/components/ui/button'
 import LanguageSwitcher from './language-switcher'
+import AuthButtons from './auth-buttons'
+import ProfileDropdown from './profile-dropdown'
 
 const Header = async () => {
   const t = await getTrans()
@@ -19,18 +20,17 @@ const Header = async () => {
             href={`/`}
             className='text-primary uppercase font-semibold text-lg md:text-2xl text-nowrap'
           >
-            🍕 {t.logo}
+            {t.logo}
           </Link>
 
-          <div className='flex items-center gap-6  flex-nowrap'>
+          <div className='flex items-center gap-3  flex-nowrap'>
             <Navbar initialSession={initialSession} />
             <CartButton />
             <div className='flex flex-nowrap gap-2'>
               <LanguageSwitcher />
-              <Button>
-                <Link href='/auth/signin'>{t.navbar.login}</Link>
-              </Button>
+              <AuthButtons initialSession={initialSession} translations={t} />
             </div>
+            <ProfileDropdown initialSession={initialSession} />
           </div>
         </div>
       </div>

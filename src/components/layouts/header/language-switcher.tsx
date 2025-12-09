@@ -3,6 +3,7 @@
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import { Languages } from '@/constants/enums'
 import { Button } from '@/components/ui/button'
+import { Globe } from 'lucide-react'
 
 const LanguageSwitcher = () => {
   const router = useRouter()
@@ -17,12 +18,20 @@ const LanguageSwitcher = () => {
   return (
     <div className='flex'>
       {locale === Languages.ARABIC ? (
-        <Button className='cursor-pointer' onClick={() => switchLanguage(Languages.ENGLISH)}>
-          English
+        <Button
+          size='lg'
+          className='rounded-full cursor-pointer'
+          onClick={() => switchLanguage(Languages.ENGLISH)}
+        >
+          <Globe /> EN
         </Button>
       ) : (
-        <Button className='cursor-pointer' onClick={() => switchLanguage(Languages.ARABIC)}>
-          العربية
+        <Button
+          size='lg'
+          className='rounded-full cursor-pointer'
+          onClick={() => switchLanguage(Languages.ARABIC)}
+        >
+          <Globe /> AR
         </Button>
       )}
     </div>

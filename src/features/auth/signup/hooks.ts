@@ -1,6 +1,6 @@
+import Toast from '@/components/ui/toast'
 import { Pages, Routes } from '@/constants/enums'
 import useFormFields from '@/hooks/useFormFields'
-import { toast } from '@/hooks/useToast'
 import { useTrans } from '@/lib/translations/client'
 import { signup } from '@/server/_actions/auth'
 import { ValidationErrors } from '@/validations/auth'
@@ -29,10 +29,7 @@ export const useSignupForm = () => {
 
   useEffect(() => {
     if (state.status && state.message) {
-      toast({
-        title: state.message,
-        className: state.status === 201 ? 'text-green-400' : 'text-destructive'
-      })
+      Toast(state.message, state.status === 201 ? 'success' : 'error')
     }
     if (state.status === 201) {
       router.replace(`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`)
