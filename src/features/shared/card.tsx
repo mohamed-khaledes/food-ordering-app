@@ -4,7 +4,15 @@ import { motion } from 'framer-motion'
 import { formatCurrency } from '@/lib/helpers'
 import AddToCart from './cart/add-to-cart'
 
-const Card = ({ item, key }: { item: any; key: number | string }) => {
+const Card = ({
+  item,
+  key,
+  isAdmin = false
+}: {
+  item: any
+  key: number | string
+  isAdmin?: boolean
+}) => {
   return (
     <motion.div
       key={key}
@@ -33,7 +41,7 @@ const Card = ({ item, key }: { item: any; key: number | string }) => {
           </strong>
         </div>
         <p className='text-gray-600 text-sm mb-4'>{item?.description?.slice(0, 80)}</p>
-        <AddToCart item={item} />
+        {!isAdmin && <AddToCart item={item} />}
       </div>
     </motion.div>
   )
