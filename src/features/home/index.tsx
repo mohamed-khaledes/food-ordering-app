@@ -1,10 +1,9 @@
-import dynamic from 'next/dynamic'
-const Featured = dynamic(() => import('./featured'))
-const Cta = dynamic(() => import('./cta'))
-const About = dynamic(() => import('./about'))
-const ContactUs = dynamic(() => import('./contact-us'))
-const WhyUs = dynamic(() => import('./why-us'))
-const Hero = dynamic(() => import('./hero'))
+import Hero from './hero'
+import Featured from './featured'
+import WhyUs from './why-us'
+import Cta from './cta'
+import About from './about'
+import ContactUs from './contact-us'
 
 export default function Landing() {
   return (

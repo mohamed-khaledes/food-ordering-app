@@ -19,11 +19,12 @@ export const addProduct = async (
   const translations = await getTrans()
   const submittedValues = Object.fromEntries(formData.entries())
   const result = addProductSchema(translations).safeParse(submittedValues)
+
   if (result.success === false) {
     return {
       error: result.error.flatten().fieldErrors,
       status: 400,
-      submittedValues
+      formData
     }
   }
   const data: any = result.data
@@ -31,28 +32,6 @@ export const addProduct = async (
   const imageFile = data.image as File
   const imageUrl = Boolean(imageFile.size) ? await getImageUrl(imageFile) : undefined
   try {
-    console.log({
-      ...data,
-      image: imageUrl,
-      basePrice,
-      categoryId: args.categoryId,
-      sizes: {
-        createMany: {
-          data: args.options.sizes.map(size => ({
-            name: size.name as ProductSizes,
-            price: Number(size.price)
-          }))
-        }
-      },
-      extras: {
-        createMany: {
-          data: args.options.extras.map(extra => ({
-            name: extra.name as ExtraIngredients,
-            price: Number(extra.price)
-          }))
-        }
-      }
-    })
     if (imageUrl) {
       await db.product.create({
         data: {
@@ -88,11 +67,26 @@ export const addProduct = async (
     }
     return {}
   } catch (error) {
-    console.error(error)
     return {
       status: 500,
       message: translations.messages.unexpectedError
     }
+  }
+}
+
+const getImageUrl = async (imageFile: File) => {
+  const formData = new FormData()
+  formData.append('file', imageFile)
+  formData.append('pathName', 'food_ordering_app_images')
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/upload`, {
+      method: 'POST',
+      body: formData
+    })
+    const image = (await response.json()) as { url: string }
+    return image.url
+  } catch (error) {
+    console.error('Error uploading file to Cloudinary:', error)
   }
 }
 
@@ -179,23 +173,6 @@ export const updateProduct = async (
       status: 500,
       message: translations.messages.unexpectedError
     }
-  }
-}
-const getImageUrl = async (imageFile: File) => {
-  const formData = new FormData()
-  formData.append('file', imageFile)
-  formData.append('pathName', 'product_images')
-
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/upload`, {
-      method: 'POST',
-      body: formData
-    })
-    console.log(response)
-    const image = (await response.json()) as { url: string }
-    return image.url
-  } catch (error) {
-    console.error('Error uploading file to Cloudinary:', error)
   }
 }
 
