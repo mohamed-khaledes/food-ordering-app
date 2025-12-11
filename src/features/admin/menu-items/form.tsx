@@ -81,7 +81,7 @@ function MenuForm({
   }, [pending, state.message, state.status])
 
   return (
-    <form action={action} className='flex flex-col md:flex-row gap-10'>
+    <form action={action} className='flex flex-col md:flex-row gap-10 my-3'>
       <div>
         <UploadImage selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
         {state?.error?.image && (

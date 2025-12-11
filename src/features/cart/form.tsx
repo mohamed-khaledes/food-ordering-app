@@ -17,13 +17,13 @@ function CheckoutForm() {
   if (!cart || cart.length === 0) return null
 
   return (
-    <div className='max-w-xl mx-auto bg-white shadow-lg rounded-2xl p-8 border border-gray-200'>
+    <div className='mx-auto bg-white shadow-lg rounded-2xl p-8 border border-gray-200'>
       <h2 className='text-3xl font-bold text-primary text-center mb-6'>{global.checkout}</h2>
 
       <form className='space-y-6'>
         {/* Phone */}
         <div className='grid gap-2'>
-          <Label htmlFor='phone' className='text-gray-700'>
+          <Label htmlFor='phone' className='text-gray-700 capitalize'>
             {global.phone}
           </Label>
           <Input
@@ -34,10 +34,21 @@ function CheckoutForm() {
             className='focus:ring-2 focus:ring-accent'
           />
         </div>
-
+        <div className='grid gap-2'>
+          <Label htmlFor='city' className='text-gray-700 capitalize'>
+            {global.city}
+          </Label>
+          <Input
+            type='text'
+            id='city'
+            placeholder={global.city}
+            name='city'
+            className='focus:ring-2 focus:ring-accent'
+          />
+        </div>
         {/* Address */}
         <div className='grid gap-2'>
-          <Label htmlFor='address' className='text-gray-700'>
+          <Label htmlFor='address' className='text-gray-700 capitalize'>
             {global['street address']}
           </Label>
           <Textarea
@@ -47,54 +58,13 @@ function CheckoutForm() {
             className='resize-none focus:ring-2 focus:ring-accent'
           />
         </div>
-
-        {/* Location */}
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-          <div className='grid gap-2'>
-            <Label htmlFor='postal-code' className='text-gray-700'>
-              {global['postal code']}
-            </Label>
-            <Input
-              type='text'
-              id='postal-code'
-              placeholder={global['postal code']}
-              name='postal-code'
-              className='focus:ring-2 focus:ring-accent'
-            />
-          </div>
-          <div className='grid gap-2'>
-            <Label htmlFor='city' className='text-gray-700'>
-              {global.city}
-            </Label>
-            <Input
-              type='text'
-              id='city'
-              placeholder={global.city}
-              name='city'
-              className='focus:ring-2 focus:ring-accent'
-            />
-          </div>
-          <div className='grid gap-2'>
-            <Label htmlFor='country' className='text-gray-700'>
-              {global.country}
-            </Label>
-            <Input
-              type='text'
-              id='country'
-              placeholder={global.country}
-              name='country'
-              className='focus:ring-2 focus:ring-accent'
-            />
-          </div>
-        </div>
-
         {/* Total + Pay */}
         <div className='flex items-center justify-between border-t pt-6'>
-          <span className='text-lg font-semibold text-gray-900'>
+          <span className='text-lg font-semibold text-gray-900 capitalize'>
             {global.total}: {formatCurrency(totalAmount)}
           </span>
-          <Button className='h-11 px-6 text-white bg-accent hover:bg-accent/90 rounded-xl shadow-md'>
-            {global['pay now']}
+          <Button className='h-11 px-6 text-white bg-accent hover:bg-accent/90 rounded-xl shadow-md capitalize cursor-pointer'>
+            {global['confirm']}
           </Button>
         </div>
       </form>

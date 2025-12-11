@@ -80,7 +80,7 @@ model Product {
   name        String
   description String
   image       String
-  order       Int
+  order       Int            @default(autoincrement())
   basePrice   Float
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
@@ -101,20 +101,22 @@ model Category {
 
 // sizes model
 model Sizes {
-  id        String       @id @default(cuid())
+  id        String         @id @default(cuid())
   name      ProductSizes
   price     Float
-  Product   Product      @relation(fields: [productId], references: [id])
+  Product   Product        @relation(fields: [productId], references: [id])
   productId String
+  orders    OrderProduct[]
 }
 
 // extras model 
 model Extras {
-  id        String           @id @default(cuid())
+  id        String               @id @default(cuid())
   name      ExtraIngredients
   price     Float
-  Product   Product          @relation(fields: [productId], references: [id])
+  Product   Product              @relation(fields: [productId], references: [id])
   productId String
+  orders    OrderProductExtras[]
 }
 
 model Order {
@@ -123,10 +125,10 @@ model Order {
   subTotal      Float
   deliveryFee   Float
   totalPrice    Float
-  userEmail     String
+  userEmail     String?
   phone         String
   streetAddress String
-  postalCode    String
+  postalCode    String?
   city          String
   country       String
   createdAt     DateTime       @default(now())
@@ -138,12 +140,25 @@ model OrderProduct {
   id       String @id @default(cuid())
   quantity Int
 
-  order     Order   @relation(fields: [orderId], references: [id])
+  order     Order                @relation(fields: [orderId], references: [id])
   orderId   String
   userId    String?
-  User      User?   @relation(fields: [userId], references: [id])
-  Product   Product @relation(fields: [productId], references: [id])
+  User      User?                @relation(fields: [userId], references: [id])
+  Product   Product              @relation(fields: [productId], references: [id])
   productId String
+  // Custom selected size
+  sizeId    String?
+  size      Sizes?               @relation(fields: [sizeId], references: [id])
+  // Selected extras (many-to-many)
+  extras    OrderProductExtras[]
+}
+
+model OrderProductExtras {
+  id             String       @id @default(uuid())
+  orderProduct   OrderProduct @relation(fields: [orderProductId], references: [id])
+  orderProductId String
+  extra          Extras       @relation(fields: [extraId], references: [id])
+  extraId        String
 }
 
 // enums

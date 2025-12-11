@@ -18,7 +18,7 @@ function CartItems() {
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cart))
   }, [cart])
-
+  console.log(cart)
   if (!cart || cart.length === 0) {
     return (
       <div className='text-center py-12'>
@@ -26,7 +26,6 @@ function CartItems() {
       </div>
     )
   }
-  console.log(cart)
   return (
     <div className='space-y-6'>
       <ul className='space-y-4'>
@@ -100,7 +99,7 @@ function CartItems() {
           {global.delivery}:{' '}
           <span className='font-semibold text-gray-900'>{formatCurrency(deliveryFee)}</span>
         </p>
-        <p className='text-lg font-bold text-gray-900'>
+        <p className='text-lg font-bold text-gray-900 capitalize'>
           {global.total}:{' '}
           <span className='text-accent'>{formatCurrency(subTotal + deliveryFee)}</span>
         </p>

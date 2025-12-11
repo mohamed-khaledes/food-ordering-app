@@ -20,7 +20,7 @@ const Card = ({
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: +key * 0.2 }}
-      className='flex md:flex-col bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1'
+      className='w-full flex md:flex-col bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1'
     >
       {/* Image Wrapper with hover animation */}
       <motion.img
@@ -31,7 +31,7 @@ const Card = ({
         transition={{ duration: 0.6, ease: 'easeOut' }}
         loading='lazy'
       />
-      <div className='p-3 md:p-6 text-start'>
+      <div className='p-3 md:p-6 text-start h-[220px]'>
         <div className='flex items-center justify-between mb-4 mt-4'>
           <h3 className='text-md md:text-xl font-semibold mb-2 first-letter:uppercase'>
             {item?.name}

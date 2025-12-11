@@ -14,53 +14,31 @@ import { Label } from '@/components/ui/label'
 import { formatCurrency } from '@/lib/helpers'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Checkbox } from '../../../components/ui/checkbox'
-import { useState } from 'react'
 import { ProductWithRelations } from '../../home/featured/type'
-import { Extras, ProductSizes, Sizes } from '@prisma/client'
-import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-import { getItemQuantity } from '../../cart/hooks'
-import { addCartItem, removeCartItem, removeItemFromCart, selectCartItems } from '../../cart/slice'
+import { Extras, Sizes } from '@prisma/client'
+import { useAppDispatch } from '@/redux/hooks'
+import { addCartItem, removeCartItem, removeItemFromCart } from '../../cart/slice'
+import { useAddToCart } from './hooks'
 
 export default function AddToCart({ item }: { item: ProductWithRelations }) {
-  const cart = useAppSelector(selectCartItems)
-  const quantity = getItemQuantity(item.id, cart)
-  const dispatch = useAppDispatch()
-  const defaultSize =
-    cart?.find((element: any) => element.id === item.id)?.size ||
-    item?.sizes?.find(size => size.name === ProductSizes.SMALL)
-
-  const defaultExtras = cart?.find(element => element.id === item.id)?.extras || []
-
-  const [selectedSize, setSelectedSize] = useState<Sizes>(defaultSize!)
-  const [selectedExtras, setSelectedExtras] = useState<Extras[]>(defaultExtras)
-
-  let totalPrice = item.basePrice
-  if (selectedSize) {
-    totalPrice += selectedSize.price
-  }
-  if (selectedExtras.length > 0) {
-    for (const extra of selectedExtras) {
-      totalPrice += extra.price
-    }
-  }
-
-  const handleAddToCart = () => {
-    dispatch(
-      addCartItem({
-        basePrice: item.basePrice,
-        id: item.id,
-        image: item.image,
-        name: item.name,
-        size: selectedSize,
-        extras: selectedExtras
-      })
-    )
-  }
+  const {
+    handleAddToCart,
+    setSelectedExtras,
+    setSelectedSize,
+    selectedSize,
+    selectedExtras,
+    quantity,
+    totalPrice
+  } = useAddToCart(item)
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type='button' size='lg' className='mt-4 text-white rounded-full !px-8'>
+        <Button
+          type='button'
+          size='lg'
+          className='mt-4 text-white rounded-full !px-8 cursor-pointer'
+        >
           <span>Add To Cart</span>
         </Button>
       </DialogTrigger>
@@ -128,13 +106,13 @@ function PickSize({
           className='flex items-center space-x-2 border border-gray-100 rounded-md p-4'
         >
           <RadioGroupItem
-            value={selectedSize.name}
-            checked={selectedSize.id === size.id}
+            value={selectedSize?.name}
+            checked={selectedSize?.id === size?.id}
             onClick={() => setSelectedSize(size)}
-            id={size.id}
+            id={size?.id}
           />
-          <Label htmlFor={size.id}>
-            {size.name} {formatCurrency(size.price + item.basePrice)}
+          <Label htmlFor={size?.id}>
+            {size?.name} {formatCurrency(size?.price + item?.basePrice)}
           </Label>
         </div>
       ))}

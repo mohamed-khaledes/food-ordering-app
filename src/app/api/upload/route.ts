@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       `data:${file.type};base64,${base64File}`,
       {
         folder: pathName,
-        transformation: [{ width: 200, height: 200, crop: 'fill' }]
+        transformation: [{ width: 400, height: 400, crop: 'fill' }]
         // transformation: [{ width: 200, height: 200, crop: 'fill', gravity: 'face' }]
       }
     )
