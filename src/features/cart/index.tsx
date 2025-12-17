@@ -8,7 +8,7 @@ import { useTrans } from '@/lib/translations/client'
 
 const Cart = () => {
   const { global } = useTrans()
-  const [payType, setPayType] = useState<'card' | 'cash'>('card')
+  const [payType, setPayType] = useState<'card' | 'cash'>('cash')
   return (
     <section className='section-gap'>
       <div className='container'>

@@ -219,7 +219,7 @@ const FormActions = ({
             variant={'outline'}
             className='bg-red-500 text-white'
             disabled={state.pending}
-            onClick={() => handleDelete(product.id)}
+            onClick={() => handleDelete(product?.id)}
           >
             {state.pending ? <Loader /> : translations.delete}
           </Button>

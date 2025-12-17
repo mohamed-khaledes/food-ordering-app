@@ -9,11 +9,24 @@ const imageValidation = (translations: Translations, isRequired: boolean) => {
           if (typeof val !== 'object' || !val) {
             return false
           }
+
           if (!(val instanceof File)) {
             return false
           }
+
           const validMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
-          return validMimeTypes.includes(val.type)
+
+          const maxSizeInBytes = 250 * 1024 // 250KB
+
+          if (!validMimeTypes.includes(val.type)) {
+            return false
+          }
+
+          if (val.size > maxSizeInBytes) {
+            return false
+          }
+
+          return true
         },
         {
           message: translations.admin['menu-items'].form.image.validation.required

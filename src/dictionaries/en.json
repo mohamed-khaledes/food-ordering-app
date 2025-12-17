@@ -219,7 +219,7 @@
         },
         "image": {
           "validation": {
-            "required": "Product image is required"
+            "required": "Product image is required & the size limit is 250kb"
           }
         }
       }
@@ -277,6 +277,7 @@
     "terms": "Terms & Conditions",
     "privacy": "Privacy Policy",
     "followUs": "Follow Us",
-    "confirm": "confirm"
+    "confirm": "confirm",
+    "email": "email"
   }
 }

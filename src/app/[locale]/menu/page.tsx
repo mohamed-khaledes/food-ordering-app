@@ -8,16 +8,7 @@ const MenuPage = async () => {
     <main>
       <section className='section-gap'>
         <div className='container text-center'>
-          {categories?.map(item => {
-            return (
-              <div className='my-5' key={item?.id}>
-                <h1 className='text-primary my-2 font-bold text-2xl text-start uppercase'>
-                  {item?.name}
-                </h1>
-                <Menu items={item?.Product} />
-              </div>
-            )
-          })}
+          <Menu categories={categories} />
         </div>
       </section>
     </main>

@@ -1,67 +1,91 @@
-// src/app/api/orders/route.ts
-
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/prisma'
 import { orderSchema } from '@/features/cart/validations'
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await req.json()
+    const body = await request.json()
+    const result = orderSchema.safeParse(body)
 
-    // Validate data
-    const data = orderSchema.parse(body)
+    if (!result.success) {
+      return NextResponse.json({ errors: result.error.flatten().fieldErrors }, { status: 400 })
+    }
 
-    // Auto calculations
-    const subTotal = data.products.reduce((sum, p) => sum + p.price * p.quantity, 0)
+    const data: any = result.data
 
-    const deliveryFee = 20
-    const totalPrice = subTotal + deliveryFee
+    // 1️⃣ Calculate subtotal
+    let subTotal = 0
 
-    // const order = await db.order.create({
-    //   data: {
-    //     paid: data.paid ?? false,
-    //     phone: data.phone,
-    //     streetAddress: data.streetAddress,
-    //     city: data.city,
-    //     country: data.country,
-    //     subTotal,
-    //     deliveryFee,
-    //     totalPrice,
+    for (const item of data.products) {
+      const product = await db.product.findUnique({
+        where: { id: item.productId },
+        include: { sizes: true, extras: true }
+      })
 
-    //     products: {
-    //       create: data.products.map(item => ({
-    //         quantity: item.quantity,
-    //         price: item.price,
-    //         Product: {
-    //           connect: { id: item.productId }
-    //         },
-    //         size: item.sizeId ? { connect: { id: item.sizeId } } : undefined,
+      if (!product) {
+        return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+      }
 
-    //         extras: item.extras?.length
-    //           ? {
-    //               create: item.extras.map(extraId => ({
-    //                 extra: { connect: { id: extraId } }
-    //               }))
-    //             }
-    //           : undefined
-    //       }))
-    //     }
-    //   },
-    //   include: {
-    //     products: {
-    //       include: {
-    //         Product: true,
-    //         size: true,
-    //         extras: { include: { extra: true } }
-    //       }
-    //     }
-    //   }
-    // })
+      let itemPrice = product.basePrice
 
-    // return NextResponse.json(order)
-    return
+      if (item.sizeId) {
+        const size = product.sizes.find(s => s.id === item.sizeId)
+        if (!size) {
+          return NextResponse.json({ error: 'Invalid size' }, { status: 400 })
+        }
+        itemPrice += size.price
+      }
+
+      if (item.extras?.length) {
+        const extras = product.extras.filter(e => item.extras!.includes(e.id))
+        extras.forEach(e => (itemPrice += e.price))
+      }
+
+      subTotal += itemPrice * item.quantity
+    }
+
+    const totalPrice = subTotal + data.deliveryFee
+
+    // 2️⃣ Transaction (IMPORTANT)
+    const order = await db.$transaction(async tx => {
+      return tx.order.create({
+        data: {
+          userEmail: data.userEmail,
+          phone: data.phone,
+          streetAddress: data.streetAddress,
+          postalCode: data.postalCode,
+          city: data.city,
+          country: data.country,
+          subTotal,
+          deliveryFee: data.deliveryFee,
+          totalPrice,
+          products: {
+            create: data.products.map((item: any) => ({
+              quantity: item.quantity,
+              userId: data.userId,
+              productId: item.productId,
+              sizeId: item.sizeId,
+              extras: {
+                create: item.extras?.map((extraId: string) => ({ extraId }))
+              }
+            }))
+          }
+        },
+        include: {
+          products: {
+            include: {
+              Product: true,
+              size: true,
+              extras: { include: { extra: true } }
+            }
+          }
+        }
+      })
+    })
+
+    return NextResponse.json(order, { status: 201 })
   } catch (error: any) {
-    console.log(error)
-    return NextResponse.json({ error: error.message }, { status: 400 })
+    console.error(error)
+    return NextResponse.json({ error: error.message ?? 'Something went wrong' }, { status: 500 })
   }
 }

@@ -1,3 +1,4 @@
+import { createOrder } from './_actions/orders'
 import { CartItem } from './slice'
 
 export const deliveryFee = 5
@@ -28,29 +29,29 @@ export const getTotalAmount = (cart: CartItem[]) => {
 // src/hooks/useCreateOrder.ts
 
 import { useState } from 'react'
+import { TCreateOrder } from './type'
 
 export function useCreateOrder() {
   const [loading, setLoading] = useState(false)
-
-  const createOrder = async (order: any) => {
+  const handleCreate = async (order: TCreateOrder) => {
     setLoading(true)
-
     try {
-      const res = await fetch('/api/orders', {
+      const data = await fetch('/api/orders', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(order)
       })
-
-      const data = await res.json()
-
-      if (!res.ok) throw new Error(data.error || 'Failed to create order')
-
+      if (data) console.log(data)
       return data
+    } catch (e) {
+      console.log(e)
+      setLoading(false)
     } finally {
       setLoading(false)
     }
   }
 
-  return { createOrder, loading }
+  return { handleCreate, loading }
 }
