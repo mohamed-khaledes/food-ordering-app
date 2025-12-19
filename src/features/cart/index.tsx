@@ -5,10 +5,20 @@ import CheckoutForm from './form'
 import { Button } from '@/components/ui/button'
 import { Banknote, CreditCard } from 'lucide-react'
 import { useTrans } from '@/lib/translations/client'
+import { useAppSelector } from '@/redux/hooks'
+import { selectCartItems } from './slice'
 
 const Cart = () => {
   const { global } = useTrans()
   const [payType, setPayType] = useState<'card' | 'cash'>('cash')
+  const cart = useAppSelector(selectCartItems)
+  if (!cart || cart.length === 0) {
+    return (
+      <div className='text-center py-12'>
+        <p className='text-gray-500 text-lg'>🛒 {global['Your cart is empty']}</p>
+      </div>
+    )
+  }
   return (
     <section className='section-gap'>
       <div className='container'>

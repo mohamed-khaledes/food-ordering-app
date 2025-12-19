@@ -6,13 +6,13 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const result = orderSchema.safeParse(body)
-
     if (!result.success) {
-      return NextResponse.json({ errors: result.error.flatten().fieldErrors }, { status: 400 })
+      return NextResponse.json(
+        { errors: result.error.flatten().fieldErrors, success: false, status: 400 },
+        { status: 400 }
+      )
     }
-
     const data: any = result.data
-
     // 1️⃣ Calculate subtotal
     let subTotal = 0
 
@@ -44,48 +44,49 @@ export async function POST(request: NextRequest) {
       subTotal += itemPrice * item.quantity
     }
 
-    const totalPrice = subTotal + data.deliveryFee
-
+    const totalPrice: number = +subTotal + +data.deliveryFee
     // 2️⃣ Transaction (IMPORTANT)
-    const order = await db.$transaction(async tx => {
-      return tx.order.create({
-        data: {
-          userEmail: data.userEmail,
-          phone: data.phone,
-          streetAddress: data.streetAddress,
-          postalCode: data.postalCode,
-          city: data.city,
-          country: data.country,
-          subTotal,
-          deliveryFee: data.deliveryFee,
-          totalPrice,
-          products: {
-            create: data.products.map((item: any) => ({
-              quantity: item.quantity,
-              userId: data.userId,
-              productId: item.productId,
-              sizeId: item.sizeId,
-              extras: {
-                create: item.extras?.map((extraId: string) => ({ extraId }))
-              }
-            }))
-          }
-        },
-        include: {
-          products: {
-            include: {
-              Product: true,
-              size: true,
-              extras: { include: { extra: true } }
+    // const order = await db.$transaction(async tx => {})
+    const order = await db.order.create({
+      data: {
+        userEmail: data.userEmail,
+        phone: data.phone,
+        streetAddress: data.streetAddress,
+        postalCode: data.postalCode,
+        city: data.city,
+        country: data.country,
+        subTotal: subTotal,
+        deliveryFee: data.deliveryFee,
+        totalPrice: totalPrice,
+        products: {
+          create: data.products.map((item: any) => ({
+            quantity: item.quantity,
+            userId: data.userId,
+            productId: item.productId,
+            sizeId: item.sizeId,
+            extras: {
+              create: item.extras?.map((extraId: string) => ({ extraId }))
             }
+          }))
+        }
+      },
+      include: {
+        products: {
+          include: {
+            Product: true,
+            size: true,
+            extras: { include: { extra: true } }
           }
         }
-      })
+      }
     })
 
-    return NextResponse.json(order, { status: 201 })
+    return NextResponse.json({ success: true, status: 200, data: order }, { status: 200 })
   } catch (error: any) {
     console.error(error)
-    return NextResponse.json({ error: error.message ?? 'Something went wrong' }, { status: 500 })
+    return NextResponse.json(
+      { success: false, status: 500, error: error.message ?? 'Something went wrong' },
+      { status: 500 }
+    )
   }
 }

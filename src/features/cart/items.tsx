@@ -18,14 +18,7 @@ function CartItems() {
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cart))
   }, [cart])
-  console.log(cart)
-  if (!cart || cart.length === 0) {
-    return (
-      <div className='text-center py-12'>
-        <p className='text-gray-500 text-lg'>🛒 {global['Your cart is empty']}</p>
-      </div>
-    )
-  }
+
   return (
     <div className='space-y-6'>
       <ul className='space-y-4'>

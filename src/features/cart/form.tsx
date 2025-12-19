@@ -2,63 +2,18 @@
 
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { useAppSelector } from '@/redux/hooks'
 import { getTotalAmount, useCreateOrder } from './hooks'
-import { selectCartItems } from './slice'
 import { formatCurrency } from '@/lib/helpers'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useTrans } from '@/lib/translations/client'
-import { FormEvent, useState } from 'react'
 import { Loading } from '@/components/ui/loading'
-import { TCreateOrder } from './type'
 
 function CheckoutForm() {
-  const cart = useAppSelector(selectCartItems)
-  const totalAmount = getTotalAmount(cart)
   const { global } = useTrans()
-  const { handleCreate, loading } = useCreateOrder()
-  const [data, setData] = useState<TCreateOrder>()
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
-    setData((prev: any) => ({
-      ...prev,
-      [key]: e.target.value
-    }))
-  }
+  const { loading, handleChange, handleSubmit, cart, data } = useCreateOrder()
+  const totalAmount = getTotalAmount(cart)
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const products = cart?.map((item: any) => {
-      return {
-        productId: item?.id,
-        quantity: item?.quantity,
-        sizeId: item?.size?.id,
-        extras: item?.extras?.map((e: any) => e?.id)
-      }
-    })
-    const order = {
-      ...data,
-      products: products
-    }
-    handleCreate(order as any)
-  }
-  const dd = {
-    userId: 'user-id-123',
-    userEmail: 'test@mail.com',
-    phone: '0100000000',
-    streetAddress: 'Street 12',
-    city: 'Cairo',
-    country: 'Egypt',
-    deliveryFee: 30,
-    products: [
-      {
-        productId: 'product-id-1',
-        quantity: 2,
-        sizeId: 'size-id-medium',
-        extras: ['extra-id-cheese', 'extra-id-bacon']
-      }
-    ]
-  }
   if (!cart || cart.length === 0) return null
 
   return (
@@ -107,6 +62,20 @@ function CheckoutForm() {
             name='country'
             value={data?.country}
             onChange={e => handleChange(e, 'country')}
+            className='focus:ring-2 focus:ring-accent'
+          />
+        </div>
+        <div className='grid gap-2'>
+          <Label htmlFor='postalCode' className='text-gray-700 capitalize'>
+            {global.postalCode}
+          </Label>
+          <Input
+            type='text'
+            id='postalCode'
+            placeholder={global.postalCode}
+            name='postalCode'
+            value={data?.postalCode}
+            onChange={e => handleChange(e, 'postalCode')}
             className='focus:ring-2 focus:ring-accent'
           />
         </div>

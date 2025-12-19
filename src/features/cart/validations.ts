@@ -8,14 +8,15 @@ export const orderSchema = z.object({
   postalCode: z.string().optional().nullable(),
   city: z.string().min(2),
   country: z.string().min(2),
-
+  deliveryFee: z.number().min(0),
   products: z.array(
     z.object({
       productId: z.string(),
       sizeId: z.string().optional().nullable(),
       extras: z.array(z.string()).optional().default([]),
       quantity: z.number().min(1),
-      price: z.number().min(0)
+      basePrice: z.number().min(0),
+      deliveryFee: z.number().min(0)
     })
   )
 })
