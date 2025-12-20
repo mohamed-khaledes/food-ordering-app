@@ -17,13 +17,16 @@ function CheckoutForm() {
   if (!cart || cart.length === 0) return null
 
   return (
-    <div className='mx-auto bg-white shadow-lg rounded-2xl p-8 border border-gray-200'>
-      <h2 className='text-3xl font-bold text-primary text-center mb-6'>{global.checkout}</h2>
-
-      <form className='space-y-6 relative' onSubmit={handleSubmit}>
+    <div className='mx-auto bg-white shadow-lg rounded-2xl p-5 border border-gray-200'>
+      <h2 className='text-3xl font-bold text-primary text-center mb-6 capitalize'>
+        {global.checkout}
+      </h2>
+      <form
+        className='space-y-6 relative grid grid-cols-1 lg:grid-cols-2 gap-2 p-2'
+        onSubmit={handleSubmit}
+      >
         {loading && <Loading />}
-        {/* Phone */}
-        <div className='grid gap-2'>
+        <div>
           <Label htmlFor='phone' className='text-gray-700 capitalize'>
             {global.phone}
           </Label>
@@ -37,7 +40,7 @@ function CheckoutForm() {
             className='focus:ring-2 focus:ring-accent'
           />
         </div>
-        <div className='grid gap-2'>
+        <div>
           <Label htmlFor='email' className='text-gray-700 capitalize'>
             {global.email}
           </Label>
@@ -51,7 +54,7 @@ function CheckoutForm() {
             className='focus:ring-2 focus:ring-accent'
           />
         </div>
-        <div className='grid gap-2'>
+        <div>
           <Label htmlFor='country' className='text-gray-700 capitalize'>
             {global.country}
           </Label>
@@ -65,7 +68,7 @@ function CheckoutForm() {
             className='focus:ring-2 focus:ring-accent'
           />
         </div>
-        <div className='grid gap-2'>
+        <div>
           <Label htmlFor='postalCode' className='text-gray-700 capitalize'>
             {global.postalCode}
           </Label>
@@ -79,7 +82,7 @@ function CheckoutForm() {
             className='focus:ring-2 focus:ring-accent'
           />
         </div>
-        <div className='grid gap-2'>
+        <div>
           <Label htmlFor='city' className='text-gray-700 capitalize'>
             {global.city}
           </Label>
@@ -93,8 +96,7 @@ function CheckoutForm() {
             className='focus:ring-2 focus:ring-accent'
           />
         </div>
-        {/* Address */}
-        <div className='grid gap-2'>
+        <div className='lg:col-span-2'>
           <Label htmlFor='address' className='text-gray-700 capitalize'>
             {global['street address']}
           </Label>
@@ -108,7 +110,7 @@ function CheckoutForm() {
           />
         </div>
         {/* Total + Pay */}
-        <div className='flex items-center justify-between border-t pt-6'>
+        <div className='flex items-center justify-between border-t pt-6 lg:col-span-2'>
           <span className='text-lg font-semibold text-gray-900 capitalize'>
             {global.total}: {formatCurrency(totalAmount)}
           </span>

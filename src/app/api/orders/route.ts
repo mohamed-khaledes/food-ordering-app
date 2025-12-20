@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/prisma'
 import { orderSchema } from '@/features/cart/validations'
+import { OrderProduct } from '@prisma/client'
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,14 +14,22 @@ export async function POST(request: NextRequest) {
       )
     }
     const data: any = result.data
-    // 1️⃣ Calculate subtotal
+    // 1️⃣ Fetch all products in one query
+    const productIds = data.products.map((p: OrderProduct) => p.productId)
+    const products = await db.product.findMany({
+      where: { id: { in: productIds } },
+      include: {
+        sizes: true,
+        extras: true
+      }
+    })
+
+    // Convert to map for O(1) access
+    const productMap = new Map(products.map(p => [p.id, p]))
     let subTotal = 0
 
     for (const item of data.products) {
-      const product = await db.product.findUnique({
-        where: { id: item.productId },
-        include: { sizes: true, extras: true }
-      })
+      const product = productMap.get(item.productId)
 
       if (!product) {
         return NextResponse.json({ error: 'Product not found' }, { status: 404 })
@@ -28,17 +37,24 @@ export async function POST(request: NextRequest) {
 
       let itemPrice = product.basePrice
 
+      // size price
       if (item.sizeId) {
         const size = product.sizes.find(s => s.id === item.sizeId)
         if (!size) {
-          return NextResponse.json({ error: 'Invalid size' }, { status: 400 })
+          return NextResponse.json({ error: 'Invalid size selected' }, { status: 400 })
         }
         itemPrice += size.price
       }
 
+      // extras price
       if (item.extras?.length) {
-        const extras = product.extras.filter(e => item.extras!.includes(e.id))
-        extras.forEach(e => (itemPrice += e.price))
+        for (const extraId of item.extras) {
+          const extra = product.extras.find(e => e.id === extraId)
+          if (!extra) {
+            return NextResponse.json({ error: 'Invalid extra selected' }, { status: 400 })
+          }
+          itemPrice += extra.price
+        }
       }
 
       subTotal += itemPrice * item.quantity

@@ -22,7 +22,7 @@ const Cart = () => {
   return (
     <section className='section-gap'>
       <div className='container'>
-        <h1 className='text-primary text-start font-bold text-4xl italic mb-10 capitalize'>
+        <h1 className='text-primary text-start font-bold text-4xl italic mb-10 uppercase'>
           {global.cart}
         </h1>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-10'>
@@ -30,6 +30,7 @@ const Cart = () => {
           <div>
             <div className='grid grid-cols-2 gap-2 items-center my-2'>
               <Button
+                size={'lg'}
                 className='w-full'
                 variant={payType == 'cash' ? 'default' : 'outline'}
                 onClick={() => setPayType('cash')}
@@ -38,6 +39,7 @@ const Cart = () => {
                 Cash
               </Button>
               <Button
+                size={'lg'}
                 className='w-full'
                 variant={payType == 'card' ? 'default' : 'outline'}
                 onClick={() => setPayType('card')}
