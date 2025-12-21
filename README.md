@@ -1,36 +1,170 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍔 Full‑Stack Food Ordering Platform
 
-## Getting Started
+A **production‑ready full‑stack food ordering application** built with **Next.js App Router**, **Prisma**, **PostgreSQL**, and **Stripe**.
+This project demonstrates **real‑world backend architecture**, **secure payment handling**, and **scalable database design** — exactly how modern e‑commerce systems are built.
 
-First, run the development server:
+> ⚠️ This is **not a demo or tutorial app**. It follows **industry best practices** used in real production systems.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🎯 What This Project Demonstrates
+
+* Designing **secure payment systems** with Stripe
+* Building **server‑trusted pricing logic** (anti‑fraud)
+* Modeling complex relational data with Prisma
+* Writing scalable, transaction‑safe backend code
+* Structuring a clean, maintainable Next.js App Router project
+
+---
+
+## ✨ Key Features
+
+* 🛒 Product catalog with **categories, sizes & extras**
+* 🧮 **Server‑side price calculation** (client cannot manipulate totals)
+* 💳 **Stripe Payment Intents** (Cards, Apple Pay, Google Pay)
+* 🔔 **Stripe Webhooks** as the single source of truth
+* 📦 Order lifecycle management (`PENDING → PAID → DELIVERED`)
+* 🔐 Zod validation for all critical inputs
+* ⚡ Optimized database queries (no N+1 issues)
+* 🧾 Transaction‑safe order creation
+
+---
+
+## 🧱 Tech Stack
+
+**Frontend**
+
+* Next.js (App Router)
+* React
+* TypeScript
+
+**Backend**
+
+* Next.js API Routes
+* Prisma ORM
+* PostgreSQL
+
+**Payments**
+
+* Stripe Payment Intents
+* Stripe Webhooks
+
+**Validation & Safety**
+
+* Zod
+* Prisma Transactions
+
+---
+
+## 🗂️ Project Structure
+
+```
+src/
+├── app/
+│   ├── api/
+│   │   ├── payments/create-intent/   # Create Stripe PaymentIntent
+│   │   ├── webhooks/stripe/           # Stripe webhook (order creation)
+│   │   └── orders/                    # Fetch orders
+│   │
+│   ├── checkout/                      # Checkout UI
+│   └── payment-success/               # Success page
+│
+├── lib/
+│   ├── prisma.ts                      # Prisma client
+│   └── stripe.ts                      # Stripe server client
+│
+├── features/
+│   └── cart/validations.ts            # Zod schemas
+│
+└── prisma/schema.prisma               # Database schema
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🔐 Payment Architecture (Industry‑Standard)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+Client Checkout
+   ↓
+Create PaymentIntent (Server)
+   ↓
+Confirm Payment (Client)
+   ↓
+Stripe Webhook
+   ↓
+Create PAID Order (Server)
+```
 
-## Learn More
+✔ Orders are **never created before payment succeeds**
+✔ Stripe is the **source of truth**
+✔ Webhooks guarantee reliability even if the client disconnects
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ⚙️ Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+DATABASE_URL=postgresql://...
 
-## Deploy on Vercel
+STRIPE_SECRET_KEY=sk_test_XXXX
+STRIPE_WEBHOOK_SECRET=whsec_XXXX
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_XXXX
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🚀 Running the Project Locally
+
+```bash
+npm install
+npx prisma migrate dev
+npm run dev
+```
+
+---
+
+## 🧪 Stripe Local Testing
+
+```bash
+stripe login
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+```
+
+Test card:
+
+```
+4242 4242 4242 4242
+```
+
+---
+
+## 🧠 Engineering Highlights (For Recruiters)
+
+* ✔ Stripe‑first payment architecture (no fake orders)
+* ✔ Secure server‑side pricing logic
+* ✔ Correct webhook handling & idempotency
+* ✔ Prisma relational modeling & transactions
+* ✔ Clean separation between client, server & services
+* ✔ Scalable structure suitable for real production use
+
+---
+
+## 🔮 Possible Extensions
+
+* Admin dashboard for order management
+* Refunds & cancellations via Stripe
+* Inventory & stock validation
+* Email / WhatsApp notifications
+* Multi‑currency support
+
+---
+
+## 👨‍💻 Mohamed Khaled
+
+This project was built to showcase **real backend & full‑stack engineering skills**, focusing on **correct architecture**, **security**, and **scalability** rather than UI demos.
+
+If you’re a recruiter or hiring manager, this repository reflects how I approach **production‑level systems**.
+
+---
+
+⭐ If you find this project interesting, feel free to star or fork it.
