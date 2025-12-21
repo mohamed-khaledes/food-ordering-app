@@ -8,16 +8,35 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useTrans } from '@/lib/translations/client'
 import { Loading } from '@/components/ui/loading'
+import { stripe } from '@/lib/stripe'
 
 function CheckoutForm() {
   const { global } = useTrans()
   const { loading, handleChange, handleSubmit, cart, data } = useCreateOrder()
   const totalAmount = getTotalAmount(cart)
 
-  if (!cart || cart.length === 0) return null
+  const finishOrder = async () => {
+    const { clientSecret } = await fetch('/api/payments/create-intent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(res => res.json())
 
+    // await stripe.confirmPayment({
+    //   elements,
+    //   clientSecret,
+    //   confirmParams: {
+    //     return_url: `${window.location.origin}/payment-success`
+    //   }
+    // })
+  }
+
+  if (!cart || cart.length === 0) return null
   return (
     <div className='mx-auto bg-white shadow-lg rounded-2xl p-5 border border-gray-200'>
+      <Button type='button' onClick={() => finishOrder()}>
+        test
+      </Button>
       <h2 className='text-3xl font-bold text-primary text-center mb-6 capitalize'>
         {global.checkout}
       </h2>
