@@ -12,19 +12,15 @@ async function Hero() {
       <div className='grid grid-cols-1 md:grid-cols-2 gap-5 text-start'>
         <div className='flex items-center justify-center'>
           <div>
-            <h1 className='text-5xl md:text-7xl font-extrabold leading-tight'>
-              Fresh • Healthy • Delicious
-            </h1>
-            <p className='mt-4 text-lg md:text-xl text-gray-600 max-w-xl'>
-              Your meals delivered fresh every day. Made with love, made for your health.
-            </p>
+            <h1 className='text-5xl md:text-7xl font-extrabold leading-tight'>{hero.title}</h1>
+            <p className='mt-4 text-lg md:text-xl text-gray-600 max-w-xl'>{hero.description}</p>
             <div className='mt-8 flex gap-4'>
               <Link href='/menu'>
-                <Button className='px-8 py-6 text-lg rounded-2xl'>Explore Menu</Button>
+                <Button className='px-8 py-6 text-lg rounded-2xl'>{hero.orderNow}</Button>
               </Link>
-              <Link href='/plans'>
+              <Link href='/menu'>
                 <Button variant='outline' className='px-8 py-6 text-lg rounded-2xl border-2'>
-                  View Plans
+                  {hero.learnMore}
                 </Button>
               </Link>
             </div>

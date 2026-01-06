@@ -1,22 +1,43 @@
 'use client'
 import React from 'react'
 import { motion } from 'framer-motion'
+import { useParams } from 'next/navigation'
+import { useTrans } from '@/lib/translations/client'
 
 const WhyUs = () => {
-  const data = [
-    {
-      title: 'Fresh Ingredients',
-      text: 'We use high‑quality, farm‑fresh ingredients to prepare your meals daily.'
-    },
-    {
-      title: 'Healthy & Balanced',
-      text: 'Nutritious meals crafted by experts to fuel your lifestyle.'
-    },
-    {
-      title: 'Delivered Daily',
-      text: 'Your food arrives fresh at your doorstep every single day.'
-    }
-  ]
+  const { locale } = useParams()
+  const { global } = useTrans()
+  const data: any = {
+    en: [
+      {
+        title: 'Fresh Ingredients',
+        text: 'We use high-quality, farm-fresh ingredients to prepare your meals daily.'
+      },
+      {
+        title: 'Healthy & Balanced',
+        text: 'Nutritious meals crafted by experts to fuel your lifestyle.'
+      },
+      {
+        title: 'Delivered Daily',
+        text: 'Your food arrives fresh at your doorstep every single day.'
+      }
+    ],
+    ar: [
+      {
+        title: 'مكونات طازجة',
+        text: 'نستخدم مكونات عالية الجودة وطازجة من المزارع لتحضير وجباتك يوميًا.'
+      },
+      {
+        title: 'صحي ومتوازن',
+        text: 'وجبات غذائية متكاملة أعدّها خبراء لدعم أسلوب حياتك.'
+      },
+      {
+        title: 'توصيل يومي',
+        text: 'تصلك وجباتك طازجة إلى باب منزلك كل يوم.'
+      }
+    ]
+  }
+
   return (
     <section className='py-24 bg-gray-50'>
       <div className='container mx-auto px-6 text-center'>
@@ -27,11 +48,11 @@ const WhyUs = () => {
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className='text-4xl font-bold mb-12'
         >
-          Why Choose Us
+          {global['Why Choose Us']}
         </motion.h2>
 
         <div className='grid grid-cols-1 md:grid-cols-3 gap-12'>
-          {data.map((item, index) => (
+          {data?.[locale as string]?.map((item: { title: string; text: string }, index: number) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}

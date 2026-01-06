@@ -1,9 +1,9 @@
 {
-  "logo": "Dar Al-Zad",
+  "logo": "Akla",
   "home": {
     "hero": {
-      "title": "Slice into Happiness",
-      "description": "Craving pizza? We've got you covered with fresh ingredients, endless flavors, and the fastest delivery. Your perfect slice is just a tap away!",
+      "title": "Fresh • Healthy • Delicious",
+      "description": "Your meals delivered fresh every day. Made with love, made for your health.",
       "orderNow": "Order now",
       "learnMore": "Learn more"
     },
@@ -279,6 +279,8 @@
     "followUs": "Follow Us",
     "confirm": "confirm",
     "email": "email",
-    "postalCode": "postal code"
+    "postalCode": "postal code",
+    "popular meals": "popular meals",
+    "Why Choose Us": "Why Choose Us"
   }
 }

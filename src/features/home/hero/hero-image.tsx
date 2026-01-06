@@ -20,7 +20,7 @@ const HeroImage = () => {
       <img
         src={streetFoodImg.src}
         alt='Healthy Meal'
-        className='relative rounded-full shadow-2xl w-[350px] h-[350px] lg:w-[450px] lg:h-[450px] xl:w-[600px] xl:h-[600px]'
+        className='relative rounded-full shadow-2xl w-[300px] h-[300px] lg:w-[400px] lg:h-[400px] xl:w-[500px] xl:h-[500px]'
         loading='lazy'
       />
     </motion.div>

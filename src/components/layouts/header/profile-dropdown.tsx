@@ -31,7 +31,7 @@ export default function ProfileDropdown({ initialSession }: Props) {
   const user = session?.data?.user
   if (!user) return
   return (
-    <DropdownMenu>
+    <DropdownMenu dir={locale == 'ar' ? 'rtl' : 'ltr'}>
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' className='rounded-full p-0'>
           <Avatar className='h-9 w-9'>
@@ -63,7 +63,7 @@ export default function ProfileDropdown({ initialSession }: Props) {
           </Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem asChild>
+        {/* <DropdownMenuItem asChild>
           <Link
             href={isAdmin ? `/${Routes.ADMIN}` : `/${locale}/${Routes.PROFILE}`}
             className='flex items-center gap-2'
@@ -71,7 +71,7 @@ export default function ProfileDropdown({ initialSession }: Props) {
             <Settings className='h-4 w-4' />
             Settings
           </Link>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
 
         {/* <DropdownMenuItem asChild>
           <Link href='/billing' className='flex items-center gap-2'>
@@ -90,7 +90,7 @@ export default function ProfileDropdown({ initialSession }: Props) {
           }}
         >
           <LogOut className='h-4 w-4' />
-          Sign out
+          {translations.global.signOut}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
