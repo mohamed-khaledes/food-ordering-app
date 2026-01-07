@@ -9,10 +9,10 @@ const About = async () => {
   return (
     <section id='about' className='py-20 bg-white dark:bg-gray-900'>
       <div className='container mx-auto px-4'>
-        <h2 className='text-4xl font-bold text-center mb-10'>About Us</h2>
+        <h2 className='text-4xl font-bold text-center mb-10'>{about.aboutUs}</h2>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-10 items-center'>
           <div className='space-y-4'>
-            <h3 className='text-2xl font-semibold'>Our Story</h3>
+            <h3 className='text-2xl font-semibold'>{about.ourStory}</h3>
             <div className='mt-8 max-w-3xl mx-auto text-start text-gray-600 flex flex-col gap-6 leading-relaxed tracking-wide'>
               <p className='transition-all duration-300 hover:text-gray-800'>
                 {about.descriptions.one}

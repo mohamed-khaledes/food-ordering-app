@@ -281,6 +281,12 @@
     "email": "email",
     "postalCode": "postal code",
     "popular meals": "popular meals",
-    "Why Choose Us": "Why Choose Us"
+    "Why Choose Us": "Why Choose Us",
+    "Ready to Eat Clean?": "Ready to Eat Clean?",
+    "Choose your meal": "Choose your meal plan and enjoy fresh food delivered daily to your doorstep.",
+    "Choose Your Plan": "Choose Your Plan",
+    "name": "Name",
+    "message": "Message",
+    "send": "send"
   }
 }

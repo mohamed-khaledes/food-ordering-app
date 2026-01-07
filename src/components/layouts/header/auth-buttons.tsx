@@ -18,31 +18,26 @@ function AuthButtons({
   const router = useRouter()
   const pathname = usePathname()
   const { locale } = useParams()
+  if (session.data?.user) return
   return (
-    <div>
-      {!session.data?.user && (
-        <div className='flex items-center gap-2'>
-          <Button
-            className='!px-4 !rounded-full'
-            variant={
-              pathname.startsWith(`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`)
-                ? 'outline'
-                : 'default'
-            }
-            size='lg'
-            onClick={() => router.push(`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`)}
-          >
-            {translations.navbar.login}
-          </Button>
-          <Button
-            className='!px-4 !rounded-full'
-            size='lg'
-            onClick={() => router.push(`/${locale}/${Routes.AUTH}/${Pages.Register}`)}
-          >
-            {translations.navbar.register}
-          </Button>
-        </div>
-      )}
+    <div className='flex items-center gap-2'>
+      <Button
+        className='!px-4 !rounded-full'
+        variant={
+          pathname.startsWith(`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`) ? 'outline' : 'default'
+        }
+        size='lg'
+        onClick={() => router.push(`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`)}
+      >
+        {translations.navbar.login}
+      </Button>
+      <Button
+        className='!px-4 !rounded-full'
+        size='lg'
+        onClick={() => router.push(`/${locale}/${Routes.AUTH}/${Pages.Register}`)}
+      >
+        {translations.navbar.register}
+      </Button>
     </div>
   )
 }

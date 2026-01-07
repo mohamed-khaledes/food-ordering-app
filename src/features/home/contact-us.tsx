@@ -1,30 +1,32 @@
+import { getTrans } from '@/lib/translations/server'
 import React from 'react'
 
-const ContactUs = () => {
+const ContactUs = async () => {
+  const { global } = await getTrans()
   return (
     <section id='contact' className='py-20 bg-gray-100 dark:bg-gray-800'>
       <div className='container mx-auto px-4'>
-        <h2 className='text-4xl font-bold text-center mb-10'>Contact Us</h2>
+        <h2 className='text-4xl font-bold text-center mb-10'>{global.contact}</h2>
 
         <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
           <form className='space-y-4 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg'>
             <input
               type='text'
-              placeholder='Your Name'
+              placeholder={global.name}
               className='w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800'
             />
             <input
               type='email'
-              placeholder='Your Email'
+              placeholder={global.email}
               className='w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800'
             />
             <textarea
-              placeholder='Message'
+              placeholder={global.message}
               className='w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800'
               // rows='5'
             ></textarea>
             <button className='px-6 py-3 bg-black text-white rounded-xl w-full hover:bg-gray-800 transition'>
-              Send Message
+              {global.send}
             </button>
           </form>
 

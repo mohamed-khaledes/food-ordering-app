@@ -31,17 +31,22 @@ const Card = ({
         transition={{ duration: 0.6, ease: 'easeOut' }}
         loading='lazy'
       />
-      <div className='p-3 md:p-6 text-start h-[220px]'>
-        <div className='flex items-center justify-between mb-4 mt-4'>
-          <h3 className='text-md md:text-xl font-semibold mb-2 first-letter:uppercase'>
+      <div className='relative p-3 md:p-6 text-start h-[220px]'>
+        <div className='flex items-center justify-between my-2 md:my-3'>
+          <h3 className='text-sm md:text-xl font-semibold mb-2 first-letter:uppercase'>
             {item?.name}
           </h3>
-          <strong className='text-accent text-md md:text-lg bg-accent/10 px-3 py-1 rounded-full'>
+          <strong className='text-accent text-sm md:text-lg bg-accent/10 px-2 md:px-3 py-1 rounded-full'>
             {formatCurrency(item?.basePrice)}
           </strong>
         </div>
         <p className='text-gray-600 text-sm mb-4'>{item?.description?.slice(0, 80)}</p>
-        {!isAdmin && <AddToCart item={item} />}
+
+        {!isAdmin && (
+          <div className='absolute bottom-3'>
+            <AddToCart item={item} />
+          </div>
+        )}
       </div>
     </motion.div>
   )

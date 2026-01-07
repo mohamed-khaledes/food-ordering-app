@@ -1,12 +1,12 @@
 'use client'
 import React from 'react'
 import { motion } from 'framer-motion'
-import streetFoodImg from '@public/assets/images/street-food-still-life.jpg'
+import heroImg from '@public/assets/images/hero.png'
 
 const HeroImage = () => {
   return (
     <motion.div
-      className='relative'
+      className='relative order-first md:order-last mx-auto'
       initial={{ opacity: 0, scale: 0.9, x: 150 }}
       animate={{ opacity: 1, scale: 1, x: 0 }}
       transition={{ duration: 1.2, ease: 'easeOut' }}
@@ -18,7 +18,7 @@ const HeroImage = () => {
       />
 
       <img
-        src={streetFoodImg.src}
+        src={heroImg.src}
         alt='Healthy Meal'
         className='relative rounded-full shadow-2xl w-[300px] h-[300px] lg:w-[400px] lg:h-[400px] xl:w-[500px] xl:h-[500px]'
         loading='lazy'

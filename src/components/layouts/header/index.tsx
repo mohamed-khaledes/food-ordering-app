@@ -28,7 +28,9 @@ const Header = async () => {
             <CartButton />
             <div className='flex flex-nowrap gap-2'>
               <LanguageSwitcher />
-              <AuthButtons initialSession={initialSession} translations={t} />
+              <div className='hidden lg:block'>
+                <AuthButtons initialSession={initialSession} translations={t} />
+              </div>
             </div>
             <ProfileDropdown initialSession={initialSession} />
           </div>

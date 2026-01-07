@@ -8,13 +8,14 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useTrans } from '@/lib/translations/client'
 import { Loading } from '@/components/ui/loading'
-import { stripe } from '@/lib/stripe'
+// import { stripe } from '@/lib/stripe'
+import { useSession } from 'next-auth/react'
 
 function CheckoutForm() {
+  const { status } = useSession()
   const { global } = useTrans()
   const { loading, handleChange, handleSubmit, cart, data } = useCreateOrder()
   const totalAmount = getTotalAmount(cart)
-
   const finishOrder = async () => {
     const { clientSecret } = await fetch('/api/payments/create-intent', {
       method: 'POST',
@@ -34,9 +35,9 @@ function CheckoutForm() {
   if (!cart || cart.length === 0) return null
   return (
     <div className='mx-auto bg-white shadow-lg rounded-2xl p-5 border border-gray-200'>
-      <Button type='button' onClick={() => finishOrder()}>
+      {/* <Button type='button' onClick={() => finishOrder()}>
         test
-      </Button>
+      </Button> */}
       <h2 className='text-3xl font-bold text-primary text-center mb-6 capitalize'>
         {global.checkout}
       </h2>
@@ -133,9 +134,17 @@ function CheckoutForm() {
           <span className='text-lg font-semibold text-gray-900 capitalize'>
             {global.total}: {formatCurrency(totalAmount)}
           </span>
-          <Button className='h-11 px-6 text-white bg-accent hover:bg-accent/90 rounded-xl shadow-md capitalize cursor-pointer'>
-            {global['confirm']}
-          </Button>
+          <div className='text-center'>
+            <Button
+              disabled={status == 'unauthenticated'}
+              className='h-11 text-white bg-primary hover:bg-accent/90 rounded-lg shadow-md capitalize cursor-pointer'
+            >
+              {global['confirm']}
+            </Button>
+            {status == 'unauthenticated' && (
+              <span className='block text-[10px] text-red-600 my-2'>please login first</span>
+            )}
+          </div>
         </div>
       </form>
     </div>
