@@ -44,5 +44,5 @@ function Menu({ categories }: { categories: any[] }) {
     </div>
   )
 }
-
+export const dynamic = 'force-dynamic'
 export default Menu
