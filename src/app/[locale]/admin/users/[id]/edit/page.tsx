@@ -15,7 +15,7 @@ async function EditUserPage({ params }: { params: Promise<{ id: string; locale: 
     <main>
       <section className='section-gap'>
         <div className='container'>
-          <EditUserForm translations={translations} user={user} />
+          <EditUserForm translations={translations} user={user as any} />
         </div>
       </section>
     </main>
