@@ -4,12 +4,6 @@ import { getTrans } from '@/lib/translations/server'
 import { getUser } from '@/server/db/users'
 import { redirect } from 'next/navigation'
 
-// export async function generateStaticParams() {
-//   const users = await getUsers()
-
-//   return users.map(user => ({ userId: user.id }))
-// }
-
 async function EditUserPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
   const { locale, id } = await params
   const translations = await getTrans()

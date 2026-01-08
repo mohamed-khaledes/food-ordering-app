@@ -1,9 +1,15 @@
+import React from 'react'
 import Menu from '@/features/menu'
 import { getProductsByCategory } from '@/server/db/products'
-import React from 'react'
 
 const MenuPage = async () => {
-  const categories = await getProductsByCategory()
+  let categories: any[] = []
+
+  try {
+    categories = await getProductsByCategory()
+  } catch (err) {
+    console.error('Failed to fetch categories', err)
+  }
   return (
     <main>
       <section className='section-gap'>
