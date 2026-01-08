@@ -1,11 +1,10 @@
 import AdminTabs from '@/features/admin/tabs'
-import { Locale } from '@/i18n.config'
 import { getTrans } from '@/lib/translations/server'
 
 async function AdminLayout({
   children
 }: {
-  params: Promise<{ locale: Locale }>
+  params: Promise<{ locale: string }>
   children: React.ReactNode
 }) {
   const translations = await getTrans()

@@ -4,7 +4,7 @@ import Card from '../shared/card'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 
-function Menu({ categories }: { categories: Category[] }) {
+function Menu({ categories }: { categories: any[] }) {
   const [category, setCategory] = useState('')
   const products =
     categories?.find(it => it?.name == category)?.Product ||

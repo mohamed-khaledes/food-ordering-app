@@ -14,7 +14,7 @@ async function BestSellers() {
         <div className='text-center mb-4'>
           <MainHead subTitle={bestSeller.checkOut} title={bestSeller.OurBestSellers} />
         </div>
-        <Menu items={products} />
+        <Menu categories={products} />
       </div>
     </section>
   )
