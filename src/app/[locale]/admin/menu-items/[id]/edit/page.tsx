@@ -19,7 +19,7 @@ async function EditProductPage({ params }: { params: Promise<{ locale: string; i
     <main>
       <section>
         <div className='container'>
-          <MenuForm categories={categories} translations={translations} product={product} />
+          <MenuForm categories={categories} translations={translations} product={product as any} />
         </div>
       </section>
     </main>
