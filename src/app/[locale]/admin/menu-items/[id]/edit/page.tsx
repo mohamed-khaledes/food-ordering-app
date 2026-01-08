@@ -1,16 +1,14 @@
 import { Pages, Routes } from '@/constants/enums'
-import { Locale } from '@/i18n.config'
-import { getProduct, getProducts } from '@/server/db/products'
+import { getProduct } from '@/server/db/products'
 import { redirect } from 'next/navigation'
 import { getCategories } from '@/server/db/categories'
 import { getTrans } from '@/lib/translations/server'
 import MenuForm from '@/features/admin/menu-items/form'
 
-export async function generateStaticParams() {
-  const products = await getProducts()
-
-  return products.map(product => ({ id: product.id }))
-}
+// export async function generateStaticParams() {
+//   const products = await getProducts()
+//   return products.map(product => ({ id: product.id }))
+// }
 async function EditProductPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { id, locale } = await params
   const translations = await getTrans()

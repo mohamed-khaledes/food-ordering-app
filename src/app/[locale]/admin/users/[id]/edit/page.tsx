@@ -1,15 +1,14 @@
 import { Pages, Routes } from '@/constants/enums'
 import EditUserForm from '@/features/profile/form'
-import { Locale } from '@/i18n.config'
 import { getTrans } from '@/lib/translations/server'
-import { getUser, getUsers } from '@/server/db/users'
+import { getUser } from '@/server/db/users'
 import { redirect } from 'next/navigation'
 
-export async function generateStaticParams() {
-  const users = await getUsers()
+// export async function generateStaticParams() {
+//   const users = await getUsers()
 
-  return users.map(user => ({ userId: user.id }))
-}
+//   return users.map(user => ({ userId: user.id }))
+// }
 
 async function EditUserPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
   const { locale, id } = await params
