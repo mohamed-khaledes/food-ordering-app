@@ -7,7 +7,7 @@ import { UserRole } from '@prisma/client'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 
-async function ProfilePage({ params }: { params: Promise<{ locale: Locale }> }) {
+async function ProfilePage({ params }: { params: Promise<{ locale: string }> }) {
   const session = await getServerSession(authOptions)
   const { locale } = await params
   const translations = await getTrans()

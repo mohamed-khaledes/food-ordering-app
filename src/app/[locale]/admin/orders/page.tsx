@@ -2,7 +2,7 @@ import { Locale } from '@/i18n.config'
 import { Order } from '@prisma/client'
 import { getOrders } from '@/features/admin/orders/_actions/orders'
 
-async function OrdersPage({ params }: { params: Promise<{ locale: Locale }> }) {
+async function OrdersPage({ params }: { params: Promise<{ locale: string }> }) {
   const orders = await getOrders()
   return (
     <main>

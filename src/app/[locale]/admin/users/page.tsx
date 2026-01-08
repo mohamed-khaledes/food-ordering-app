@@ -7,7 +7,7 @@ import { User } from '@prisma/client'
 import DeleteUserButton from '@/features/admin/users/delete-btn'
 import { getUsers } from '@/server/db/users'
 
-async function UsersPage({ params }: { params: Promise<{ locale: Locale }> }) {
+async function UsersPage({ params }: { params: Promise<{ locale: string }> }) {
   const users = await getUsers()
   return (
     <main>

@@ -4,7 +4,7 @@ import CategoryForm from '@/features/admin/categories/form'
 import { getTrans } from '@/lib/translations/server'
 import CategoryItem from '@/features/admin/categories/item'
 
-async function CategoriesPage({ params }: { params: Promise<{ locale: Locale }> }) {
+async function CategoriesPage({ params }: { params: Promise<{ locale: string }> }) {
   const categories = await getCategories()
   const translations = await getTrans()
 

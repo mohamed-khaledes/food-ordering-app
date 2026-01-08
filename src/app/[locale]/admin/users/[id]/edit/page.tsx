@@ -11,7 +11,7 @@ export async function generateStaticParams() {
   return users.map(user => ({ userId: user.id }))
 }
 
-async function EditUserPage({ params }: { params: Promise<{ id: string; locale: Locale }> }) {
+async function EditUserPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
   const { locale, id } = await params
   const translations = await getTrans()
   const user = await getUser(id)

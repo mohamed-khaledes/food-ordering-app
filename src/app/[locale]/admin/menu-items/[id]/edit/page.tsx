@@ -11,7 +11,7 @@ export async function generateStaticParams() {
 
   return products.map(product => ({ id: product.id }))
 }
-async function EditProductPage({ params }: { params: Promise<{ locale: Locale; id: string }> }) {
+async function EditProductPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { id, locale } = await params
   const translations = await getTrans()
   const product = await getProduct(id)

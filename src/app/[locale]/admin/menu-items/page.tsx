@@ -11,7 +11,7 @@ import { redirect } from 'next/navigation'
 import { getTrans } from '@/lib/translations/server'
 import MenuItems from '@/features/admin/menu-items'
 
-async function MenuItemsPage({ params }: { params: Promise<{ locale: Locale }> }) {
+async function MenuItemsPage({ params }: { params: Promise<{ locale: string }> }) {
   const locale = (await params).locale
   const translations = await getTrans()
   const session = await getServerSession(authOptions)
