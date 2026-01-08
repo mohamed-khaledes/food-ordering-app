@@ -1,4 +1,3 @@
-import { Locale } from '@/i18n.config'
 import { getCategories } from '@/server/db/categories'
 import CategoryForm from '@/features/admin/categories/form'
 import { getTrans } from '@/lib/translations/server'
