@@ -10,14 +10,18 @@ import { selectCartItems } from '@/features/cart/slice'
 const CartButton = () => {
   const cart = useAppSelector(selectCartItems)
   const cartQuantity = getCartQuantity(cart)
+
   return (
-    <Link href={`/${Routes.CART}`} className='block relative group'>
-      <span className='absolute -top-4 start-4 w-5 h-5 text-sm bg-primary rounded-full text-black text-center'>
-        {cartQuantity}
-      </span>
-      <ShoppingCartIcon
-        className={`text-accent group-hover:text-primary duration-200 transition-colors !w-6 !h-6`}
-      />
+    <Link
+      href={`/${Routes.CART}`}
+      className='relative w-9 h-9 flex items-center justify-center rounded-xl hover:bg-muted/60 transition-colors group'
+    >
+      <ShoppingCartIcon className='w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors' />
+      {cartQuantity > 0 && (
+        <span className='absolute -top-1 -right-1 w-4 h-4 text-[10px] font-bold bg-primary text-foreground rounded-full flex items-center justify-center leading-none'>
+          {cartQuantity}
+        </span>
+      )}
     </Link>
   )
 }

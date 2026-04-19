@@ -1,8 +1,6 @@
-import dynamic from 'next/dynamic'
-import { Suspense } from 'react'
 import '../globals.css'
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
-import { Locale } from '@/i18n.config'
 import { Toaster } from '@/components/ui/toast'
 import { Roboto, Cairo } from 'next/font/google'
 import Header from '@/components/layouts/header'
@@ -11,7 +9,7 @@ import ReduxProvider from '@/providers/redux-provider'
 import { Directions, Languages } from '@/constants/enums'
 import ScrollToTopBtn from '@/components/ui/scroll-to-top'
 import NextAuthSessionProvider from '@/providers/NextAuthSessionProvider'
-const Footer = dynamic(() => import('@/components/layouts/footer'))
+import Footer from '@/components/layouts/footer'
 
 export async function generateStaticParams() {
   return [{ locale: Languages.ARABIC }, { locale: Languages.ENGLISH }]

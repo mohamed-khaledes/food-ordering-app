@@ -2,10 +2,11 @@
   "logo": "Akla",
   "home": {
     "hero": {
-      "title": "Fresh • Healthy • Delicious",
-      "description": "Your meals delivered fresh every day. Made with love, made for your health.",
+      "title": "Food that fuels your best days",
+      "description": "Chef-crafted meals with locally sourced ingredients, delivered to your door in minutes. No compromise — just great food.",
       "orderNow": "Order now",
-      "learnMore": "Learn more"
+      "learnMore": "Learn more",
+      "explore menu": "explore menu"
     },
     "bestSeller": {
       "checkOut": "check out",

@@ -16,35 +16,60 @@ const Card = ({
   return (
     <motion.div
       key={key}
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: +key * 0.2 }}
-      className='w-full flex md:flex-col bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1'
+      transition={{ duration: 0.5, delay: +key * 0.1 }}
+      className='group w-full flex flex-col bg-background rounded-3xl border border-border hover:border-primary/40 transition-all duration-300 overflow-hidden hover:-translate-y-1.5'
     >
-      {/* Image Wrapper with hover animation */}
-      <motion.img
-        src={item?.image || null}
-        alt={`Meal ${item?.id}`}
-        className='object-cover w-[150px] md:w-[250px] h-[150px] md:h-[250px] mx-auto my-auto'
-        whileHover={{ scale: 1.1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-        loading='lazy'
-      />
-      <div className='relative p-3 md:p-6 text-start h-[220px]'>
-        <div className='flex items-center justify-between my-2 md:my-3'>
-          <h3 className='text-sm md:text-xl font-semibold mb-2 first-letter:uppercase'>
-            {item?.name}
-          </h3>
-          <strong className='text-accent text-sm md:text-lg bg-accent/10 px-2 md:px-3 py-1 rounded-full'>
+      {/* Image */}
+      <div className='relative overflow-hidden bg-white h-[220px]'>
+        <motion.img
+          src={item?.image || null}
+          alt={`Meal ${item?.id}`}
+          className='w-full h-full object-contain'
+          whileHover={{ scale: 1.06 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          loading='lazy'
+        />
+        {/* Price badge overlaid on image */}
+        <div className='absolute top-3 right-3 bg-background/90 backdrop-blur-sm border border-border rounded-full px-3 py-1'>
+          <span className='text-sm font-semibold text-foreground'>
             {formatCurrency(item?.basePrice)}
-          </strong>
+          </span>
         </div>
-        <p className='text-gray-600 text-sm mb-4'>{item?.description?.slice(0, 80)}</p>
+      </div>
 
-        {!isAdmin && (
-          <div className='absolute bottom-3'>
-            <AddToCart item={item} />
+      {/* Content */}
+      <div className='flex flex-col flex-1 p-5'>
+        {/* Name + category */}
+        <div className='mb-2'>
+          <h3 className='text-base font-bold leading-snug first-letter:uppercase'>{item?.name}</h3>
+          {item?.category && (
+            <span className='text-xs text-muted-foreground uppercase tracking-widest mt-0.5 inline-block'>
+              {item.category}
+            </span>
+          )}
+        </div>
+
+        {/* Description */}
+        <p className='text-sm text-muted-foreground leading-relaxed flex-1 mb-4'>
+          {item?.description?.slice(0, 90)}
+          {item?.description?.length > 90 && '...'}
+        </p>
+
+        {/* Divider */}
+        <div className='border-t border-border mb-4' />
+
+        {/* Footer */}
+        {!isAdmin ? (
+          <AddToCart item={item} />
+        ) : (
+          <div className='flex items-center justify-between'>
+            <span className='text-xs text-muted-foreground uppercase tracking-widest'>
+              Admin view
+            </span>
+            <strong className='text-sm font-semibold'>{formatCurrency(item?.basePrice)}</strong>
           </div>
         )}
       </div>

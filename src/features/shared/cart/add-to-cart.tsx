@@ -37,7 +37,7 @@ export default function AddToCart({ item }: { item: ProductWithRelations }) {
         <Button
           type='button'
           size='lg'
-          className='mt-4 text-white rounded-full !px-8 cursor-pointer'
+          className='mt-4 text-white rounded-full !px-8 cursor-pointer bg-foreground '
         >
           <span>Add To Cart</span>
         </Button>

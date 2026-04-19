@@ -1,9 +1,5 @@
-import Landing from '@/features/home'
+import Home from '@/features/home'
 
-export default async function Home() {
-  return (
-    <main>
-      <Landing />
-    </main>
-  )
+export default async function HomePage() {
+  return <Home />
 }

@@ -5,21 +5,23 @@ import Cta from './cta'
 import About from './about'
 import ContactUs from './contact-us'
 
-export default function Landing() {
+export default function Home() {
   return (
-    <div className='w-full overflow-hidden bg-white text-gray-900'>
-      {/* Hero Section */}
-      <Hero />
-      {/* Featured Meals */}
-      <Featured />
-      {/* Why Us Section */}
-      <WhyUs />
-      {/* CTA Section */}
-      <Cta />
-      {/*about */}
-      <About />
-      {/*contact us */}
-      <ContactUs />
-    </div>
+    <main>
+      <div className='w-full overflow-hidden bg-white text-gray-900'>
+        {/* Hero Section */}
+        <Hero />
+        {/* Featured Meals */}
+        <Featured />
+        {/* Why Us Section */}
+        <WhyUs />
+        {/* CTA Section */}
+        <Cta />
+        {/*about */}
+        <About />
+        {/*contact us */}
+        <ContactUs />
+      </div>
+    </main>
   )
 }
