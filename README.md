@@ -1,6 +1,7 @@
 # 🍔 Full‑Stack Food Ordering Platform
 LIVE: https://akla-pi.vercel.app/en
-<img width="1901" height="917" alt="Screenshot_18" src="https://github.com/user-attachments/assets/105298fc-79c5-4e32-b404-45e26e2a3add" />
+<img width="1898" height="953" alt="akla" src="https://github.com/user-attachments/assets/f88e0ff0-bf82-4057-88a9-307bb4f97e52" />
+
 
 A **production‑ready full‑stack food ordering application** built with **Next.js App Router**, **Prisma**, **PostgreSQL**, and **Stripe**.
 This project demonstrates **real‑world backend architecture**, **secure payment handling**, and **scalable database design** — exactly how modern e‑commerce systems are built.
