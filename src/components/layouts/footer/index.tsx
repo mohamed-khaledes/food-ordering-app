@@ -1,6 +1,7 @@
 import Link from '@/components/link'
 import { getTrans } from '@/lib/translations/server'
 import { Facebook, Instagram, Twitter, Youtube, Linkedin } from 'lucide-react'
+import logo from '../../../../public/logo.png'
 
 const socialLinks = [
   { href: 'https://facebook.com', icon: Facebook, label: 'Facebook' },
@@ -53,10 +54,7 @@ const Footer = async () => {
           <div className='lg:col-span-2 flex flex-col gap-5'>
             <div>
               <div className='inline-flex items-center gap-2 mb-3'>
-                <div className='w-8 h-8 rounded-xl bg-primary flex items-center justify-center'>
-                  <span className='text-foreground font-bold text-sm'>K</span>
-                </div>
-                <span className='text-lg font-bold text-background'>Kemetraa</span>
+                <img src={logo.src} alt='akla' loading='lazy' className='w-[70px] lg:w-[90px]' />
               </div>
               <p className='text-sm text-background/50 leading-relaxed max-w-xs'>
                 Chef-crafted meals with locally sourced ingredients, delivered fresh to your door
@@ -124,8 +122,8 @@ const Footer = async () => {
         {/* Bottom bar */}
         <div className='pt-8 flex flex-col sm:flex-row items-center justify-between gap-4'>
           <p className='text-xs text-background/40'>
-            © {new Date().getFullYear()} <span className='text-primary font-medium'>Kemetraa</span>{' '}
-            {global.copyRight}
+            © {new Date().getFullYear()}{' '}
+            <span className='text-primary font-medium'>Mohamed khaled</span> {global.copyRight}
           </p>
           <div className='flex items-center gap-1.5'>
             <span className='w-1.5 h-1.5 rounded-full bg-primary animate-pulse' />

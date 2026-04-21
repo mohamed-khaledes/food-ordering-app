@@ -17,11 +17,10 @@ function Navbar({ initialSession }: { initialSession: Session | null }) {
   const pathname = usePathname()
 
   const links = [
-    { id: crypto.randomUUID(), title: translations.navbar.menu, href: Routes.MENU },
-    { id: crypto.randomUUID(), title: translations.navbar.about, href: Routes.ABOUT },
-    { id: crypto.randomUUID(), title: translations.navbar.contact, href: Routes.CONTACT }
+    { id: 'menu', title: translations.navbar.menu, href: Routes.MENU },
+    { id: 'about', title: translations.navbar.about, href: Routes.ABOUT },
+    { id: 'contact', title: translations.navbar.contact, href: Routes.CONTACT }
   ]
-
   return (
     <nav className='order-last md:order-none'>
       {/* Mobile trigger — hidden at md and above */}

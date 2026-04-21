@@ -40,8 +40,15 @@ export default async function RootLayout({
 }>) {
   const locale = (await params).locale
   return (
-    <html lang={locale} dir={locale === Languages.ARABIC ? Directions.RTL : Directions.LTR}>
-      <body className={locale === Languages.ARABIC ? cairo.className : roboto.className}>
+    <html
+      suppressHydrationWarning
+      lang={locale}
+      dir={locale === Languages.ARABIC ? Directions.RTL : Directions.LTR}
+    >
+      <body
+        className={locale === Languages.ARABIC ? cairo.className : roboto.className}
+        suppressHydrationWarning
+      >
         <Suspense fallback={<LoadingPage />}>
           <NextAuthSessionProvider>
             <ReduxProvider>

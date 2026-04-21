@@ -2,6 +2,7 @@ import Toast from '@/components/ui/toast'
 import { Pages, Routes } from '@/constants/enums'
 import useFormFields from '@/hooks/useFormFields'
 import { useTrans } from '@/lib/translations/client'
+import { ValidationErrors } from '@/validations/auth'
 import { signIn } from 'next-auth/react'
 import { useParams, useRouter } from 'next/navigation'
 import { useRef, useState } from 'react'
@@ -10,7 +11,7 @@ export const useSigninForm = () => {
   const router = useRouter()
   const { locale } = useParams()
   const formRef = useRef<HTMLFormElement>(null)
-  const [error, setError] = useState({})
+  const [error, setError] = useState<ValidationErrors>()
   const [isLoading, setIsLoading] = useState(false)
   const translations = useTrans()
   const { getFormFields } = useFormFields({
