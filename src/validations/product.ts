@@ -29,23 +29,23 @@ const imageValidation = (translations: Translations, isRequired: boolean) => {
           return true
         },
         {
-          message: translations.admin['menu-items'].form.image.validation.required
+          message: translations.admin['menu'].form.image.validation.required
         }
       )
 }
 const getCommonValidations = (translations: Translations) => {
   return {
     name: z.string().trim().min(1, {
-      message: translations.admin['menu-items'].form.name.validation.required
+      message: translations.admin['menu'].form.name.validation.required
     }),
     description: z.string().trim().min(1, {
-      message: translations.admin['menu-items'].form.description.validation.required
+      message: translations.admin['menu'].form.description.validation.required
     }),
     basePrice: z.string().min(1, {
-      message: translations.admin['menu-items'].form.basePrice.validation.required
+      message: translations.admin['menu'].form.basePrice.validation.required
     }),
     categoryId: z.string().min(1, {
-      message: translations.admin['menu-items'].form.category.validation.required
+      message: translations.admin['menu'].form.category.validation.required
     })
   }
 }

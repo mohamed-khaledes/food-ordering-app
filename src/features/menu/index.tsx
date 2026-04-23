@@ -112,30 +112,31 @@ function Menu({ categories }: { categories: any[] }) {
           </button>
         )}
       </div>
-
-      {/* Grid */}
-      {products.length > 0 ? (
-        <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {products?.map((item: Product) => (
-            <li key={item.id}>
-              <Card key={item?.id} item={item} />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div className='flex flex-col items-center justify-center py-24 gap-3'>
-          <div className='w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-2xl'>
-            🔍
+      <div className='min-h-[80vh]'>
+        {/* Grid */}
+        {products.length > 0 ? (
+          <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {products?.map((item: Product) => (
+              <li key={item.id}>
+                <Card key={item?.id} item={item} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className='flex flex-col items-center justify-center py-24 gap-3'>
+            <div className='w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-2xl'>
+              🔍
+            </div>
+            <p className='text-sm font-medium'>No meals in this category</p>
+            <button
+              onClick={() => setCategory('')}
+              className='text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors'
+            >
+              Show all meals
+            </button>
           </div>
-          <p className='text-sm font-medium'>No meals in this category</p>
-          <button
-            onClick={() => setCategory('')}
-            className='text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors'
-          >
-            Show all meals
-          </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

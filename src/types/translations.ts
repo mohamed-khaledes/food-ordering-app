@@ -134,7 +134,7 @@ export type Translations = {
         }
       }
     }
-    'menu-items': {
+    menu: {
       addItemSize: string
       createNewMenuItem: string
       addExtraItem: string

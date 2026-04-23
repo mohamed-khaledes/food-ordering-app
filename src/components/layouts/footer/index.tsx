@@ -43,7 +43,7 @@ const Footer = async () => {
   ]
 
   return (
-    <footer className='bg-foreground text-background rounded-tl-3xl rounded-tr-3xl overflow-hidden'>
+    <footer className='bg-foreground text-background overflow-hidden'>
       {/* Top accent bar */}
       <div className='h-1 w-full bg-primary' />
 

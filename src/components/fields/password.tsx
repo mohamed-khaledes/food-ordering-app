@@ -61,7 +61,7 @@ const Password = ({
           onMouseDown={handleMouseDownPassword}
           className={`absolute ${locale === Languages.ARABIC ? 'left-3' : 'right-3'}`}
         >
-          {showPassword ? <EyeOffIcon className='h-4 w-4' /> : <EyeIcon className='h-4 w-4' />}
+          {showPassword ? <EyeIcon className='h-4 w-4' /> : <EyeOffIcon className='h-4 w-4' />}
         </button>
       </div>
       {error && error[name] && (

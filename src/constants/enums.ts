@@ -24,7 +24,7 @@ export enum Pages {
   Register = 'signup',
   FORGOT_PASSWORD = 'forgot-password',
   CATEGORIES = 'categories',
-  MENU_ITEMS = 'menu-items',
+  MENU_ITEMS = 'menu',
   USERS = 'users',
   ORDERS = 'orders',
   NEW = 'new',

@@ -183,7 +183,7 @@
         }
       }
     },
-    "menu-items": {
+    "menu": {
       "createNewMenuItem": "إنشاء عنصر قائمة جديد",
       "addItemSize": "إضافة حجم العنصر",
       "addExtraItem": "إضافة عنصر إضافي",

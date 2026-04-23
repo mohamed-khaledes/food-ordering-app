@@ -97,23 +97,23 @@ const useFormFields = ({ slug, translations }: Props) => {
 
   const addProductFields = (): IFormField[] => [
     {
-      label: translations.admin['menu-items'].form.name.label,
+      label: translations.admin['menu'].form.name.label,
       name: 'name',
       type: 'text',
-      placeholder: translations.admin['menu-items'].form.name.placeholder,
+      placeholder: translations.admin['menu'].form.name.placeholder,
       autoFocus: true
     },
     {
-      label: translations.admin['menu-items'].form.description.label,
+      label: translations.admin['menu'].form.description.label,
       name: 'description',
       type: 'text',
-      placeholder: translations.admin['menu-items'].form.description.placeholder
+      placeholder: translations.admin['menu'].form.description.placeholder
     },
     {
-      label: translations.admin['menu-items'].form.basePrice.label,
+      label: translations.admin['menu'].form.basePrice.label,
       name: 'basePrice',
       type: 'text',
-      placeholder: translations.admin['menu-items'].form.basePrice.placeholder
+      placeholder: translations.admin['menu'].form.basePrice.placeholder
     }
   ]
   const getFormFields = (): IFormField[] => {

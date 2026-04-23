@@ -183,7 +183,7 @@
         }
       }
     },
-    "menu-items": {
+    "menu": {
       "createNewMenuItem": "Create new menu item",
       "addItemSize": "Add item size",
       "addExtraItem": "Add extra item",
