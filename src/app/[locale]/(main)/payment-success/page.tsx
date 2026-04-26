@@ -4,6 +4,7 @@ import { db } from '@/lib/prisma'
 import { formatCurrency } from '@/lib/helpers'
 import { CheckCircle2, ShoppingBag, ArrowRight, Home } from 'lucide-react'
 import { Routes } from '@/constants/enums'
+import ClearCart from './clear-cart'
 
 async function PaymentSuccessPage({ searchParams }: { searchParams: Promise<{ order?: string }> }) {
   const { order: orderId } = await searchParams
@@ -18,6 +19,7 @@ async function PaymentSuccessPage({ searchParams }: { searchParams: Promise<{ or
 
   return (
     <div className='min-h-screen bg-background flex items-center justify-center px-4 py-20'>
+      <ClearCart />
       {/* Background blobs */}
       <div className='fixed -top-20 left-1/3 w-[360px] h-[360px] rounded-full bg-primary/8 blur-3xl pointer-events-none' />
       <div className='fixed bottom-0 -right-20 w-[260px] h-[260px] rounded-full bg-primary/5 blur-3xl pointer-events-none' />

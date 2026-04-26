@@ -31,13 +31,15 @@
   "navbar": {
     "home": "Home",
     "about": "About",
+    "orders": "Orders",
     "menu": "Menu",
     "contact": "Contact",
     "login": "Login",
     "register": "Register",
     "signOut": "Sign Out",
     "profile": "Profile",
-    "admin": "Admin"
+    "admin": "Admin",
+    "dashboard": "Dashboard"
   },
   "auth": {
     "login": {

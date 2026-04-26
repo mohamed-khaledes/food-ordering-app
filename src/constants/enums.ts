@@ -11,12 +11,14 @@ export enum Languages {
 export enum Routes {
   ROOT = '/',
   MENU = 'menu',
+  ORDERS = 'orders',
   ABOUT = 'about',
   CONTACT = 'contact',
   AUTH = 'auth',
   CART = 'cart',
   PROFILE = 'profile',
-  ADMIN = 'admin'
+  ADMIN = 'admin',
+  DASHBOARD = 'dashboard'
 }
 
 export enum Pages {
@@ -105,5 +107,6 @@ export enum Environments {
 }
 export enum UserRole {
   USER = 'USER',
-  ADMIN = 'ADMIN'
+  ADMIN = 'ADMIN',
+  DELIVERY = 'DELIVERY'
 }

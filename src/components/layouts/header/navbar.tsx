@@ -18,6 +18,7 @@ function Navbar({ initialSession }: { initialSession: Session | null }) {
 
   const links = [
     { id: 'menu', title: translations.navbar.menu, href: Routes.MENU },
+    { id: 'orders', title: translations.navbar.orders, href: Routes.ORDERS },
     { id: 'about', title: translations.navbar.about, href: Routes.ABOUT },
     { id: 'contact', title: translations.navbar.contact, href: Routes.CONTACT }
   ]

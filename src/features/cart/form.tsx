@@ -5,13 +5,13 @@ import { formatCurrency } from '@/lib/helpers'
 import { useTrans } from '@/lib/translations/client'
 import { Loading } from '@/components/ui/loading'
 import { useSession } from 'next-auth/react'
-import { Banknote, CreditCard, Loader2, Lock, MapPin, Phone, Mail } from 'lucide-react'
+import { Banknote, CreditCard, Loader2, Lock, MapPin, Phone } from 'lucide-react'
 import Link from '@/components/link'
 import { Routes, Pages } from '@/constants/enums'
 import { useParams } from 'next/navigation'
 
 function CheckoutForm({ payType }: { payType: 'card' | 'cash' }) {
-  const { status } = useSession()
+  const { status, data: session } = useSession()
   const { global } = useTrans()
   const { locale } = useParams()
   const { loading, handleChange, handleSubmit, handlePaymobPayment, cart, data, paymobLoading } =
@@ -54,15 +54,21 @@ function CheckoutForm({ payType }: { payType: 'card' | 'cash' }) {
               onChange={e => handleChange(e, 'phone')}
               placeholder={global['enter your phone number']}
             />
-            <Field
-              label={global.email}
-              id='email'
-              type='email'
-              name='userEmail'
-              value={data?.userEmail ?? ''}
-              onChange={e => handleChange(e, 'userEmail')}
-              placeholder={global.email}
-            />
+            {/* Email pre-filled from session — read only */}
+            <div className='flex flex-col gap-1.5'>
+              <label className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>
+                {global.email}
+                <span className='ml-2 text-[10px] normal-case bg-muted px-1.5 py-0.5 rounded text-muted-foreground'>
+                  From your account
+                </span>
+              </label>
+              <input
+                type='email'
+                value={session?.user?.email ?? ''}
+                readOnly
+                className='w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border outline-none text-sm text-muted-foreground cursor-not-allowed'
+              />
+            </div>
           </div>
         </div>
 
@@ -111,7 +117,7 @@ function CheckoutForm({ payType }: { payType: 'card' | 'cash' }) {
           </div>
         </div>
 
-        {/* Divider + total */}
+        {/* Total */}
         <div className='flex items-center justify-between py-3 px-4 bg-muted/40 rounded-xl'>
           <span className='text-sm text-muted-foreground'>{global.total}</span>
           <span className='text-base font-bold text-foreground'>{formatCurrency(totalAmount)}</span>
@@ -134,7 +140,7 @@ function CheckoutForm({ payType }: { payType: 'card' | 'cash' }) {
           </div>
         )}
 
-        {/* CTA buttons */}
+        {/* CTA */}
         <div className='space-y-3 pt-1'>
           {payType === 'cash' && (
             <button
@@ -154,28 +160,27 @@ function CheckoutForm({ payType }: { payType: 'card' | 'cash' }) {
           )}
 
           {payType === 'card' && (
-            <button
-              type='button'
-              disabled={paymobLoading || status === 'unauthenticated'}
-              onClick={() => handlePaymobPayment(data)}
-              className='w-full flex items-center justify-center gap-2 py-3.5 bg-primary text-foreground rounded-xl text-sm font-medium hover:bg-primary/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed'
-            >
-              {paymobLoading ? (
-                <Loader2 className='w-4 h-4 animate-spin' />
-              ) : (
-                <>
-                  <Lock className='w-4 h-4' />
-                  Pay securely — {formatCurrency(totalAmount)}
-                </>
-              )}
-            </button>
-          )}
-
-          {payType === 'card' && (
-            <div className='flex items-center justify-center gap-1.5 text-xs text-muted-foreground'>
-              <Lock className='w-3 h-3' />
-              Secured by Paymob · 256-bit SSL encryption
-            </div>
+            <>
+              <button
+                type='button'
+                disabled={paymobLoading || status === 'unauthenticated'}
+                onClick={() => handlePaymobPayment(data)}
+                className='w-full flex items-center justify-center gap-2 py-3.5 bg-primary text-foreground rounded-xl text-sm font-medium hover:bg-primary/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+              >
+                {paymobLoading ? (
+                  <Loader2 className='w-4 h-4 animate-spin' />
+                ) : (
+                  <>
+                    <Lock className='w-4 h-4' />
+                    Pay securely — {formatCurrency(totalAmount)}
+                  </>
+                )}
+              </button>
+              <div className='flex items-center justify-center gap-1.5 text-xs text-muted-foreground'>
+                <Lock className='w-3 h-3' />
+                Secured by Paymob · 256-bit SSL encryption
+              </div>
+            </>
           )}
         </div>
       </form>
@@ -185,7 +190,6 @@ function CheckoutForm({ payType }: { payType: 'card' | 'cash' }) {
 
 export default CheckoutForm
 
-// ─── Reusable field ───────────────────────────────────────
 const Field = ({
   label,
   id,

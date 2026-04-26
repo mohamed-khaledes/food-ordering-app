@@ -6,7 +6,7 @@ import AddToCart from './cart/add-to-cart'
 
 const Card = ({
   item,
-  key,
+  key = 1,
   isAdmin = false
 }: {
   item: any

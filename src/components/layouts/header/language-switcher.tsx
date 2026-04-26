@@ -15,7 +15,7 @@ const LanguageSwitcher = () => {
   }
 
   const isArabic = locale === Languages.ARABIC
-
+  return
   return (
     <button
       onClick={() => switchLanguage(isArabic ? Languages.ENGLISH : Languages.ARABIC)}

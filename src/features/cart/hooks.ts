@@ -1,9 +1,11 @@
-import { CartItem } from './slice'
-import { selectCartItems, clearCart } from './slice'
-import { FormEvent, useState } from 'react'
+'use client'
+import { CartItem, selectCartItems, clearCart } from './slice'
+import { FormEvent, useEffect, useState } from 'react'
 import { TCreateOrder } from './type'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import Toast from '@/components/ui/toast'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export const deliveryFee = 5
 
@@ -23,22 +25,32 @@ export const getSubTotal = (cart: CartItem[]) =>
 export const getTotalAmount = (cart: CartItem[]) => getSubTotal(cart) + deliveryFee
 
 export function useCreateOrder() {
+  const { data: session } = useSession()
   const [loading, setLoading] = useState(false)
   const [paymobLoading, setPaymobLoading] = useState(false)
   const [data, setData] = useState<TCreateOrder>()
   const cart = useAppSelector(selectCartItems)
   const dispatch = useAppDispatch()
+  const router = useRouter()
+
+  // Pre-fill email from session
+  useEffect(() => {
+    if (session?.user?.email) {
+      setData((prev: any) => ({
+        ...prev,
+        userEmail: session.user.email
+      }))
+    }
+  }, [session])
 
   const buildProducts = () =>
     cart?.map((item: any) => ({
       productId: item?.id,
       quantity: item?.quantity,
-      sizeId: item?.size?.id,
+      sizeId: item?.size?.id ?? null,
       basePrice: +item?.basePrice,
-      deliveryFee,
-      extras: item?.extras?.map((e: any) => e?.id)
+      extras: item?.extras?.map((e: any) => e?.id) ?? []
     }))
-
   const handleCreate = async (order: TCreateOrder) => {
     setLoading(true)
     try {
@@ -54,6 +66,7 @@ export function useCreateOrder() {
       }
       dispatch(clearCart())
       Toast('Order placed successfully!', 'success')
+      router.push('/orders')
       return data?.data
     } catch (e) {
       console.log(e)
@@ -62,7 +75,6 @@ export function useCreateOrder() {
     }
   }
 
-  // ── Paymob card payment ──────────────────────────────────
   const handlePaymobPayment = async (formData?: TCreateOrder) => {
     if (!formData?.phone || !formData?.streetAddress || !formData?.city || !formData?.country) {
       Toast('Please fill in all delivery details first', 'error')
@@ -79,6 +91,7 @@ export function useCreateOrder() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          userEmail: session?.user?.email ?? formData?.userEmail,
           totalAmount,
           deliveryFee,
           products,
@@ -93,7 +106,6 @@ export function useCreateOrder() {
         return
       }
 
-      // Redirect to Paymob hosted payment page
       window.location.href = result.paymentUrl
     } catch (e) {
       console.log(e)
@@ -109,7 +121,13 @@ export function useCreateOrder() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const order = { ...data, deliveryFee, products: buildProducts() }
+    const order = {
+      ...data,
+      // Always use session email as source of truth
+      userEmail: session?.user?.email ?? data?.userEmail,
+      deliveryFee,
+      products: buildProducts()
+    }
     handleCreate(order as any)
   }
 

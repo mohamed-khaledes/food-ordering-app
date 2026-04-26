@@ -7,7 +7,7 @@ import ContactUs from './contact-us'
 
 export default function Home() {
   return (
-    <main>
+    <main className='min-h-screen'>
       <div className='w-full overflow-hidden bg-white text-gray-900'>
         {/* Hero Section */}
         <Hero />

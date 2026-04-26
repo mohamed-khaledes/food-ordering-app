@@ -27,6 +27,7 @@ export default function ProfileDropdown({ initialSession }: Props) {
   const { locale } = useParams()
   const session = useClientSession(initialSession)
   const isAdmin = session?.data?.user?.role === UserRole?.ADMIN
+  const isDelivery = session?.data?.user?.role === UserRole?.DELIVERY
   const user = session?.data?.user
 
   if (!user) return null
@@ -81,11 +82,21 @@ export default function ProfileDropdown({ initialSession }: Props) {
 
         <DropdownMenuItem asChild>
           <Link
-            href={isAdmin ? `/${Routes.ADMIN}` : `/${locale}/${Routes.PROFILE}`}
+            href={
+              isAdmin
+                ? `/${Routes.ADMIN}`
+                : isDelivery
+                  ? `/${Routes.DASHBOARD}`
+                  : `/${Routes.PROFILE}`
+            }
             className='flex items-center gap-2 rounded-xl cursor-pointer'
           >
             <UserIcon className='h-4 w-4' />
-            {isAdmin ? translations.navbar.admin : translations.navbar.profile}
+            {isAdmin
+              ? translations.navbar.admin
+              : isDelivery
+                ? translations.navbar.dashboard
+                : translations.navbar.profile}
           </Link>
         </DropdownMenuItem>
 

@@ -1,26 +1,30 @@
-import { getOrders } from '@/features/admin/orders/_actions/orders'
 import { formatCurrency } from '@/lib/helpers'
 import { Order, OrderStatus } from '@prisma/client'
 import { ShoppingBag } from 'lucide-react'
+import StatusSelect from '@/features/admin/orders/status-select'
+import AssignDelivery from '@/features/admin/orders/assign-delivery'
+import { getOrders } from '@/features/admin/orders/_actions/orders'
+import { getDeliveryMen } from '@/features/orders/_actions/orders'
 
 const statusColors: Record<string, string> = {
-  PENDING: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  PAID: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  PREPARING: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  OUT_FOR_DELIVERY: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+  PENDING: 'bg-amber-100 text-amber-700',
+  PAID: 'bg-green-100 text-green-700',
+  PREPARING: 'bg-blue-100 text-blue-700',
+  OUT_FOR_DELIVERY: 'bg-purple-100 text-purple-700',
   DELIVERED: 'bg-primary/15 text-foreground',
-  CANCELLED: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+  CANCELLED: 'bg-red-100 text-red-700'
 }
 
 async function OrdersPage() {
-  const orders = await getOrders()
+  const [orders, deliveryMen] = await Promise.all([getOrders(), getDeliveryMen()])
 
   const totalRevenue = orders
-    .filter((o: Order) => o.paid)
-    .reduce((sum: number, o: Order) => sum + o.totalPrice, 0)
+    .filter((o: any) => o.paid)
+    .reduce((sum: number, o: any) => sum + o.totalPrice, 0)
 
   return (
     <div className='space-y-6'>
+      {/* Header */}
       <div className='flex items-start justify-between'>
         <div>
           <div className='inline-flex items-center gap-2 bg-primary/15 border border-primary/30 rounded-full px-4 py-1.5 mb-3'>
@@ -42,17 +46,17 @@ async function OrdersPage() {
         <div className='bg-background rounded-2xl border border-border overflow-hidden'>
           {/* Table header */}
           <div className='grid grid-cols-12 gap-4 px-6 py-3 border-b border-border bg-muted/30'>
-            <div className='col-span-4 text-xs font-medium text-muted-foreground uppercase tracking-widest'>
+            <div className='col-span-3 text-xs font-medium text-muted-foreground uppercase tracking-widest'>
               Customer
             </div>
             <div className='col-span-2 text-xs font-medium text-muted-foreground uppercase tracking-widest hidden md:block'>
-              Location
-            </div>
-            <div className='col-span-2 text-xs font-medium text-muted-foreground uppercase tracking-widest hidden sm:block'>
               Date
             </div>
             <div className='col-span-2 text-xs font-medium text-muted-foreground uppercase tracking-widest'>
               Status
+            </div>
+            <div className='col-span-3 text-xs font-medium text-muted-foreground uppercase tracking-widest'>
+              Delivery man
             </div>
             <div className='col-span-2 text-xs font-medium text-muted-foreground uppercase tracking-widest text-right'>
               Total
@@ -61,31 +65,28 @@ async function OrdersPage() {
 
           {/* Rows */}
           <ul className='divide-y divide-border'>
-            {orders.map((order: Order) => (
+            {orders.map((order: any) => (
               <li
                 key={order.id}
                 className='grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-muted/20 transition-colors'
               >
-                <div className='col-span-4 flex items-center gap-3'>
+                {/* Customer */}
+                <div className='col-span-3 flex items-center gap-3'>
                   <div className='w-8 h-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0'>
                     <ShoppingBag className='w-3.5 h-3.5 text-muted-foreground' />
                   </div>
                   <div>
-                    <p className='text-sm font-medium truncate max-w-[140px]'>
+                    <p className='text-sm font-medium truncate max-w-[120px]'>
                       {order.userEmail ?? 'Guest'}
                     </p>
-                    <p className='text-xs text-muted-foreground font-mono truncate max-w-[100px]'>
+                    <p className='text-xs text-muted-foreground font-mono'>
                       #{order.id.slice(0, 8)}
                     </p>
                   </div>
                 </div>
 
+                {/* Date */}
                 <div className='col-span-2 hidden md:block'>
-                  <p className='text-sm text-muted-foreground'>{order.city}</p>
-                  <p className='text-xs text-muted-foreground'>{order.country}</p>
-                </div>
-
-                <div className='col-span-2 hidden sm:block'>
                   <p className='text-xs text-muted-foreground'>
                     {new Date(order.createdAt).toLocaleDateString('en-GB', {
                       day: '2-digit',
@@ -95,19 +96,24 @@ async function OrdersPage() {
                   </p>
                 </div>
 
+                {/* Status select */}
                 <div className='col-span-2'>
-                  <span
-                    className={`text-[10px] font-medium px-2 py-1 rounded-full uppercase tracking-wider ${statusColors[order.status]}`}
-                  >
-                    {order.status.replace(/_/g, ' ')}
-                  </span>
+                  <StatusSelect orderId={order.id} currentStatus={order.status as OrderStatus} />
                 </div>
 
+                {/* Assign delivery */}
+                <div className='col-span-3'>
+                  <AssignDelivery
+                    orderId={order.id}
+                    deliveryMen={deliveryMen}
+                    currentDeliveryManId={order.deliveryManId}
+                  />
+                </div>
+
+                {/* Total */}
                 <div className='col-span-2 text-right'>
                   <p className='text-sm font-semibold'>{formatCurrency(order.totalPrice)}</p>
-                  {order.paid && (
-                    <p className='text-[10px] text-green-600 dark:text-green-400'>Paid</p>
-                  )}
+                  {order.paid && <p className='text-[10px] text-green-600'>Paid</p>}
                 </div>
               </li>
             ))}
