@@ -2,7 +2,8 @@
 
 <div align="center">
 
-![Akla Banner](https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&h=400&fit=crop)
+<img width="1898" height="953" alt="akla" src="https://github.com/user-attachments/assets/955e8645-0b53-4cca-a5e2-f50b9ad4d8f0" />
+<img width="1901" height="956" alt="Screenshot 2026-04-26 220918" src="https://github.com/user-attachments/assets/d8f8c66a-1477-4be5-8ef3-7b52d0cde9e1" />
 
 **Chef-crafted meals with locally sourced ingredients, delivered to your door.**  
 Powered by seamless Paymob payment integration.
