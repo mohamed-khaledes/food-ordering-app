@@ -3,7 +3,11 @@
 <div align="center">
 
 <img width="1899" height="952" alt="Screenshot 2026-04-30 133533" src="https://github.com/user-attachments/assets/ad9fbfa8-490f-4340-bc12-e5b6e5406fea" />
+
+<img width="1901" height="953" alt="image" src="https://github.com/user-attachments/assets/8213ba78-9adb-4c20-9f38-d2b733a7cd80" />
+
 <img width="1901" height="956" alt="Screenshot 2026-04-26 220918" src="https://github.com/user-attachments/assets/d8f8c66a-1477-4be5-8ef3-7b52d0cde9e1" />
+
 <img width="1615" height="899" alt="Screenshot 2026-04-30 133612" src="https://github.com/user-attachments/assets/91128c71-7353-4a0c-9e65-8bfe791b6347" />
 
 **Chef-crafted meals with locally sourced ingredients, delivered to your door.**  
