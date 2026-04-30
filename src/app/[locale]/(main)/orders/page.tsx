@@ -8,6 +8,7 @@ import { OrderStatus } from '@prisma/client'
 import { Package, ShoppingBag } from 'lucide-react'
 import Link from '@/components/link'
 import { getUserOrders } from '@/features/orders/_actions/orders'
+import Banner from '@/components/layouts/banner'
 
 const STEPS: OrderStatus[] = [
   OrderStatus.PENDING,
@@ -51,9 +52,13 @@ async function OrdersPage({ params }: { params: Promise<{ locale: string }> }) {
   }
 
   const orders = await getUserOrders(session.user.email!)
-  console.log(orders)
   return (
-    <div className='py-24 min-h-screen bg-background'>
+    <div className='bg-background'>
+      <Banner
+        eyebrow={`${orders.length} orders`}
+        title='My Orders'
+        description='Track all your orders in real time.'
+      />
       <div className='container'>
         {/* Header */}
         <div className='mb-10'>

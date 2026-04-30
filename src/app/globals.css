@@ -144,3 +144,7 @@
     transform: translateY(-14px);
   }
 }
+/* for iPhone notch support: */
+.safe-bottom {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}

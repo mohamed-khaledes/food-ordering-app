@@ -24,56 +24,53 @@ function Menu({ categories }: { categories: any[] }) {
   return (
     <div>
       {/* Filter bar */}
-      <div className='sticky top-20 z-30 -mx-4 px-4 md:-mx-8 md:px-8 py-3 bg-background/80 backdrop-blur-lg border-b border-border mb-8'>
-        <div className='flex items-center gap-2 overflow-x-auto no-scrollbar'>
-          {/* All button */}
+      <div className='sticky top-10 md:top-20 z-30 py-3 mb-8'>
+        <div className='flex items-center gap-2 overflow-x-auto no-scrollbar px-1 pb-1'>
+          {/* All */}
           <button
             onClick={() => setCategory('all')}
-            className={`flex-shrink-0 px-5 py-2 rounded-xl text-sm font-medium transition-all duration-200 
-              ${
-                !category || category === 'all'
-                  ? 'bg-foreground text-background'
-                  : 'bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted'
-              }`}
+            className={`group flex-shrink-0 flex items-center gap-1.5 h-9 px-4 rounded-full text-sm font-medium transition-all duration-200 border
+        ${
+          !category || category === 'all'
+            ? 'bg-foreground text-background border-foreground shadow-sm'
+            : 'bg-background text-muted-foreground border-border hover:border-foreground/30 hover:text-foreground'
+        }`}
           >
             All
             <span
-              className={`ml-2 text-xs px-1.5 py-0.5 rounded-full
-              ${
-                !category || category === 'all'
-                  ? 'bg-primary/20 text-background'
-                  : 'bg-border text-muted-foreground'
-              }`}
+              className={`text-[11px] font-semibold min-w-[18px] text-center tabular-nums
+        ${
+          !category || category === 'all'
+            ? 'text-primary'
+            : 'text-muted-foreground group-hover:text-foreground'
+        }`}
             >
               {categories?.flatMap(item => item?.Product ?? []).length}
             </span>
           </button>
 
-          {/* Divider */}
-          <div className='w-px h-5 bg-border flex-shrink-0' />
-
-          {/* Category buttons */}
+          {/* Categories */}
           {categories?.map(item => {
             const isActive = category === item?.name
             return (
               <button
                 key={item?.id}
                 onClick={() => setCategory(item?.name)}
-                className={`flex-shrink-0 flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-medium transition-all duration-200 capitalize
-                  ${
-                    isActive
-                      ? 'bg-primary text-foreground'
-                      : 'bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted'
-                  }`}
+                className={`group flex-shrink-0 flex items-center gap-1.5 h-9 px-4 rounded-full text-sm font-medium transition-all duration-200 border capitalize
+            ${
+              isActive
+                ? 'bg-primary text-foreground border-primary shadow-sm'
+                : 'bg-background text-muted-foreground border-border hover:border-primary/40 hover:text-foreground'
+            }`}
               >
                 {item?.name}
                 <span
-                  className={`text-xs px-1.5 py-0.5 rounded-full
-                  ${
-                    isActive
-                      ? 'bg-foreground/10 text-foreground'
-                      : 'bg-border text-muted-foreground'
-                  }`}
+                  className={`text-[11px] font-semibold min-w-[18px] text-center tabular-nums
+            ${
+              isActive
+                ? 'text-foreground/60'
+                : 'text-muted-foreground group-hover:text-foreground/70'
+            }`}
                 >
                   {item?.Product?.length ?? 0}
                 </span>
