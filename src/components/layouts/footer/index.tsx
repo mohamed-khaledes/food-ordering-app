@@ -19,25 +19,25 @@ const Footer = async () => {
       title: global.company,
       links: [
         { href: '/about', label: global.about },
-        { href: '/careers', label: global.careers },
-        { href: '/blog', label: global.blog }
+        { href: '/', label: global.careers },
+        { href: '/', label: global.blog }
       ]
     },
     {
       title: global.menu,
       links: [
-        { href: '/meals', label: global.meals },
-        { href: '/plans', label: global.plans },
-        { href: '/pricing', label: global.pricing }
+        { href: '/menu', label: global.meals },
+        { href: '/', label: global.plans },
+        { href: '/', label: global.pricing }
       ]
     },
     {
       title: global.support,
       links: [
         { href: '/contact', label: global.contact },
-        { href: '/faq', label: global.faq },
-        { href: '/terms', label: global.terms },
-        { href: '/privacy', label: global.privacy }
+        { href: '/', label: global.faq },
+        { href: '/', label: global.terms },
+        { href: '/', label: global.privacy }
       ]
     }
   ]
@@ -121,10 +121,14 @@ const Footer = async () => {
 
         {/* Bottom bar */}
         <div className='pt-8 flex flex-col sm:flex-row items-center justify-between gap-4'>
-          <p className='text-xs text-background/40'>
+          <a
+            href='https://www.linkedin.com/in/mohamed-khaledes/'
+            target='_blank'
+            className='text-xs text-background/40'
+          >
             © {new Date().getFullYear()}{' '}
             <span className='text-primary font-medium'>Mohamed khaled</span> {global.copyRight}
-          </p>
+          </a>
           <div className='flex items-center gap-1.5'>
             <span className='w-1.5 h-1.5 rounded-full bg-primary animate-pulse' />
             <span className='text-xs text-background/40'>All systems operational</span>
