@@ -8,7 +8,7 @@ import { authOptions } from '@/server/auth'
 import LanguageSwitcher from './language-switcher'
 import AuthButtons from './auth-buttons'
 import ProfileDropdown from './profile-dropdown'
-import logo from '../../../../public/logo.png'
+import logo from '../../../../public/logo-removebg.png'
 // ── Mobile bottom bar (separate import-free component) ────
 import MobileBottomBar from './mobile-bottom-bar'
 const Header = async () => {
