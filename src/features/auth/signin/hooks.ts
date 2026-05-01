@@ -44,7 +44,7 @@ export const useSigninForm = () => {
       }
       if (res?.ok) {
         Toast(translations.messages.loginSuccessful, 'success')
-        router.replace(`/${locale}/${Routes.PROFILE}`)
+        router.replace(`/${locale}`)
       }
     } catch (error) {
       console.log(error)
