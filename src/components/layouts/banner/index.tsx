@@ -60,12 +60,12 @@ export default function Banner({ eyebrow, title, description, stats }: PageBanne
       </div>
 
       {/* Bottom wave */}
-      <div className='relative h-8 bg-foreground'>
+      <div className='relative h-10 bg-foreground'>
         <svg
           viewBox='0 0 1440 32'
           fill='none'
           xmlns='http://www.w3.org/2000/svg'
-          className='absolute bottom-0 w-full'
+          className='absolute inset-0 w-full h-full'
           preserveAspectRatio='none'
         >
           <path

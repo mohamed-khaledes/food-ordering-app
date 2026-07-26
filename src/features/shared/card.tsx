@@ -32,7 +32,7 @@ const Card = ({
         <motion.img
           src={item?.image || null}
           alt={`Meal ${item?.id}`}
-          className='w-full h-full object-cover'
+          className='w-full h-full object-contain'
           whileHover={{ scale: 1.06 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
           loading='lazy'

@@ -109,7 +109,7 @@ function Menu({ categories }: { categories: any[] }) {
           </button>
         )}
       </div>
-      <div className='min-h-[80vh]'>
+      <div className='min-h-[80vh] my-5'>
         {/* Grid */}
         {products.length > 0 ? (
           <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
