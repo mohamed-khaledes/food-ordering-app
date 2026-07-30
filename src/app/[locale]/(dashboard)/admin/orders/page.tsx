@@ -1,131 +1,139 @@
 import { formatCurrency } from '@/lib/helpers'
-import { Order, OrderStatus } from '@prisma/client'
-import { ShoppingBag } from 'lucide-react'
+import { OrderStatus } from '@prisma/client'
+import { CheckCircle2, ShoppingBag } from 'lucide-react'
 import StatusSelect from '@/features/admin/orders/status-select'
 import AssignDelivery from '@/features/admin/orders/assign-delivery'
 import { getOrders } from '@/features/admin/orders/_actions/orders'
 import { getDeliveryMen } from '@/features/orders/_actions/orders'
-
-const statusColors: Record<string, string> = {
-  PENDING: 'bg-amber-100 text-amber-700',
-  PAID: 'bg-green-100 text-green-700',
-  PREPARING: 'bg-blue-100 text-blue-700',
-  OUT_FOR_DELIVERY: 'bg-purple-100 text-purple-700',
-  DELIVERED: 'bg-primary/15 text-foreground',
-  CANCELLED: 'bg-red-100 text-red-700'
-}
+import DashboardHeader from '@/features/admin/page-header'
+import { getTrans } from '@/lib/translations/server'
+import { EmptyState, Panel, StatusChip } from '@/features/admin/ui'
+import { statusLabel, STATUS_ORDER } from '@/features/admin/order-status'
 
 async function OrdersPage() {
-  const [orders, deliveryMen] = await Promise.all([getOrders(), getDeliveryMen()])
+  const [orders, deliveryMen, t] = await Promise.all([getOrders(), getDeliveryMen(), getTrans()])
+  const ui = t.adminUi
 
   const totalRevenue = orders
     .filter((o: any) => o.paid)
     .reduce((sum: number, o: any) => sum + o.totalPrice, 0)
 
+  // Counts per state, so the operator sees the shape of the queue at a glance.
+  const byStatus = STATUS_ORDER.map(status => ({
+    status,
+    count: orders.filter((o: any) => o.status === status).length
+  })).filter(entry => entry.count > 0)
+
   return (
-    <div className='space-y-6'>
-      {/* Header */}
-      <div className='flex items-start justify-between'>
-        <div>
-          <div className='inline-flex items-center gap-2 bg-primary/15 border border-primary/30 rounded-full px-4 py-1.5 mb-3'>
-            <span className='w-1.5 h-1.5 rounded-full bg-primary' />
-            <span className='text-xs font-medium text-foreground/70 uppercase tracking-widest'>
-              Manage
-            </span>
+    <div>
+      <DashboardHeader
+        title={t.admin.tabs.orders}
+        description={`${orders.length} ${ui.ordersTotal}`}
+        action={
+          <div className='bg-deep rounded-xl px-5 py-3 text-end text-white'>
+            <p className='text-[10px] tracking-widest text-white/50 uppercase'>{ui.totalRevenue}</p>
+            <p className='text-brand text-2xl leading-tight font-bold tabular-nums'>
+              {formatCurrency(totalRevenue)}
+            </p>
           </div>
-          <h1 className='text-3xl font-bold'>Orders</h1>
-          <p className='text-muted-foreground mt-1'>{orders.length} orders total</p>
-        </div>
-        <div className='bg-foreground text-background rounded-2xl px-6 py-4 text-right'>
-          <p className='text-xs text-background/50 uppercase tracking-widest mb-1'>Total Revenue</p>
-          <p className='text-2xl font-bold text-primary'>{formatCurrency(totalRevenue)}</p>
-        </div>
-      </div>
+        }
+      />
 
       {orders.length > 0 ? (
-        <div className='bg-background rounded-2xl border border-border overflow-hidden'>
-          {/* Table header */}
-          <div className='grid grid-cols-12 gap-4 px-6 py-3 border-b border-border bg-muted/30'>
-            <div className='col-span-3 text-xs font-medium text-muted-foreground uppercase tracking-widest'>
-              Customer
-            </div>
-            <div className='col-span-2 text-xs font-medium text-muted-foreground uppercase tracking-widest hidden md:block'>
-              Date
-            </div>
-            <div className='col-span-2 text-xs font-medium text-muted-foreground uppercase tracking-widest'>
-              Status
-            </div>
-            <div className='col-span-3 text-xs font-medium text-muted-foreground uppercase tracking-widest'>
-              Delivery man
-            </div>
-            <div className='col-span-2 text-xs font-medium text-muted-foreground uppercase tracking-widest text-right'>
-              Total
-            </div>
-          </div>
+        <div className='space-y-4'>
+          {byStatus.length > 0 && (
+            <Panel className='flex flex-wrap items-center gap-x-5 gap-y-3 px-5 py-4'>
+              <span className='text-muted-foreground text-[11px] font-medium tracking-widest uppercase'>
+                {ui.breakdown}
+              </span>
+              {byStatus.map(({ status, count }) => (
+                <span key={status} className='flex items-center gap-2'>
+                  <StatusChip status={status} label={statusLabel(status, t)} />
+                  <span className='text-sm font-bold tabular-nums'>{count}</span>
+                </span>
+              ))}
+            </Panel>
+          )}
 
-          {/* Rows */}
-          <ul className='divide-y divide-border'>
-            {orders.map((order: any) => (
-              <li
-                key={order.id}
-                className='grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-muted/20 transition-colors'
-              >
-                {/* Customer */}
-                <div className='col-span-3 flex items-center gap-3'>
-                  <div className='w-8 h-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0'>
-                    <ShoppingBag className='w-3.5 h-3.5 text-muted-foreground' />
-                  </div>
-                  <div>
-                    <p className='text-sm font-medium truncate max-w-[120px]'>
-                      {order.userEmail ?? 'Guest'}
-                    </p>
-                    <p className='text-xs text-muted-foreground font-mono'>
-                      #{order.id.slice(0, 8)}
-                    </p>
-                  </div>
-                </div>
+          <Panel className='overflow-hidden'>
+            {/* Column headings are desktop-only — each row labels itself on mobile. */}
+            <div className='bg-haze/70 text-muted-foreground border-border/70 hidden border-b px-5 py-3 text-[11px] font-medium tracking-widest uppercase lg:grid lg:grid-cols-12 lg:gap-4'>
+              <div className='lg:col-span-3'>{ui.table.customer}</div>
+              <div className='lg:col-span-2'>{ui.table.date}</div>
+              <div className='lg:col-span-2'>{ui.table.status}</div>
+              <div className='lg:col-span-3'>{ui.table.deliveryMan}</div>
+              <div className='text-end lg:col-span-2'>{ui.table.total}</div>
+            </div>
 
-                {/* Date */}
-                <div className='col-span-2 hidden md:block'>
-                  <p className='text-xs text-muted-foreground'>
+            <ul className='divide-border/70 divide-y'>
+              {orders.map((order: any) => (
+                <li
+                  key={order.id}
+                  className='hover:bg-haze/50 px-5 py-4 transition-colors lg:grid lg:grid-cols-12 lg:items-center lg:gap-4'
+                >
+                  {/* Customer + reference */}
+                  <div className='flex min-w-0 items-start gap-3 lg:col-span-3'>
+                    <span className='bg-brand-soft flex h-9 w-9 shrink-0 items-center justify-center rounded-full'>
+                      <ShoppingBag className='text-brand h-4 w-4' />
+                    </span>
+                    <div className='min-w-0'>
+                      <p className='truncate text-sm font-semibold'>{order.userEmail ?? ui.guest}</p>
+                      <p className='text-muted-foreground font-mono text-xs'>
+                        #{order.id.slice(0, 8)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className='text-muted-foreground mt-3 text-xs lg:col-span-2 lg:mt-0'>
                     {new Date(order.createdAt).toLocaleDateString('en-GB', {
                       day: '2-digit',
                       month: 'short',
                       year: 'numeric'
                     })}
-                  </p>
-                </div>
+                  </div>
 
-                {/* Status select */}
-                <div className='col-span-2'>
-                  <StatusSelect orderId={order.id} currentStatus={order.status as OrderStatus} />
-                </div>
+                  <div className='mt-3 lg:col-span-2 lg:mt-0'>
+                    <StatusSelect orderId={order.id} currentStatus={order.status as OrderStatus} />
+                  </div>
 
-                {/* Assign delivery */}
-                <div className='col-span-3'>
-                  <AssignDelivery
-                    orderId={order.id}
-                    deliveryMen={deliveryMen}
-                    currentDeliveryManId={order.deliveryManId}
-                  />
-                </div>
+                  <div className='mt-3 lg:col-span-3 lg:mt-0'>
+                    <AssignDelivery
+                      orderId={order.id}
+                      deliveryMen={deliveryMen}
+                      currentDeliveryManId={order.deliveryManId}
+                    />
+                  </div>
 
-                {/* Total */}
-                <div className='col-span-2 text-right'>
-                  <p className='text-sm font-semibold'>{formatCurrency(order.totalPrice)}</p>
-                  {order.paid && <p className='text-[10px] text-green-600'>Paid</p>}
-                </div>
-              </li>
-            ))}
-          </ul>
+                  {/* Total. On mobile it becomes a labelled footer row. */}
+                  <div className='border-border/70 mt-3 flex items-center justify-between border-t pt-3 lg:col-span-2 lg:mt-0 lg:block lg:border-0 lg:pt-0 lg:text-end'>
+                    <span className='text-muted-foreground text-[11px] tracking-widest uppercase lg:hidden'>
+                      {ui.table.total}
+                    </span>
+                    <span className='flex items-center gap-2'>
+                      <p className='text-[15px] font-bold tabular-nums'>
+                        {formatCurrency(order.totalPrice)}
+                      </p>
+                      {order.paid && (
+                        <span className='text-state-paid inline-flex items-center gap-1 text-[11px] font-medium lg:hidden'>
+                          <CheckCircle2 className='h-3 w-3' />
+                          {ui.paidTag}
+                        </span>
+                      )}
+                    </span>
+                    {order.paid && (
+                      <p className='text-state-paid mt-0.5 hidden items-center justify-end gap-1 text-[11px] font-medium lg:flex'>
+                        <CheckCircle2 className='h-3 w-3' />
+                        {ui.paidTag}
+                      </p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </Panel>
         </div>
       ) : (
-        <div className='flex flex-col items-center justify-center py-20 gap-3 bg-background rounded-2xl border border-border'>
-          <div className='w-12 h-12 rounded-2xl bg-muted flex items-center justify-center'>
-            <ShoppingBag className='w-5 h-5 text-muted-foreground' />
-          </div>
-          <p className='text-sm text-muted-foreground'>No orders yet</p>
-        </div>
+        <EmptyState icon={ShoppingBag} message={ui.noOrders} />
       )}
     </div>
   )

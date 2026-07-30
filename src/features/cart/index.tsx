@@ -6,83 +6,77 @@ import { Banknote, CreditCard, ShoppingCart } from 'lucide-react'
 import { useTrans } from '@/lib/translations/client'
 import { useAppSelector } from '@/redux/hooks'
 import { selectCartItems } from './slice'
-import { getSubTotal, deliveryFee } from './hooks'
-import { formatCurrency } from '@/lib/helpers'
 import Banner from '@/components/layouts/banner'
+import PartnersStrip from '@/components/layouts/partners-strip'
+import Link from '@/components/link'
+import { Routes } from '@/constants/enums'
+import { Container } from '@/components/ui/container'
 
 const Cart = () => {
-  const { global } = useTrans()
+  const { global, checkout } = useTrans()
   const [payType, setPayType] = useState<'card' | 'cash'>('cash')
   const cart = useAppSelector(selectCartItems)
-  const total = getSubTotal(cart) + deliveryFee
 
   return (
     <section>
       <Banner
-        eyebrow={`${cart.length} items`}
-        title='Your Cart'
-        description='Review your order and choose your payment method.'
+        title={global.checkout}
+        crumbs={[{ label: global.home, href: '/' }, { label: global.checkout }]}
       />
+
       {!cart || cart.length === 0 ? (
-        <div className='flex flex-col items-center justify-center py-24 gap-4'>
-          <div className='w-16 h-16 rounded-2xl bg-muted flex items-center justify-center'>
-            <ShoppingCart className='w-7 h-7 text-muted-foreground' />
+        <div className='flex flex-col items-center justify-center gap-4 py-28'>
+          <div className='flex h-16 w-16 items-center justify-center rounded-full bg-muted'>
+            <ShoppingCart className='h-7 w-7 text-muted-foreground' />
           </div>
           <p className='text-muted-foreground'>{global['Your cart is empty']}</p>
+          <Link href={`/${Routes.MENU}`} className='btn-brand mt-2'>
+            {global.menu}
+          </Link>
         </div>
       ) : (
-        <div className='container'>
-          {/* Header */}
-          <div className='mb-10'>
-            <div className='inline-flex items-center gap-2 bg-primary/15 border border-primary/30 rounded-full px-4 py-1.5 mb-3'>
-              <span className='w-1.5 h-1.5 rounded-full bg-primary' />
-              <span className='text-xs font-medium text-foreground/70 uppercase tracking-widest'>
-                {cart.length} {cart.length === 1 ? 'item' : 'items'}
-              </span>
-            </div>
-            <h1 className='text-4xl font-bold'>{global.cart}</h1>
-          </div>
-
-          <div className='grid grid-cols-1 lg:grid-cols-2 gap-10'>
-            {/* Left: cart items */}
-            <CartItems />
-
-            {/* Right: payment */}
-            <div className='space-y-4'>
-              {/* Payment type selector */}
-              <div className='bg-background rounded-2xl border border-border p-2 grid grid-cols-2 gap-2'>
+        <Container className='section-y'>
+          <div className='grid grid-cols-1 gap-10 lg:grid-cols-[1.6fr_1fr]'>
+            {/* Left: payment method + delivery form */}
+            <div className='space-y-5'>
+              <div className='grid grid-cols-2 gap-3'>
                 <button
                   onClick={() => setPayType('cash')}
-                  className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
-                  ${
+                  className={`flex items-center justify-center gap-2 border px-4 py-3 text-sm font-medium transition-colors ${
                     payType === 'cash'
-                      ? 'bg-foreground text-background shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                      ? 'border-brand bg-brand text-white'
+                      : 'border-border text-muted-foreground hover:border-brand hover:text-brand'
                   }`}
                 >
-                  <Banknote className='w-4 h-4' />
-                  Cash on delivery
+                  <Banknote className='h-4 w-4' />
+                  {checkout.cashOnDelivery}
                 </button>
                 <button
                   onClick={() => setPayType('card')}
-                  className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
-                  ${
+                  className={`flex items-center justify-center gap-2 border px-4 py-3 text-sm font-medium transition-colors ${
                     payType === 'card'
-                      ? 'bg-foreground text-background shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                      ? 'border-brand bg-brand text-white'
+                      : 'border-border text-muted-foreground hover:border-brand hover:text-brand'
                   }`}
                 >
-                  <CreditCard className='w-4 h-4' />
-                  Pay with card
+                  <CreditCard className='h-4 w-4' />
+                  {checkout.payWithCard}
                 </button>
               </div>
 
-              {/* Form */}
               <CheckoutForm payType={payType} />
             </div>
+
+            {/* Right: order summary */}
+            <aside>
+              <h2 className='mb-4 text-lg font-bold text-foreground'>{global.cart}</h2>
+              <CartItems />
+            </aside>
           </div>
-        </div>
+        </Container>
       )}
+
+      <PartnersStrip />
     </section>
   )
 }

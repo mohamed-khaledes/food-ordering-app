@@ -73,11 +73,11 @@ function EditUserForm({
               className={`inline-flex items-center gap-1 mt-2 text-[10px] font-medium px-2.5 py-0.5 rounded-full uppercase tracking-widest
               ${
                 user.role === UserRole.ADMIN
-                  ? 'bg-primary/15 text-foreground border border-primary/30'
+                  ? 'bg-brand-soft text-foreground border border-brand/40'
                   : 'bg-muted text-muted-foreground'
               }`}
             >
-              {user.role === UserRole.ADMIN && <span className='w-1 h-1 rounded-full bg-primary' />}
+              {user.role === UserRole.ADMIN && <span className='w-1 h-1 rounded-full bg-brand' />}
               {user.role}
             </span>
           )}
@@ -123,9 +123,9 @@ function EditUserForm({
 
       {/* Admin toggle */}
       {session?.data?.user.role === UserRole.ADMIN && (
-        <div className='flex items-center justify-between px-4 py-3 rounded-xl border border-border bg-muted/30'>
+        <div className='flex items-center justify-between px-4 py-3 rounded-sm border border-border bg-muted/30'>
           <div>
-            <p className='text-sm font-medium text-foreground'>Admin access</p>
+            <p className='text-sm font-medium text-foreground'>{translations.common.adminAccess}</p>
             <p className='text-xs text-muted-foreground'>
               Grant full admin privileges to this user
             </p>
@@ -141,7 +141,7 @@ function EditUserForm({
 
       {/* Error */}
       {state?.error?.message && (
-        <div className='flex items-center gap-2 px-3 py-2.5 bg-destructive/10 border border-destructive/20 rounded-xl'>
+        <div className='flex items-center gap-2 px-3 py-2.5 bg-destructive/10 border border-destructive/20 rounded-sm'>
           <span className='w-1.5 h-1.5 rounded-full bg-destructive flex-shrink-0' />
           <p className='text-xs text-destructive'>{state.error.message}</p>
         </div>
@@ -151,7 +151,7 @@ function EditUserForm({
       <button
         type='submit'
         disabled={pending}
-        className='flex items-center gap-2 px-6 py-2.5 bg-foreground text-background rounded-xl text-sm font-medium hover:bg-foreground/90 active:scale-[0.98] transition-all disabled:opacity-50'
+        className='flex items-center gap-2 px-6 py-2.5 bg-foreground text-background rounded-sm text-sm font-medium hover:bg-foreground/90 active:scale-[0.98] transition-all disabled:opacity-50'
       >
         {pending ? (
           <Loader />
@@ -184,7 +184,7 @@ const UploadImage = ({
 
   return (
     <div className='relative group flex-shrink-0'>
-      <div className='w-16 h-16 rounded-2xl overflow-hidden border border-border bg-muted flex items-center justify-center'>
+      <div className='w-16 h-16 rounded-none overflow-hidden border border-border bg-muted flex items-center justify-center'>
         {selectedImage ? (
           <Image
             src={selectedImage}
@@ -203,7 +203,7 @@ const UploadImage = ({
       {/* Hover overlay */}
       <label
         htmlFor='profile-image-upload'
-        className='absolute inset-0 rounded-2xl flex items-center justify-center bg-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
+        className='absolute inset-0 rounded-none flex items-center justify-center bg-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
       >
         <CameraIcon className='w-5 h-5 text-white' />
       </label>

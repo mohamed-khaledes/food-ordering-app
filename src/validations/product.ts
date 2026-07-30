@@ -33,14 +33,27 @@ const imageValidation = (translations: Translations, isRequired: boolean) => {
         }
       )
 }
+/**
+ * Arabic copy is optional — the storefront falls back to English when it's
+ * blank. An empty input arrives as `''`, which is normalised to `null` so we
+ * don't store a whitespace value that the fallback would then treat as real.
+ */
+const optionalArabic = z
+  .string()
+  .trim()
+  .transform(value => (value.length > 0 ? value : null))
+  .nullish()
+
 const getCommonValidations = (translations: Translations) => {
   return {
     name: z.string().trim().min(1, {
       message: translations.admin['menu'].form.name.validation.required
     }),
+    nameAr: optionalArabic,
     description: z.string().trim().min(1, {
       message: translations.admin['menu'].form.description.validation.required
     }),
+    descriptionAr: optionalArabic,
     basePrice: z.string().min(1, {
       message: translations.admin['menu'].form.basePrice.validation.required
     }),

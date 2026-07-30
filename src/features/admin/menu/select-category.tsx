@@ -54,7 +54,7 @@ function SelectCategory({
               <SelectItem
                 key={category.id}
                 value={category.id}
-                className='hover:!bg-primary hover:!text-white !text-accent !bg-transparent'
+                className='hover:!bg-brand hover:!text-white !text-accent !bg-transparent'
               >
                 {category.name}
               </SelectItem>

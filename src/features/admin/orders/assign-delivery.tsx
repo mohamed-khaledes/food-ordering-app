@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Toast from '@/components/ui/toast'
 import Loader from '@/components/ui/loader'
 import { assignDeliveryMan } from '@/features/orders/_actions/orders'
+import { useTrans } from '@/lib/translations/client'
 
 type DeliveryMan = { id: string; name: string; email: string }
 
@@ -15,6 +16,7 @@ export default function AssignDelivery({
   deliveryMen: DeliveryMan[]
   currentDeliveryManId?: string | null
 }) {
+  const t = useTrans()
   const [selected, setSelected] = useState(currentDeliveryManId ?? '')
   const [loading, setLoading] = useState(false)
 
@@ -32,7 +34,7 @@ export default function AssignDelivery({
   }
 
   if (deliveryMen.length === 0) {
-    return <span className='text-xs text-muted-foreground'>No delivery men</span>
+    return <span className='text-xs text-muted-foreground'>{t.common.noDeliveryMen}</span>
   }
 
   return (
@@ -42,9 +44,9 @@ export default function AssignDelivery({
         value={selected}
         onChange={e => handleAssign(e.target.value)}
         disabled={loading}
-        className='text-xs px-2.5 py-1.5 rounded-lg border border-border bg-background text-foreground outline-none cursor-pointer focus:border-primary/40 transition-colors'
+        className='text-xs px-2.5 py-1.5 rounded-lg border border-border bg-background text-foreground outline-none cursor-pointer focus:border-brand transition-colors'
       >
-        <option value=''>Assign delivery</option>
+        <option value=''>{t.common.assignDelivery}</option>
         {deliveryMen.map(dm => (
           <option key={dm.id} value={dm.id}>
             {dm.name}

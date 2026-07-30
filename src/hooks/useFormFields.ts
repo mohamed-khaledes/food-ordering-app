@@ -95,6 +95,8 @@ const useFormFields = ({ slug, translations }: Props) => {
     }
   ]
 
+  // English first, then its Arabic counterpart, so the pairs read together in
+  // the form. The Arabic fields are optional — see `validations/product.ts`.
   const addProductFields = (): IFormField[] => [
     {
       label: translations.admin['menu'].form.name.label,
@@ -104,10 +106,26 @@ const useFormFields = ({ slug, translations }: Props) => {
       autoFocus: true
     },
     {
+      label: translations.admin['menu'].form.nameAr.label,
+      name: 'nameAr',
+      type: 'text',
+      placeholder: translations.admin['menu'].form.nameAr.placeholder,
+      hint: translations.admin['menu'].form.nameAr.hint,
+      dir: 'rtl'
+    },
+    {
       label: translations.admin['menu'].form.description.label,
       name: 'description',
       type: 'text',
       placeholder: translations.admin['menu'].form.description.placeholder
+    },
+    {
+      label: translations.admin['menu'].form.descriptionAr.label,
+      name: 'descriptionAr',
+      type: 'text',
+      placeholder: translations.admin['menu'].form.descriptionAr.placeholder,
+      hint: translations.admin['menu'].form.descriptionAr.hint,
+      dir: 'rtl'
     },
     {
       label: translations.admin['menu'].form.basePrice.label,

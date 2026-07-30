@@ -2,50 +2,58 @@ import Link from '@/components/link'
 import { Pages, Routes } from '@/constants/enums'
 import SignupForm from '@/features/auth/signup/form'
 import { getTrans } from '@/lib/translations/server'
-import logo from '../../../../../../public/logo.png'
 import Banner from '@/components/layouts/banner'
+import PartnersStrip from '@/components/layouts/partners-strip'
+
+import type { Metadata } from 'next'
+import { privateMetadata } from '@/constants/seo'
+
+// Not for the index — see `privateMetadata`.
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  return privateMetadata({ locale, path: '/auth/signup', title: 'Create Account' })
+}
 
 async function SignupPage() {
   const translations = await getTrans()
-  return (
-    <div>
-      <Banner title='Welcome' description='Create your account and start eating' />
-      <div className='bg-background flex items-center justify-center px-4'>
-        {/* Background blobs */}
-        <div className='fixed -top-20 left-1/3 w-[360px] h-[360px] rounded-full bg-primary/8 blur-3xl pointer-events-none' />
-        <div className='fixed bottom-0 -right-20 w-[260px] h-[260px] rounded-full bg-primary/5 blur-3xl pointer-events-none' />
+  const { global, auth } = translations
 
-        <div className='w-full max-w-md relative z-10'>
-          {/* Logo */}
-          <div className='flex flex-col items-center mb-8'>
-            <img src={logo.src} alt='akla' loading='lazy' className='w-[70px] lg:w-[90px]' />
-            <h1 className='text-2xl font-bold text-foreground'>
-              {translations.auth.register.title}
-            </h1>
-            <p className='text-sm text-muted-foreground mt-1'>
-              Create your account and start eating
+  return (
+    <>
+      <Banner
+        title={auth.register.title}
+        crumbs={[{ label: global.home, href: '/' }, { label: global.register }]}
+      />
+
+      <div className='container section-y'>
+        <div className='mx-auto w-full max-w-md border border-border bg-background p-8 shadow-[0_20px_50px_-30px_rgba(0,0,0,0.35)] md:p-10'>
+          <div className='mb-8 text-center'>
+            <h2 className='text-2xl font-bold text-foreground'>{auth.register.title}</h2>
+            <p className='mt-1 text-sm text-muted-foreground'>
+              Create your account and start ordering.
             </p>
           </div>
 
-          {/* Card */}
-          <div className='bg-background border border-border rounded-2xl p-8 shadow-sm'>
-            <SignupForm />
+          <SignupForm />
 
-            <div className='mt-6 pt-6 border-t border-border flex items-center justify-center gap-1.5 text-sm'>
-              <span className='text-muted-foreground'>
-                {translations.auth.register.authPrompt.message}
-              </span>
-              <Link
-                href={`/${Routes.AUTH}/${Pages.LOGIN}`}
-                className='text-foreground font-medium hover:text-primary transition-colors underline underline-offset-2'
-              >
-                {translations.auth.register.authPrompt.loginLinkText}
-              </Link>
-            </div>
+          <div className='mt-6 flex items-center justify-center gap-1.5 text-sm'>
+            <span className='text-muted-foreground'>{auth.register.authPrompt.message}</span>
+            <Link
+              href={`/${Routes.AUTH}/${Pages.LOGIN}`}
+              className='font-medium text-brand underline-offset-4 hover:underline'
+            >
+              {auth.register.authPrompt.loginLinkText}
+            </Link>
           </div>
         </div>
       </div>
-    </div>
+
+      <PartnersStrip />
+    </>
   )
 }
 

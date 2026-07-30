@@ -110,11 +110,35 @@ model VerificationRequest {
   @@unique([identifier, token])
 }
 
-// product model 
+// blog post
+model Blog {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  excerpt   String
+  content   String
+  image     String
+  author    String   @default("Akla Kitchen")
+  views     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, createdAt])
+}
+
+// product model
 model Product {
-  id          String         @id @default(cuid())
-  name        String
-  description String
+  id String @id @default(cuid())
+
+  // `name`/`description` hold English. The `*Ar` pair is optional so existing
+  // rows stay valid and the admin form can be filled in one language at a time;
+  // display falls back to English whenever the Arabic value is blank.
+  name          String
+  nameAr        String?
+  description   String
+  descriptionAr String?
+
   image       String
   order       Int            @default(autoincrement())
   basePrice   Float
@@ -131,6 +155,7 @@ model Product {
 model Category {
   id      String    @id @default(cuid())
   name    String
+  nameAr  String?
   order   Int       @default(autoincrement())
   Product Product[]
 }

@@ -40,19 +40,38 @@ function CategoryForm({ translations }: { translations: Translations }) {
           name='name'
           id='name'
           placeholder={translations.admin.categories.form.name.placeholder}
-          className='rounded-xl bg-muted border-border focus:border-primary focus:ring-2 focus:ring-primary/20'
+          className='rounded-sm bg-muted border-border focus:border-primary focus:ring-2 focus:ring-primary/20'
         />
         {state.error?.name && (
-          <div className='flex items-center gap-2 px-3 py-2 bg-destructive/10 border border-destructive/20 rounded-xl'>
+          <div className='flex items-center gap-2 px-3 py-2 bg-destructive/10 border border-destructive/20 rounded-sm'>
             <span className='w-1.5 h-1.5 rounded-full bg-destructive flex-shrink-0' />
             <p className='text-xs text-destructive'>{state.error.name}</p>
           </div>
         )}
       </div>
+
+      {/* Optional — blank falls back to the English name on Arabic pages. */}
+      <div className='space-y-1.5'>
+        <label className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>
+          {translations.admin.categories.form.nameAr.label}
+        </label>
+        <Input
+          type='text'
+          name='nameAr'
+          id='nameAr'
+          dir='rtl'
+          placeholder={translations.admin.categories.form.nameAr.placeholder}
+          className='rounded-sm bg-muted border-border focus:border-primary focus:ring-2 focus:ring-primary/20'
+        />
+        <p className='text-xs text-muted-foreground'>
+          {translations.admin.categories.form.nameAr.hint}
+        </p>
+      </div>
+
       <Button
         type='submit'
         disabled={pending}
-        className='w-full rounded-xl bg-foreground text-background hover:bg-foreground/90 active:scale-[0.98] transition-all'
+        className='w-full rounded-sm bg-foreground text-background hover:bg-foreground/90 active:scale-[0.98] transition-all'
       >
         {pending ? <Loader /> : translations.create}
       </Button>

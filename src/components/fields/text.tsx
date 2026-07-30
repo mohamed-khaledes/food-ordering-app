@@ -16,7 +16,9 @@ const Text = ({
   autoFocus,
   error,
   defaultValue,
-  readOnly
+  readOnly,
+  hint,
+  dir
 }: Props) => {
   return (
     <div className='space-y-2'>
@@ -32,7 +34,10 @@ const Text = ({
         id={name}
         defaultValue={defaultValue}
         readOnly={readOnly}
+        // Arabic inputs type right-to-left even while the admin UI is English.
+        dir={dir}
       />
+      {hint && !error?.[name] && <p className='text-xs text-muted-foreground'>{hint}</p>}
       {error && error[name] && (
         <p
           className={`text-accent mt-2 text-sm font-medium ${

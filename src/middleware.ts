@@ -84,6 +84,10 @@ export default withAuth(
 )
 
 export const config = {
-  // Matcher ignoring `/_next/`, `/api/`, ..etc
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)']
+  // Ignore `/api/`, `/_next/`, and anything in `public/` with a file extension.
+  // Without the extension clause, static assets referenced by URL (logo SVGs,
+  // og images, manifests) get locale-redirected to `/{locale}/file.svg` and 404.
+  matcher: [
+    '/((?!api|_next/static|_next/image|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico|txt|xml|json|webmanifest)$).*)'
+  ]
 }

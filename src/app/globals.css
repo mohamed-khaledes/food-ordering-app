@@ -6,8 +6,38 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-heading);
   --font-mono: var(--font-geist-mono);
+
+  /* ── Cabbage design system ──────────────────────────── */
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-soft: var(--brand-soft);
+  --color-deep: var(--deep);
+  --color-forest: var(--forest);
+  --color-cream: var(--cream);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-amber: var(--amber);
+  --color-star: var(--star);
+  --color-haze: var(--haze);
+
+  /* Order-state colours. Semantic, and deliberately separate from the brand
+     accent — the dashboard used raw Tailwind blues/purples before, which
+     belonged to no palette. Each has a tint for fills and an ink for text. */
+  --color-state-pending: var(--state-pending);
+  --color-state-pending-tint: var(--state-pending-tint);
+  --color-state-paid: var(--state-paid);
+  --color-state-paid-tint: var(--state-paid-tint);
+  --color-state-prep: var(--state-prep);
+  --color-state-prep-tint: var(--state-prep-tint);
+  --color-state-transit: var(--state-transit);
+  --color-state-transit-tint: var(--state-transit-tint);
+  --color-state-done: var(--state-done);
+  --color-state-done-tint: var(--state-done-tint);
+  --color-state-void: var(--state-void);
+  --color-state-void-tint: var(--state-void-tint);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -44,23 +74,51 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #c4f87d;
-  /* --primary: hsl(0, 100%, 61%); */
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  /* --accent: oklch(0.97 0 0); */
-  --accent: hsl(220 9% 46%);
-  --accent-foreground: oklch(0.205 0 0);
+  --radius: 0.5rem;
+
+  /* ── Cabbage palette (sampled from the design) ───────── */
+  --brand: #84b905; /* primary lime green — buttons, links, accents */
+  --brand-dark: #6d9a04; /* hover state */
+  --brand-soft: #f2f7e6; /* tinted surfaces behind icons */
+  --deep: #0b472e; /* top announcement bar */
+  --forest: #12300a; /* dark full-bleed bands */
+  --cream: #f8f5ec; /* hero background */
+  --ink: #181b2a; /* footer */
+  --ink-soft: #303440; /* footer bottom strip */
+  --amber: #ff9700; /* promo card / sale */
+  --star: #ffc10d; /* rating stars */
+  --haze: #f6f6f6; /* breadcrumb + section wash */
+
+  /* Order states. Hues walk from warm (waiting) to the brand green (complete),
+     so a column of chips reads as progress. Tints sit on white; the paired ink
+     clears 4.5:1 against its own tint. */
+  --state-pending: #8a5a00;
+  --state-pending-tint: #fff3df;
+  --state-paid: #1f6f4a;
+  --state-paid-tint: #e6f4ec;
+  --state-prep: #8a4d00;
+  --state-prep-tint: #fdefdc;
+  --state-transit: #2c5c8a;
+  --state-transit-tint: #e6f0f8;
+  --state-done: #4a7a03;
+  --state-done-tint: #f0f7e0;
+  --state-void: #9b2c2c;
+  --state-void-tint: #fbeaea;
+
+  --background: #ffffff;
+  --foreground: #161415;
+  --card: #ffffff;
+  --card-foreground: #161415;
+  --popover: #ffffff;
+  --popover-foreground: #161415;
+  --primary: #84b905;
+  --primary-foreground: #ffffff;
+  --secondary: #f6f6f6;
+  --secondary-foreground: #161415;
+  --muted: #f1f2f6;
+  --muted-foreground: #7a7f8a;
+  --accent: #f2f7e6;
+  --accent-foreground: #12300a;
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
@@ -120,12 +178,64 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body), system-ui, sans-serif;
   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading), var(--font-body), system-ui, sans-serif;
+  }
+  /*
+   * The template was cut on Bootstrap's grid, so the page wrapper mirrors
+   * Bootstrap's `.container` exactly — same breakpoints, same 12px gutters.
+   * At xl that lands on 1140px + gutters, which is the 1170px content column
+   * measured off the 1920px comps.
+   */
   .container {
-    @apply mx-auto px-4 md:px-8 lg:px-16 xl:px-32;
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 0.75rem;
+  }
+  @media (min-width: 576px) {
+    .container {
+      max-width: 540px;
+    }
+  }
+  @media (min-width: 768px) {
+    .container {
+      max-width: 720px;
+    }
+  }
+  @media (min-width: 992px) {
+    .container {
+      max-width: 960px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .container {
+      max-width: 1140px;
+    }
+  }
+  @media (min-width: 1400px) {
+    .container {
+      max-width: 1320px;
+    }
+  }
+  /* Edge-to-edge wrapper that keeps the gutters — Bootstrap's container-fluid. */
+  .container-fluid {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 0.75rem;
   }
   .section-gap {
     @apply my-8 md:my-16;
+  }
+  /* Vertical rhythm between the design's full-width bands. */
+  .section-y {
+    @apply py-14 md:py-20 lg:py-24;
   }
   .element-center {
     @apply flex items-center justify-center;
@@ -133,6 +243,23 @@
   .no-scrollbar {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+  }
+}
+
+@layer components {
+  /* Solid green pill/rect CTA used across the template. */
+  .btn-brand {
+    @apply inline-flex items-center justify-center gap-2 bg-brand px-6 py-3 text-sm font-medium
+      text-white transition-colors duration-200 hover:bg-brand-dark disabled:opacity-60;
+  }
+  .btn-brand-outline {
+    @apply inline-flex items-center justify-center gap-2 border border-brand bg-transparent px-6 py-3
+      text-sm font-medium text-brand transition-colors duration-200 hover:bg-brand hover:text-white;
+  }
+  /* Underlined form input from the checkout screen. */
+  .field-underline {
+    @apply w-full border-0 border-b border-border bg-transparent px-0 py-3 text-sm outline-none
+      transition-colors placeholder:text-muted-foreground focus:border-brand;
   }
 }
 @keyframes float {

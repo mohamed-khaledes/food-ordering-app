@@ -11,8 +11,8 @@ async function MenuItems({ products }: { products: Product[] }) {
 
   if (!products || products.length === 0) {
     return (
-      <div className='flex flex-col items-center justify-center py-20 gap-3 bg-background rounded-2xl border border-border'>
-        <div className='w-12 h-12 rounded-2xl bg-muted flex items-center justify-center'>
+      <div className='flex flex-col items-center justify-center py-20 gap-3 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-16px_rgb(0_0_0/0.12)]'>
+        <div className='flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft'>
           <UtensilsCrossed className='w-5 h-5 text-muted-foreground' />
         </div>
         <p className='text-sm text-muted-foreground'>{translations.noProductsFound}</p>
@@ -21,19 +21,19 @@ async function MenuItems({ products }: { products: Product[] }) {
   }
 
   return (
-    <div className='bg-background rounded-2xl border border-border overflow-hidden'>
+    <div className='overflow-hidden rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-16px_rgb(0_0_0/0.12)]'>
       {/* Table header */}
       <div className='grid grid-cols-12 gap-4 px-6 py-3 border-b border-border bg-muted/30'>
-        <div className='col-span-5 text-xs font-medium text-muted-foreground uppercase tracking-widest'>
+        <div className='col-span-8 sm:col-span-6 md:col-span-5 text-xs font-medium text-muted-foreground uppercase tracking-widest'>
           Product
         </div>
         <div className='col-span-3 text-xs font-medium text-muted-foreground uppercase tracking-widest hidden md:block'>
           Category
         </div>
-        <div className='col-span-2 text-xs font-medium text-muted-foreground uppercase tracking-widest hidden sm:block'>
+        <div className='sm:col-span-3 md:col-span-2 text-xs font-medium text-muted-foreground uppercase tracking-widest hidden sm:block'>
           Price
         </div>
-        <div className='col-span-2 text-xs font-medium text-muted-foreground uppercase tracking-widest text-right'>
+        <div className='col-span-4 sm:col-span-3 md:col-span-2 text-xs font-medium text-muted-foreground uppercase tracking-widest text-right'>
           Action
         </div>
       </div>
@@ -45,8 +45,8 @@ async function MenuItems({ products }: { products: Product[] }) {
             key={product.id}
             className='grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-muted/20 transition-colors'
           >
-            <div className='col-span-5 flex items-center gap-3'>
-              <div className='w-10 h-10 rounded-xl overflow-hidden bg-muted flex-shrink-0'>
+            <div className='col-span-8 sm:col-span-6 md:col-span-5 flex items-center gap-3'>
+              <div className='w-10 h-10 rounded-sm overflow-hidden bg-muted flex-shrink-0'>
                 {product.image ? (
                   <img
                     src={product.image}
@@ -68,21 +68,21 @@ async function MenuItems({ products }: { products: Product[] }) {
             </div>
 
             <div className='col-span-3 hidden md:block'>
-              <span className='text-xs bg-primary/10 text-foreground px-2.5 py-1 rounded-full font-medium'>
+              <span className='text-xs bg-brand-soft text-foreground px-2.5 py-1 rounded-full font-medium'>
                 {(product as any).category?.name ?? '—'}
               </span>
             </div>
 
-            <div className='col-span-2 hidden sm:block'>
+            <div className='sm:col-span-3 md:col-span-2 hidden sm:block'>
               <span className='text-sm font-semibold text-foreground'>
                 {formatCurrency(product.basePrice)}
               </span>
             </div>
 
-            <div className='col-span-2 flex justify-end'>
+            <div className='col-span-4 sm:col-span-3 md:col-span-2 flex justify-end'>
               <Link
                 href={`/${Routes.ADMIN}/${Pages.MENU_ITEMS}/${product.id}/${Pages.EDIT}`}
-                className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border hover:border-primary/40 hover:bg-muted/50 transition-all text-xs font-medium'
+                className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border hover:border-brand hover:bg-muted/50 transition-all text-xs font-medium'
               >
                 <Edit className='w-3 h-3' />
                 Edit

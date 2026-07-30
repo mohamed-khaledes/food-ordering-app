@@ -18,8 +18,16 @@ import { useAppDispatch } from '@/redux/hooks'
 import { addCartItem, removeCartItem, removeItemFromCart } from '../../cart/slice'
 import { useAddToCart } from './hooks'
 import { Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react'
+import { useTrans } from '@/lib/translations/client'
 
-export default function AddToCart({ item }: { item: ProductWithRelations }) {
+export default function AddToCart({
+  item,
+  trigger
+}: {
+  item: ProductWithRelations
+  /** Custom dialog trigger — the product card passes its hover icon button. */
+  trigger?: React.ReactNode
+}) {
   const {
     handleAddToCart,
     setSelectedExtras,
@@ -29,22 +37,22 @@ export default function AddToCart({ item }: { item: ProductWithRelations }) {
     quantity,
     totalPrice
   } = useAddToCart(item)
+  const { product } = useTrans()
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button
-          type='button'
-          className='flex items-center justify-center gap-2 px-5 py-2.5 bg-foreground text-background rounded-xl text-sm font-medium hover:bg-foreground/90 active:scale-[0.98] transition-all'
-        >
-          <ShoppingCart className='w-4 h-4' />
-          Add to cart
-        </button>
+        {trigger ?? (
+          <button type='button' className='btn-brand w-full'>
+            <ShoppingCart className='h-4 w-4' />
+            {product.addToCart}
+          </button>
+        )}
       </DialogTrigger>
 
-      <DialogContent className='sm:w-[425px] md:w-[560px] max-h-[85vh] overflow-y-auto no-scrollbar p-0 rounded-2xl gap-0'>
+      <DialogContent className='w-[calc(100%-2rem)] sm:w-[425px] md:w-[560px] max-h-[85vh] overflow-y-auto no-scrollbar p-0 rounded-none gap-0'>
         {/* Product hero */}
-        <div className='relative h-52 w-full bg-muted overflow-hidden rounded-t-2xl flex-shrink-0'>
+        <div className='relative h-52 w-full bg-muted overflow-hidden rounded-none flex-shrink-0'>
           <Image
             src={item.image || ''}
             alt={item.name}
@@ -63,8 +71,8 @@ export default function AddToCart({ item }: { item: ProductWithRelations }) {
 
         <div className='p-6 space-y-6'>
           {/* Base price */}
-          <div className='flex items-center justify-between py-3 px-4 bg-muted/40 rounded-xl'>
-            <span className='text-sm text-muted-foreground'>Base price</span>
+          <div className='flex items-center justify-between py-3 px-4 bg-muted/40 rounded-sm'>
+            <span className='text-sm text-muted-foreground'>{product.basePrice}</span>
             <span className='text-sm font-semibold text-foreground'>
               {formatCurrency(item.basePrice)}
             </span>
@@ -74,9 +82,9 @@ export default function AddToCart({ item }: { item: ProductWithRelations }) {
           {item?.sizes?.length > 0 && (
             <div className='space-y-3'>
               <div className='flex items-center gap-2'>
-                <span className='w-1.5 h-1.5 rounded-full bg-primary' />
+                <span className='w-1.5 h-1.5 rounded-full bg-brand' />
                 <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>
-                  Pick your size
+                  {product.pickSize}
                 </p>
               </div>
               <PickSize
@@ -92,9 +100,9 @@ export default function AddToCart({ item }: { item: ProductWithRelations }) {
           {item?.extras?.length > 0 && (
             <div className='space-y-3'>
               <div className='flex items-center gap-2'>
-                <span className='w-1.5 h-1.5 rounded-full bg-primary' />
+                <span className='w-1.5 h-1.5 rounded-full bg-brand' />
                 <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>
-                  Any extras?
+                  {product.anyExtras}
                 </p>
               </div>
               <ProductExtras
@@ -116,14 +124,10 @@ export default function AddToCart({ item }: { item: ProductWithRelations }) {
           )}
 
           {/* Add to cart CTA */}
-          <button
-            type='submit'
-            onClick={handleAddToCart}
-            className='w-full flex items-center justify-center gap-2 py-3.5 bg-foreground text-background rounded-xl text-sm font-medium hover:bg-foreground/90 active:scale-[0.98] transition-all'
-          >
-            <ShoppingCart className='w-4 h-4' />
-            Add to cart
-            <span className='ml-1 text-primary font-bold'>{formatCurrency(totalPrice)}</span>
+          <button type='submit' onClick={handleAddToCart} className='btn-brand w-full py-3.5'>
+            <ShoppingCart className='h-4 w-4' />
+            {product.addToCart}
+            <span className='ms-1 font-bold'>{formatCurrency(totalPrice)}</span>
           </button>
         </div>
       </DialogContent>
@@ -151,11 +155,11 @@ function PickSize({
           <div
             key={size.id}
             onClick={() => setSelectedSize(size)}
-            className={`flex items-center justify-between px-4 py-3 rounded-xl border cursor-pointer transition-all duration-200
+            className={`flex items-center justify-between px-4 py-3 rounded-sm border cursor-pointer transition-all duration-200
               ${
                 isSelected
-                  ? 'border-primary/40 bg-primary/10'
-                  : 'border-border hover:border-primary/20 hover:bg-muted/30'
+                  ? 'border-brand bg-brand-soft'
+                  : 'border-border hover:border-brand/40 hover:bg-muted/30'
               }`}
           >
             <div className='flex items-center gap-3'>
@@ -207,11 +211,11 @@ function ProductExtras({
           <div
             key={extra.id}
             onClick={() => handleExtra(extra)}
-            className={`flex items-center justify-between px-4 py-3 rounded-xl border cursor-pointer transition-all duration-200
+            className={`flex items-center justify-between px-4 py-3 rounded-sm border cursor-pointer transition-all duration-200
               ${
                 isSelected
-                  ? 'border-primary/40 bg-primary/10'
-                  : 'border-border hover:border-primary/20 hover:bg-muted/30'
+                  ? 'border-brand bg-brand-soft'
+                  : 'border-border hover:border-brand/40 hover:bg-muted/30'
               }`}
           >
             <div className='flex items-center gap-3'>
@@ -251,7 +255,7 @@ const ChooseQuantity = ({
   const dispatch = useAppDispatch()
 
   return (
-    <div className='flex items-center justify-between gap-3 px-4 py-3 bg-muted/40 rounded-xl'>
+    <div className='flex items-center justify-between gap-3 px-4 py-3 bg-muted/40 rounded-sm'>
       <span className='text-sm text-muted-foreground'>
         <span className='font-semibold text-foreground'>{quantity}</span> in cart
       </span>
@@ -261,7 +265,7 @@ const ChooseQuantity = ({
         <button
           type='button'
           onClick={() => dispatch(removeCartItem({ id: item.id }))}
-          className='w-8 h-8 flex items-center justify-center rounded-lg border border-border hover:border-primary/30 hover:bg-muted transition-all'
+          className='w-8 h-8 flex items-center justify-center rounded-lg border border-border hover:border-brand/40 hover:bg-muted transition-all'
         >
           <Minus className='w-3 h-3' />
         </button>
@@ -281,7 +285,7 @@ const ChooseQuantity = ({
               })
             )
           }
-          className='w-8 h-8 flex items-center justify-center rounded-lg border border-border hover:border-primary/30 hover:bg-muted transition-all'
+          className='w-8 h-8 flex items-center justify-center rounded-lg border border-border hover:border-brand/40 hover:bg-muted transition-all'
         >
           <Plus className='w-3 h-3' />
         </button>

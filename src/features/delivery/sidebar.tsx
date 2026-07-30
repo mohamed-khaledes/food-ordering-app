@@ -1,21 +1,30 @@
 'use client'
 import Link from '@/components/link'
-import { Routes } from '@/constants/enums'
 import { Translations } from '@/types/translations'
 import { useParams, usePathname } from 'next/navigation'
-import { LayoutDashboard, ShoppingBag, User, Menu, X, ChevronRight } from 'lucide-react'
+import {
+  LayoutDashboard,
+  ShoppingBag,
+  User,
+  Menu,
+  X,
+  ChevronRight,
+  ExternalLink
+} from 'lucide-react'
 import { useState } from 'react'
-import logo from '../../../public/logo.png'
+import Logo from '@/components/ui/logo'
+
 const NAV_ITEMS = [
-  { id: 'overview', icon: LayoutDashboard, href: 'dashboard', label: 'Overview' },
-  { id: 'orders', icon: ShoppingBag, href: 'dashboard/orders', label: 'Orders' },
-  { id: 'profile', icon: User, href: 'dashboard/profile', label: 'Profile' }
-]
+  { id: 'overview', icon: LayoutDashboard, href: 'dashboard' },
+  { id: 'orders', icon: ShoppingBag, href: 'dashboard/orders' },
+  { id: 'profile', icon: User, href: 'dashboard/profile' }
+] as const
 
 export default function DeliverySidebar({ translations }: { translations: Translations }) {
   const pathname = usePathname()
   const { locale } = useParams()
   const [open, setOpen] = useState(false)
+  const ui = translations.adminUi
 
   const isActive = (href: string) =>
     pathname === `/${locale}/${href}` || pathname.startsWith(`/${locale}/${href}/`)
@@ -23,52 +32,50 @@ export default function DeliverySidebar({ translations }: { translations: Transl
   return (
     <>
       {/* Mobile top bar */}
-      <div className='lg:hidden fixed top-16 left-0 right-0 z-30 bg-background border-b border-border px-4 py-2 flex items-center gap-3'>
+      <div className='fixed inset-x-0 top-0 z-30 flex items-center gap-3 border-b border-border bg-background px-4 py-3 lg:hidden'>
         <button
           onClick={() => setOpen(true)}
-          className='w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors'
+aria-label={ui.openMenu}
+          className='flex h-8 w-8 items-center justify-center border border-border transition-colors hover:border-brand hover:text-brand'
         >
-          <Menu className='w-4 h-4' />
+          <Menu className='h-4 w-4' />
         </button>
-        <span className='text-sm font-medium text-muted-foreground'>Delivery Panel</span>
+        <span className='text-sm font-medium text-muted-foreground'>{ui.deliveryPanel}</span>
       </div>
 
       {open && (
         <div
-          className='fixed inset-0 bg-foreground/20 backdrop-blur-sm z-40 lg:hidden'
+          className='fixed inset-0 z-40 bg-ink/40 backdrop-blur-sm lg:hidden'
           onClick={() => setOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-background border-r border-border z-50 flex flex-col transition-all duration-300
-        lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
+        className={`fixed inset-y-0 start-0 z-50 flex w-64 flex-col bg-ink text-white transition-transform duration-300
+        lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full lg:translate-x-0 rtl:lg:translate-x-0'}`}
       >
         {/* Header */}
-        <div className='flex items-center justify-between px-6 py-5 border-b border-border mt-16 lg:mt-0'>
-          <div className='flex items-center gap-2'>
-            <div className='w-7 h-7 rounded-lg bg-primary flex items-center justify-center'>
-              <span className='text-foreground font-bold text-sm'>🚴</span>
-            </div>
-            <div>
-              <Link href={'/'}>
-                <img src={logo.src} alt='akla' loading='lazy' className='w-[70px] lg:w-[90px]' />
-                <p className='text-[10px] text-muted-foreground uppercase tracking-widest'>
-                  Delivery Panel
-                </p>
-              </Link>
-            </div>
-          </div>
+        <div className='flex items-center justify-between border-b border-white/10 px-6 py-5'>
+          <Link href='/'>
+            <Logo markClassName='h-6' wordClassName='text-[22px] text-white' />
+            <p className='mt-1 text-[10px] uppercase tracking-widest text-white/40'>
+              {ui.deliveryPanel}
+            </p>
+          </Link>
           <button
-            className='lg:hidden w-7 h-7 flex items-center justify-center rounded-lg hover:bg-muted'
+            className='flex h-7 w-7 items-center justify-center text-white/60 transition-colors hover:text-white lg:hidden'
             onClick={() => setOpen(false)}
+  aria-label={ui.closeMenu}
           >
-            <X className='w-4 h-4' />
+            <X className='h-4 w-4' />
           </button>
         </div>
 
         {/* Nav */}
-        <nav className='flex-1 px-3 py-4'>
+        <nav className='flex-1 px-3 py-5'>
+          <p className='mb-3 px-3 text-[10px] font-medium uppercase tracking-widest text-white/35'>
+            {ui.navigation}
+          </p>
           <ul className='flex flex-col gap-1'>
             {NAV_ITEMS.map(item => {
               const active = isActive(item.href)
@@ -77,18 +84,16 @@ export default function DeliverySidebar({ translations }: { translations: Transl
                   <Link
                     href={`/${item.href}`}
                     onClick={() => setOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                    className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors duration-200
                       ${
                         active
-                          ? 'bg-primary/15 text-foreground'
-                          : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
+                          ? 'bg-brand text-white'
+                          : 'text-white/60 hover:bg-white/5 hover:text-white'
                       }`}
                   >
-                    <item.icon
-                      className={`w-4 h-4 flex-shrink-0 ${active ? 'text-primary' : ''}`}
-                    />
-                    <span className='flex-1'>{item.label}</span>
-                    {active && <ChevronRight className='w-3 h-3 text-primary' />}
+                    <item.icon className='h-4 w-4 shrink-0' />
+                    <span className='flex-1'>{ui.deliveryNav[item.id]}</span>
+                    {active && <ChevronRight className='h-3 w-3 rtl:rotate-180' />}
                   </Link>
                 </li>
               )
@@ -97,10 +102,17 @@ export default function DeliverySidebar({ translations }: { translations: Transl
         </nav>
 
         {/* Footer */}
-        <div className='px-4 py-4 border-t border-border'>
+        <div className='border-t border-white/10 px-4 py-4'>
+          <Link
+            href='/'
+            className='mb-3 flex items-center gap-2 text-xs text-white/60 transition-colors hover:text-brand'
+          >
+            <ExternalLink className='h-3.5 w-3.5' />
+            {ui.viewStorefront}
+          </Link>
           <div className='flex items-center gap-1.5'>
-            <span className='w-1.5 h-1.5 rounded-full bg-primary animate-pulse' />
-            <span className='text-xs text-muted-foreground'>On duty</span>
+            <span className='h-1.5 w-1.5 animate-pulse rounded-full bg-brand' />
+            <span className='text-xs text-white/40'>{ui.onDuty}</span>
           </div>
         </div>
       </aside>

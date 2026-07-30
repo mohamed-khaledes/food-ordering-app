@@ -26,6 +26,10 @@ export interface IFormField {
   defaultValue?: string
   readOnly?: boolean
   checked?: boolean
+  /** Helper text under the input — used by the optional Arabic fields. */
+  hint?: string
+  /** Forces text direction, so Arabic inputs type right-to-left in either UI locale. */
+  dir?: 'rtl' | 'ltr'
 }
 export interface IFormFieldsVariables {
   slug: string

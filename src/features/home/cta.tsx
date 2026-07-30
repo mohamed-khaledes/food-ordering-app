@@ -2,103 +2,71 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import Link from '@/components/link'
-import { Button } from '@/components/ui/button'
 import { useTrans } from '@/lib/translations/client'
+import { Routes } from '@/constants/enums'
+import { IMAGES } from '@/constants/images'
+import { Play } from 'lucide-react'
+import { Container } from '@/components/ui/container'
 
-const stats = [
-  { n: '12k+', l: 'Happy customers' },
-  { n: '200+', l: 'Weekly meals' },
-  { n: '4.9', l: 'Avg. rating' }
-]
-
+/**
+ * Full-bleed dark band with a play affordance — the "Need Any Organic Fresh
+ * Food?" strip in the design.
+ */
 const Cta = () => {
   const { global } = useTrans()
 
   return (
-    <section className='relative py-24 bg-foreground text-background overflow-hidden'>
-      {/* Decorative blobs */}
-      <div className='absolute -top-16 -right-16 w-56 h-56 rounded-full bg-primary/10 pointer-events-none' />
-      <div className='absolute -bottom-10 left-1/4 w-40 h-40 rounded-full bg-primary/5 pointer-events-none' />
+    <section className='relative overflow-hidden bg-forest text-white'>
+      {/* Photographic backdrop, darkened so the copy stays readable */}
+      <img
+        src={IMAGES.ctaBackground}
+        alt=''
+        aria-hidden
+        loading='lazy'
+        className='absolute inset-0 h-full w-full object-cover'
+      />
+      <span aria-hidden className='absolute inset-0 bg-forest/80' />
 
-      <div className='container mx-auto px-6 text-center relative z-10'>
-        {/* Eyebrow badge */}
+      <Container className='relative flex flex-col items-start gap-10 py-20 md:flex-row md:items-center md:justify-between md:py-28'>
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className='inline-flex items-center gap-2 bg-primary/20 border border-primary/30 rounded-full px-4 py-1.5 mb-6'
+          transition={{ duration: 0.6 }}
+          className='max-w-lg'
         >
-          <span className='w-1.5 h-1.5 rounded-full bg-primary animate-pulse' />
-          <span className='text-xs font-medium text-primary uppercase tracking-widest'>
-            Limited time offer
+          <h2 className='mb-4 text-[26px] font-bold leading-tight sm:text-[30px] md:text-[42px]'>
+            {global['Ready to Eat Clean?']}
+          </h2>
+          <p className='mb-8 text-white/70'>{global['Choose your meal']}</p>
+
+          <div className='flex flex-wrap gap-3'>
+            <Link href={`/${Routes.MENU}`} className='btn-brand px-8'>
+              {global['Choose Your Plan']}
+            </Link>
+            <Link
+              href={`/${Routes.CONTACT}`}
+              className='inline-flex items-center justify-center border border-white/30 px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10'
+            >
+              {global.contact}
+            </Link>
+          </div>
+        </motion.div>
+
+        {/* Play button ring */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.85 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className='relative mx-auto flex h-32 w-32 shrink-0 items-center justify-center rounded-full border border-white/25 md:mx-0 md:h-40 md:w-40'
+        >
+          <span className='absolute inset-0 animate-ping rounded-full border border-white/10' />
+          <span className='flex h-16 w-16 items-center justify-center rounded-full bg-white text-forest'>
+            <Play className='ms-1 h-6 w-6 fill-current rtl:ms-0 rtl:me-1 rtl:rotate-180' />
           </span>
         </motion.div>
-
-        {/* Title */}
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className='text-4xl md:text-5xl font-bold mb-4 text-background'
-        >
-          {global['Ready to Eat Clean?']}
-        </motion.h2>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className='text-lg md:text-xl mb-10 max-w-2xl mx-auto text-background/60'
-        >
-          {global['Choose your meal']}
-        </motion.p>
-
-        {/* Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className='flex gap-4 justify-center flex-wrap'
-        >
-          <Link href='/plans'>
-            <Button className='px-10 py-6 text-lg rounded-2xl bg-primary text-foreground font-semibold hover:bg-primary/90 active:scale-[0.98] transition'>
-              {global['Choose Your Plan']}
-            </Button>
-          </Link>
-          <Link href='/menu'>
-            <Button
-              variant='outline'
-              className='px-10 py-6 text-lg rounded-2xl bg-transparent border-background/30 text-background hover:bg-background/10 active:scale-[0.98] transition'
-            >
-              Browse menu →
-            </Button>
-          </Link>
-        </motion.div>
-
-        {/* Stats row */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className='mt-14 flex items-center justify-center gap-10 flex-wrap'
-        >
-          {stats.map((s, i) => (
-            <React.Fragment key={s.l}>
-              {i > 0 && <div className='h-8 w-px bg-background/15' />}
-              <div>
-                <div className='text-2xl font-bold text-primary'>{s.n}</div>
-                <div className='text-sm text-background/60'>{s.l}</div>
-              </div>
-            </React.Fragment>
-          ))}
-        </motion.div>
-      </div>
+      </Container>
     </section>
   )
 }

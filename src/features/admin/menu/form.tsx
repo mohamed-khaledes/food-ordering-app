@@ -5,6 +5,7 @@ import { Pages, Routes } from '@/constants/enums'
 import useFormFields from '@/hooks/useFormFields'
 import { IFormField } from '@/types/app'
 import { Translations } from '@/types/translations'
+import { useTrans } from '@/lib/translations/client'
 import { CameraIcon, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import { useActionState, useEffect, useState } from 'react'
@@ -90,10 +91,10 @@ function MenuForm({
     <div className='space-y-6'>
       {/* Page header */}
       <div>
-        <div className='inline-flex items-center gap-2 bg-primary/15 border border-primary/30 rounded-full px-4 py-1.5 mb-3'>
-          <span className='w-1.5 h-1.5 rounded-full bg-primary' />
+        <div className='inline-flex items-center gap-2 bg-brand-soft border border-brand/40 rounded-full px-4 py-1.5 mb-3'>
+          <span className='w-1.5 h-1.5 rounded-full bg-brand' />
           <span className='text-xs font-medium text-foreground/70 uppercase tracking-widest'>
-            {product ? 'Edit Item' : 'New Item'}
+            {product ? translations.adminUi.editItem : translations.adminUi.newItem}
           </span>
         </div>
         <h1 className='text-3xl font-bold'>
@@ -104,13 +105,13 @@ function MenuForm({
       <form action={action}>
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
           {/* Left: image */}
-          <div className='bg-background rounded-2xl border border-border p-6 flex flex-col items-center gap-4'>
+          <div className='rounded-2xl border border-border/70 bg-background p-6 flex flex-col items-center gap-4 shadow-[0_1px_2px_rgb(0_0_0/0.04)]'>
             <h2 className='text-sm font-bold uppercase tracking-widest text-muted-foreground self-start'>
-              Product Image
+              {translations.adminUi.productImage}
             </h2>
             <UploadImage selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
             {state?.error?.image && (
-              <div className='flex items-center gap-2 px-3 py-2 bg-destructive/10 border border-destructive/20 rounded-xl w-full'>
+              <div className='flex items-center gap-2 px-3 py-2 bg-destructive/10 border border-destructive/20 rounded-sm w-full'>
                 <span className='w-1.5 h-1.5 rounded-full bg-destructive flex-shrink-0' />
                 <p className='text-xs text-destructive'>{state.error?.image}</p>
               </div>
@@ -119,9 +120,9 @@ function MenuForm({
 
           {/* Right: fields */}
           <div className='lg:col-span-2 space-y-4'>
-            <div className='bg-background rounded-2xl border border-border p-6 space-y-4'>
+            <div className='rounded-2xl border border-border/70 bg-background p-6 space-y-4 shadow-[0_1px_2px_rgb(0_0_0/0.04)]'>
               <h2 className='text-sm font-bold uppercase tracking-widest text-muted-foreground'>
-                Product Details
+                {translations.adminUi.productDetails}
               </h2>
               {getFormFields().map((field: IFormField) => {
                 const fieldValue = state.formData?.get(field.name) ?? formData.get(field.name)
@@ -140,7 +141,7 @@ function MenuForm({
               })}
               <div className='flex flex-col gap-1.5'>
                 <label className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>
-                  Category
+                  {translations.category}
                 </label>
                 <SelectCategory
                   categoryId={categoryId}
@@ -152,13 +153,13 @@ function MenuForm({
             </div>
 
             {/* Options */}
-            <div className='bg-background rounded-2xl border border-border overflow-hidden'>
+            <div className='overflow-hidden rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgb(0_0_0/0.04)]'>
               <Accordion type='single' collapsible>
                 <AccordionItem value='sizes' className='border-b border-border px-6'>
                   <AccordionTrigger className='text-sm font-medium hover:no-underline py-4'>
                     {translations.sizes}
                     {sizes.length > 0 && (
-                      <span className='ml-2 text-xs bg-primary/15 text-foreground px-2 py-0.5 rounded-full'>
+                      <span className='ml-2 text-xs bg-brand-soft text-foreground px-2 py-0.5 rounded-full'>
                         {sizes.length}
                       </span>
                     )}
@@ -176,7 +177,7 @@ function MenuForm({
                   <AccordionTrigger className='text-sm font-medium hover:no-underline py-4'>
                     {translations.extrasIngredients}
                     {extras.length > 0 && (
-                      <span className='ml-2 text-xs bg-primary/15 text-foreground px-2 py-0.5 rounded-full'>
+                      <span className='ml-2 text-xs bg-brand-soft text-foreground px-2 py-0.5 rounded-full'>
                         {extras.length}
                       </span>
                     )}
@@ -212,6 +213,8 @@ const UploadImage = ({
   selectedImage: string
   setSelectedImage: React.Dispatch<React.SetStateAction<string>>
 }) => {
+  const translations = useTrans()
+
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0]
     if (file) {
@@ -222,7 +225,7 @@ const UploadImage = ({
 
   return (
     <div className='relative group'>
-      <div className='w-40 h-40 rounded-2xl overflow-hidden border-2 border-dashed border-border group-hover:border-primary/40 transition-colors bg-muted/30 flex items-center justify-center'>
+      <div className='w-40 h-40 rounded-none overflow-hidden border-2 border-dashed border-border group-hover:border-brand transition-colors bg-muted/30 flex items-center justify-center'>
         {selectedImage ? (
           <Image
             src={selectedImage}
@@ -234,7 +237,7 @@ const UploadImage = ({
         ) : (
           <div className='flex flex-col items-center gap-2 text-muted-foreground'>
             <CameraIcon className='w-8 h-8' />
-            <span className='text-xs'>Upload image</span>
+            <span className='text-xs'>{translations.common.uploadImage}</span>
           </div>
         )}
       </div>
@@ -249,10 +252,10 @@ const UploadImage = ({
       />
       <label
         htmlFor='image-upload'
-        className='absolute inset-0 cursor-pointer rounded-2xl flex items-end justify-center pb-3 opacity-0 group-hover:opacity-100 transition-opacity bg-foreground/20'
+        className='absolute inset-0 cursor-pointer rounded-none flex items-end justify-center pb-3 opacity-0 group-hover:opacity-100 transition-opacity bg-foreground/20'
       >
         <span className='text-xs text-white font-medium bg-foreground/60 px-3 py-1 rounded-full'>
-          Change
+          {translations.adminUi.changeImage}
         </span>
       </label>
     </div>
@@ -295,11 +298,11 @@ const FormActions = ({
   }, [deleteState.message, deleteState.status])
 
   return (
-    <div className='bg-background rounded-2xl border border-border p-6 flex flex-wrap gap-3'>
+    <div className='rounded-2xl border border-border/70 bg-background p-6 flex flex-wrap gap-3 shadow-[0_1px_2px_rgb(0_0_0/0.04)]'>
       <Button
         type='submit'
         disabled={pending}
-        className='flex-1 rounded-xl bg-foreground text-background hover:bg-foreground/90 active:scale-[0.98] transition-all'
+        className='flex-1 rounded-sm bg-foreground text-background hover:bg-foreground/90 active:scale-[0.98] transition-all'
       >
         {pending ? <Loader /> : product ? translations.save : translations.create}
       </Button>
@@ -309,7 +312,7 @@ const FormActions = ({
           type='button'
           disabled={deleteState.pending}
           onClick={() => handleDelete(product.id)}
-          className='flex items-center gap-2 px-4 py-2 rounded-xl border border-destructive/30 text-destructive hover:bg-destructive/10 transition-all text-sm font-medium disabled:opacity-50'
+          className='flex items-center gap-2 px-4 py-2 rounded-sm border border-destructive/30 text-destructive hover:bg-destructive/10 transition-all text-sm font-medium disabled:opacity-50'
         >
           {deleteState.pending ? (
             <Loader />
@@ -323,7 +326,7 @@ const FormActions = ({
 
       <Link
         href={`/${locale}/${Routes.ADMIN}/${Pages.MENU_ITEMS}`}
-        className='flex-1 flex items-center justify-center px-4 py-2 rounded-xl border border-border hover:bg-muted/50 transition-all text-sm font-medium'
+        className='flex-1 flex items-center justify-center px-4 py-2 rounded-sm border border-border hover:bg-muted/50 transition-all text-sm font-medium'
       >
         {translations.cancel}
       </Link>

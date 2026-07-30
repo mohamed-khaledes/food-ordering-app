@@ -14,11 +14,11 @@ const CartButton = () => {
   return (
     <Link
       href={`/${Routes.CART}`}
-      className='relative w-9 h-9 flex items-center justify-center rounded-xl hover:bg-muted/60 transition-colors group'
+      className='group relative flex h-10 w-10 items-center justify-center rounded-full bg-haze transition-colors hover:bg-brand-soft'
     >
-      <ShoppingCartIcon className='w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors' />
+      <ShoppingCartIcon className='h-[18px] w-[18px] text-foreground/70 transition-colors group-hover:text-brand' />
       {cartQuantity > 0 && (
-        <span className='absolute -top-1 -right-1 w-4 h-4 text-[10px] font-bold bg-primary text-foreground rounded-full flex items-center justify-center leading-none'>
+        <span className='absolute -end-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold leading-none text-white'>
           {cartQuantity}
         </span>
       )}

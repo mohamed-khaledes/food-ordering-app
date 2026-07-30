@@ -40,7 +40,7 @@ export default function ProfileDropdown({ initialSession }: Props) {
             {user?.image ? (
               <AvatarImage src={user.image} alt={user.name ?? 'avatar'} />
             ) : (
-              <AvatarFallback className='bg-primary/20 text-foreground text-xs font-semibold'>
+              <AvatarFallback className='bg-brand-soft text-foreground text-xs font-semibold'>
                 {(user?.name || 'U').charAt(0)}
               </AvatarFallback>
             )}
@@ -48,7 +48,7 @@ export default function ProfileDropdown({ initialSession }: Props) {
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className='w-56 rounded-2xl p-1' align='end'>
+      <DropdownMenuContent className='w-56 rounded-none p-1' align='end'>
         {/* User info */}
         <div className='px-3 py-3 mb-1'>
           <div className='flex items-center gap-2.5'>
@@ -56,7 +56,7 @@ export default function ProfileDropdown({ initialSession }: Props) {
               {user?.image ? (
                 <AvatarImage src={user.image} alt={user.name ?? 'avatar'} />
               ) : (
-                <AvatarFallback className='bg-primary/20 text-foreground text-xs font-semibold'>
+                <AvatarFallback className='bg-brand-soft text-foreground text-xs font-semibold'>
                   {(user?.name || 'U').charAt(0)}
                 </AvatarFallback>
               )}
@@ -69,8 +69,8 @@ export default function ProfileDropdown({ initialSession }: Props) {
             </div>
           </div>
           {isAdmin && (
-            <div className='mt-2 inline-flex items-center gap-1 bg-primary/15 border border-primary/30 rounded-full px-2 py-0.5'>
-              <span className='w-1 h-1 rounded-full bg-primary' />
+            <div className='mt-2 inline-flex items-center gap-1 bg-brand-soft border border-brand/40 rounded-full px-2 py-0.5'>
+              <span className='w-1 h-1 rounded-full bg-brand' />
               <span className='text-[10px] font-medium text-foreground/70 uppercase tracking-widest'>
                 Admin
               </span>
@@ -89,7 +89,7 @@ export default function ProfileDropdown({ initialSession }: Props) {
                   ? `/${Routes.DASHBOARD}`
                   : `/${Routes.PROFILE}`
             }
-            className='flex items-center gap-2 rounded-xl cursor-pointer'
+            className='flex items-center gap-2 rounded-sm cursor-pointer'
           >
             <UserIcon className='h-4 w-4' />
             {isAdmin
@@ -103,7 +103,7 @@ export default function ProfileDropdown({ initialSession }: Props) {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          className='flex items-center gap-2 rounded-xl text-destructive focus:text-destructive cursor-pointer'
+          className='flex items-center gap-2 rounded-sm text-destructive focus:text-destructive cursor-pointer'
           onSelect={e => {
             e.preventDefault()
             signOut()

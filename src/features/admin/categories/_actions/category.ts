@@ -58,7 +58,8 @@ export const updateCategory = async (id: string, prevState: unknown, formData: F
         id
       },
       data: {
-        name: data.categoryName
+        name: data.categoryName,
+        nameAr: data.categoryNameAr ?? null
       }
     })
     revalidatePath(`/${locale}/${Routes.ADMIN}/${Pages.CATEGORIES}`)

@@ -1,79 +1,118 @@
 import React from 'react'
+import Link from '@/components/link'
+import { ChevronRight } from 'lucide-react'
+import { IMAGES } from '@/constants/images'
+import { Container } from '@/components/ui/container'
 
 type Stat = {
   n: string | number
   l: string
 }
 
+export type Crumb = { label: string; href?: string }
+
 type PageBannerProps = {
   eyebrow?: string
   title: string
   description?: string
   stats?: Stat[]
+  /** Trail under the title. Falls back to `Home › {title}`. */
+  crumbs?: Crumb[]
+  /** Backdrop image URL. Pass `null` for the plain grey banner. */
+  background?: string | null
 }
 
-export default function Banner({ eyebrow, title, description, stats }: PageBannerProps) {
+/**
+ * Grey masthead with an oversized title and breadcrumb — the shared banner on
+ * every inner page of the design.
+ */
+export default function Banner({
+  eyebrow,
+  title,
+  description,
+  stats,
+  crumbs,
+  background = IMAGES.bannerBackground
+}: PageBannerProps) {
+  const trail: Crumb[] = crumbs ?? [{ label: 'Home', href: '/' }, { label: title }]
+
   return (
-    <div className='md:pt-10 relative bg-foreground overflow-hidden'>
-      {/* Decorative blobs */}
-      <div className='absolute -top-10 -left-10 w-48 h-48 rounded-full bg-primary/15 blur-3xl pointer-events-none' />
-      <div className='absolute -bottom-10 right-1/4 w-64 h-64 rounded-full bg-primary/10 blur-3xl pointer-events-none' />
-      <div className='absolute top-1/2 -translate-y-1/2 right-10 w-32 h-32 rounded-full bg-primary/20 blur-2xl pointer-events-none' />
-
-      <div className='container py-10 md:py-14 relative z-10'>
-        <div className='flex flex-col md:flex-row md:items-end md:justify-between gap-6'>
-          {/* Left: text */}
-          <div>
-            {eyebrow && (
-              <div className='inline-flex items-center gap-2 bg-primary/20 border border-primary/30 rounded-full px-4 py-1.5 mb-4'>
-                <span className='w-1.5 h-1.5 rounded-full bg-primary animate-pulse' />
-                <span className='text-xs font-medium text-primary uppercase tracking-widest'>
-                  {eyebrow}
-                </span>
-              </div>
-            )}
-            <h1 className='text-4xl md:text-5xl font-bold text-background mb-3'>{title}</h1>
-            {description && (
-              <p className='text-background/60 text-base md:text-lg max-w-md leading-relaxed'>
-                {description}
-              </p>
-            )}
-          </div>
-
-          {/* Right: stats */}
-          {stats && stats.length > 0 && (
-            <div className='flex items-center gap-px bg-background/10 rounded-2xl overflow-hidden flex-shrink-0'>
-              {stats.map((s, i) => (
-                <div
-                  key={i}
-                  className='px-5 py-4 text-center bg-background/5 hover:bg-background/10 transition-colors'
-                >
-                  <div className='text-xl font-bold text-primary'>{s.n}</div>
-                  <div className='text-xs text-background/50 uppercase tracking-widest mt-0.5'>
-                    {s.l}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Bottom wave */}
-      <div className='relative h-10 bg-foreground'>
-        <svg
-          viewBox='0 0 1440 32'
-          fill='none'
-          xmlns='http://www.w3.org/2000/svg'
-          className='absolute inset-0 w-full h-full'
-          preserveAspectRatio='none'
-        >
-          <path
-            d='M0 32C240 32 240 0 480 0C720 0 720 32 960 32C1200 32 1200 0 1440 0V32H0Z'
-            className='fill-background'
+    <section className='relative overflow-hidden bg-haze'>
+      {/* Photographic backdrop, washed out so the title stays legible */}
+      {/* {background && (
+        <>
+          <img
+            src={background}
+            alt=''
+            aria-hidden
+            loading='lazy'
+            className='absolute inset-0 h-full w-full object-cover'
           />
-        </svg>
-      </div>
-    </div>
+          <span aria-hidden className='absolute inset-0 bg-haze/90' />
+        </>
+      )} */}
+
+      {/* Corner marks from the design's banner */}
+      <span
+        aria-hidden
+        className='pointer-events-none absolute end-[8%] top-10 text-5xl leading-none text-black/10 select-none'
+      >
+        ✳
+      </span>
+
+      <Container className=' relative py-14 md:py-20'>
+        {eyebrow && <p className='mb-3 text-sm font-medium text-brand'>{eyebrow}</p>}
+
+        <h1 className='text-[26px] font-bold leading-tight text-foreground sm:text-[32px] md:text-[46px]'>
+          {title}
+        </h1>
+
+        {trail.length > 0 && (
+          <nav aria-label='Breadcrumb' className='mt-3'>
+            <ol className='flex flex-wrap items-center gap-1.5 text-sm'>
+              {trail.map((crumb, i) => {
+                const isLast = i === trail.length - 1
+                return (
+                  <li key={`${crumb.label}-${i}`} className='flex items-center gap-1.5'>
+                    {crumb.href && !isLast ? (
+                      <Link
+                        href={crumb.href}
+                        className='text-muted-foreground transition-colors hover:text-brand'
+                      >
+                        {crumb.label}
+                      </Link>
+                    ) : (
+                      <span className='text-foreground'>{crumb.label}</span>
+                    )}
+                    {!isLast && (
+                      <ChevronRight className='h-3.5 w-3.5 text-muted-foreground rtl:rotate-180' />
+                    )}
+                  </li>
+                )
+              })}
+            </ol>
+          </nav>
+        )}
+
+        {description && (
+          <p className='mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base'>
+            {description}
+          </p>
+        )}
+
+        {stats && stats.length > 0 && (
+          <div className='mt-8 flex flex-wrap items-center gap-x-10 gap-y-4'>
+            {stats.map((stat, i) => (
+              <div key={i}>
+                <div className='text-2xl font-bold text-foreground'>{stat.n}</div>
+                <div className='text-xs uppercase tracking-widest text-muted-foreground'>
+                  {stat.l}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </Container>
+    </section>
   )
 }

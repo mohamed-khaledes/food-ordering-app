@@ -23,10 +23,10 @@ export default async function DeliveryLayout({
   }
 
   return (
-    <div className='min-h-screen bg-muted/30 flex'>
+    <div className='flex min-h-screen bg-haze'>
       <DeliverySidebar translations={translations} />
-      <div className='flex-1 lg:ml-64'>
-        <main className='p-6 pt-24 lg:pt-8 min-h-screen'>{children}</main>
+      <div className='flex-1 lg:ms-64'>
+        <main className='min-h-screen p-4 pt-20 md:p-6 lg:pt-8'>{children}</main>
       </div>
     </div>
   )

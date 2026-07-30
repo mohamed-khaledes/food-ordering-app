@@ -1,24 +1,50 @@
 import Banner from '@/components/layouts/banner'
+import PartnersStrip from '@/components/layouts/partners-strip'
 import About from '@/features/home/about'
-import ContactUs from '@/features/home/contact-us'
+import Cta from '@/features/home/cta'
+import Counters from '@/features/home/counters'
+import Team from '@/features/about/team'
+import Testimonials from '@/features/about/testimonials'
+import LatestBlog from '@/features/blog/latest'
+import { getTrans } from '@/lib/translations/server'
+import type { Metadata } from 'next'
+import { Languages, Routes } from '@/constants/enums'
+import { pageMetadata } from '@/constants/seo'
+
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const isArabic = locale === Languages.ARABIC
+
+  return pageMetadata({
+    locale,
+    path: `/${Routes.ABOUT}`,
+    title: isArabic ? 'من نحن' : 'About Us',
+    description: isArabic
+      ? 'تعرّف على قصة أكلة: من أين نحصل على مكوناتنا، الفريق الذي يطبخ لك، ولماذا يثق بنا آلاف العملاء في مصر.'
+      : 'The story behind Akla — where we source our ingredients, the team who cooks for you, and why thousands of customers across Egypt order with us.'
+  })
+}
 
 export default async function AboutPage() {
+  const { global } = await getTrans()
+
   return (
     <>
       <Banner
-        eyebrow='Our story'
-        title='About Akla'
-        description='We started with a simple belief — healthy food should never feel like a compromise.'
-        stats={[
-          { n: '2018', l: 'Founded' },
-          { n: '50+', l: 'Team members' },
-          { n: '12k+', l: 'Customers' }
-        ]}
+        title={global.about}
+        crumbs={[{ label: global.home, href: '/' }, { label: global.about }]}
       />
-      {/*about */}
       <About />
-      {/*contact us */}
-      <ContactUs />
+      <Cta />
+      <Team />
+      <Testimonials />
+      <LatestBlog />
+      <Counters />
+      <PartnersStrip />
     </>
   )
 }

@@ -12,7 +12,7 @@ import { useParams } from 'next/navigation'
 
 function CheckoutForm({ payType }: { payType: 'card' | 'cash' }) {
   const { status, data: session } = useSession()
-  const { global } = useTrans()
+  const { global, checkout } = useTrans()
   const { locale } = useParams()
   const { loading, handleChange, handleSubmit, handlePaymobPayment, cart, data, paymobLoading } =
     useCreateOrder()
@@ -21,30 +21,30 @@ function CheckoutForm({ payType }: { payType: 'card' | 'cash' }) {
   if (!cart || cart.length === 0) return null
 
   return (
-    <div className='bg-background rounded-2xl border border-border overflow-hidden'>
+    <div className='bg-haze'>
       {/* Header */}
-      <div className='px-6 py-5 border-b border-border'>
+      <div className='border-b border-border px-6 py-5 md:px-8'>
         <div className='flex items-center gap-2'>
           {payType === 'cash' ? (
-            <Banknote className='w-4 h-4 text-muted-foreground' />
+            <Banknote className='h-4 w-4 text-brand' />
           ) : (
-            <CreditCard className='w-4 h-4 text-muted-foreground' />
+            <CreditCard className='h-4 w-4 text-brand' />
           )}
-          <h2 className='text-sm font-bold uppercase tracking-widest text-muted-foreground'>
-            {payType === 'cash' ? 'Delivery details' : 'Card payment'}
+          <h2 className='text-lg font-bold text-foreground'>
+            {payType === 'cash' ? checkout.deliveryDetails : checkout.cardPayment}
           </h2>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className='p-6 space-y-5 relative'>
+      <form onSubmit={handleSubmit} className='relative space-y-8 p-6 md:p-8'>
         {loading && <Loading />}
 
         {/* Contact */}
         <div>
-          <p className='text-[11px] font-medium text-muted-foreground uppercase tracking-widest mb-3 flex items-center gap-1.5'>
-            <Phone className='w-3 h-3' /> Contact
+          <p className='mb-2 flex items-center gap-1.5 text-sm font-bold text-foreground'>
+            <Phone className='h-3.5 w-3.5 text-brand' /> {checkout.contactInformation}
           </p>
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+          <div className='grid grid-cols-1 gap-x-6 sm:grid-cols-2'>
             <Field
               label={global.phone}
               id='phone'
@@ -55,29 +55,25 @@ function CheckoutForm({ payType }: { payType: 'card' | 'cash' }) {
               placeholder={global['enter your phone number']}
             />
             {/* Email pre-filled from session — read only */}
-            <div className='flex flex-col gap-1.5'>
-              <label className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>
-                {global.email}
-                <span className='ml-2 text-[10px] normal-case bg-muted px-1.5 py-0.5 rounded text-muted-foreground'>
-                  From your account
-                </span>
-              </label>
+            <div className='flex flex-col'>
               <input
                 type='email'
                 value={session?.user?.email ?? ''}
                 readOnly
-                className='w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border outline-none text-sm text-muted-foreground cursor-not-allowed'
+                aria-label={global.email}
+                className='field-underline cursor-not-allowed text-muted-foreground'
               />
+              <span className='pt-1 text-[11px] text-muted-foreground'>{checkout.fromYourAccount}</span>
             </div>
           </div>
         </div>
 
         {/* Address */}
         <div>
-          <p className='text-[11px] font-medium text-muted-foreground uppercase tracking-widest mb-3 flex items-center gap-1.5'>
-            <MapPin className='w-3 h-3' /> Delivery address
+          <p className='mb-2 flex items-center gap-1.5 text-sm font-bold text-foreground'>
+            <MapPin className='h-3.5 w-3.5 text-brand' /> {checkout.shippingAddress}
           </p>
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+          <div className='grid grid-cols-1 gap-x-6 sm:grid-cols-2'>
             <Field
               label={global.country}
               id='country'
@@ -118,41 +114,41 @@ function CheckoutForm({ payType }: { payType: 'card' | 'cash' }) {
         </div>
 
         {/* Total */}
-        <div className='flex items-center justify-between py-3 px-4 bg-muted/40 rounded-xl'>
+        <div className='flex items-center justify-between border-t border-border pt-5'>
           <span className='text-sm text-muted-foreground'>{global.total}</span>
-          <span className='text-base font-bold text-foreground'>{formatCurrency(totalAmount)}</span>
+          <span className='text-lg font-bold text-brand'>{formatCurrency(totalAmount)}</span>
         </div>
 
         {/* Auth warning */}
         {status === 'unauthenticated' && (
-          <div className='flex items-center gap-2 px-3 py-2.5 bg-destructive/10 border border-destructive/20 rounded-xl'>
-            <span className='w-1.5 h-1.5 rounded-full bg-destructive flex-shrink-0' />
+          <div className='flex items-center gap-2 border border-destructive/20 bg-destructive/10 px-3 py-2.5'>
+            <span className='h-1.5 w-1.5 shrink-0 rounded-full bg-destructive' />
             <p className='text-xs text-destructive'>
-              Please{' '}
+              {checkout.signInPrompt}{' '}
               <Link
                 href={`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`}
                 className='underline font-medium'
               >
-                sign in
+                {checkout.signInLink}
               </Link>{' '}
-              to place an order
+              {checkout.signInSuffix}
             </p>
           </div>
         )}
 
         {/* CTA */}
-        <div className='space-y-3 pt-1'>
+        <div className='space-y-3'>
           {payType === 'cash' && (
             <button
               type='submit'
               disabled={loading || status === 'unauthenticated'}
-              className='w-full flex items-center justify-center gap-2 py-3.5 bg-foreground text-background rounded-xl text-sm font-medium hover:bg-foreground/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+              className='btn-brand w-full py-3.5 disabled:cursor-not-allowed'
             >
               {loading ? (
-                <Loader2 className='w-4 h-4 animate-spin' />
+                <Loader2 className='h-4 w-4 animate-spin' />
               ) : (
                 <>
-                  <Banknote className='w-4 h-4' />
+                  <Banknote className='h-4 w-4' />
                   {global.confirm} — {formatCurrency(totalAmount)}
                 </>
               )}
@@ -165,20 +161,20 @@ function CheckoutForm({ payType }: { payType: 'card' | 'cash' }) {
                 type='button'
                 disabled={paymobLoading || status === 'unauthenticated'}
                 onClick={() => handlePaymobPayment(data)}
-                className='w-full flex items-center justify-center gap-2 py-3.5 bg-primary text-foreground rounded-xl text-sm font-medium hover:bg-primary/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                className='btn-brand w-full py-3.5 disabled:cursor-not-allowed'
               >
                 {paymobLoading ? (
-                  <Loader2 className='w-4 h-4 animate-spin' />
+                  <Loader2 className='h-4 w-4 animate-spin' />
                 ) : (
                   <>
-                    <Lock className='w-4 h-4' />
-                    Pay securely — {formatCurrency(totalAmount)}
+                    <Lock className='h-4 w-4' />
+                    {checkout.paySecurely} — {formatCurrency(totalAmount)}
                   </>
                 )}
               </button>
               <div className='flex items-center justify-center gap-1.5 text-xs text-muted-foreground'>
-                <Lock className='w-3 h-3' />
-                Secured by Paymob · 256-bit SSL encryption
+                <Lock className='h-3 w-3' />
+                {checkout.securedBy}
               </div>
             </>
           )}
@@ -190,6 +186,7 @@ function CheckoutForm({ payType }: { payType: 'card' | 'cash' }) {
 
 export default CheckoutForm
 
+/** Underlined input from the design's checkout form — the label is the placeholder. */
 const Field = ({
   label,
   id,
@@ -198,17 +195,10 @@ const Field = ({
   label: string
   id: string
 } & React.InputHTMLAttributes<HTMLInputElement>) => (
-  <div className='flex flex-col gap-1.5'>
-    <label
-      htmlFor={id}
-      className='text-xs font-medium text-muted-foreground uppercase tracking-widest'
-    >
+  <div className='flex flex-col'>
+    <label htmlFor={id} className='sr-only'>
       {label}
     </label>
-    <input
-      id={id}
-      {...props}
-      className='w-full px-3 py-2.5 rounded-xl bg-muted border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition text-sm'
-    />
+    <input id={id} placeholder={label} {...props} className='field-underline' />
   </div>
 )

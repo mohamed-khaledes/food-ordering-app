@@ -6,11 +6,14 @@ import { getProducts } from '@/server/db/products'
 import { getOrders } from '@/features/admin/orders/_actions/orders'
 import { getCategories } from '@/server/db/categories'
 import { formatCurrency } from '@/lib/helpers'
-import { ShoppingBag, Users, UtensilsCrossed, Tag, TrendingUp, Clock } from 'lucide-react'
+import { Clock, ShoppingBag, TrendingUp, Users, UtensilsCrossed } from 'lucide-react'
 import { Order, OrderStatus } from '@prisma/client'
 import EditUserForm from '@/features/profile/form'
+import DashboardHeader from '@/features/admin/page-header'
+import { Panel, PanelHeader, StatCard, StatusChip } from '@/features/admin/ui'
+import { statusLabel, statusTone, STATUS_ORDER } from '@/features/admin/order-status'
 
-async function AdminPage({ params }: { params: Promise<{ locale: string }> }) {
+async function AdminPage() {
   const translations = await getTrans()
   const session = await getServerSession(authOptions)
   const [users, products, orders, categories] = await Promise.all([
@@ -20,6 +23,7 @@ async function AdminPage({ params }: { params: Promise<{ locale: string }> }) {
     getCategories()
   ])
 
+  const ui = translations.adminUi
   const totalRevenue = orders
     .filter((o: Order) => o.paid)
     .reduce((sum: number, o: Order) => sum + o.totalPrice, 0)
@@ -29,29 +33,24 @@ async function AdminPage({ params }: { params: Promise<{ locale: string }> }) {
 
   const stats = [
     {
-      label: 'Total Revenue',
+      label: ui.totalRevenue,
       value: formatCurrency(totalRevenue),
       icon: TrendingUp,
-      sub: `${paidOrders} paid orders`,
-      accent: true
+      sub: `${paidOrders} ${ui.paidOrders}`,
+      tone: 'accent' as const
     },
     {
-      label: 'Total Orders',
+      label: ui.totalOrders,
       value: orders.length,
       icon: ShoppingBag,
-      sub: `${pendingOrders} pending`
+      sub: `${pendingOrders} ${ui.pending}`
     },
+    { label: ui.totalUsers, value: users.length, icon: Users, sub: ui.registeredAccounts },
     {
-      label: 'Total Users',
-      value: users.length,
-      icon: Users,
-      sub: 'Registered accounts'
-    },
-    {
-      label: 'Menu Items',
+      label: ui.menuItemsCount,
       value: products.length,
       icon: UtensilsCrossed,
-      sub: `${categories.length} categories`
+      sub: `${categories.length} ${translations.admin.tabs.categories}`
     }
   ]
 
@@ -59,126 +58,108 @@ async function AdminPage({ params }: { params: Promise<{ locale: string }> }) {
     .sort((a: Order, b: Order) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 5)
 
-  const statusColors: Record<string, string> = {
-    PENDING: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-    PAID: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-    PREPARING: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-    OUT_FOR_DELIVERY: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-    DELIVERED: 'bg-primary/15 text-foreground',
-    CANCELLED: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-  }
+  /**
+   * Share of the pipeline per state. A stacked bar makes the mix readable
+   * without pulling in a chart library, and each segment keeps the same
+   * semantic colour its chip uses.
+   */
+  const pipeline = STATUS_ORDER.map(status => ({
+    status,
+    count: orders.filter((o: Order) => o.status === status).length
+  })).filter(entry => entry.count > 0)
 
   return (
-    <div className='space-y-8'>
-      {/* Page header */}
-      <div>
-        <div className='inline-flex items-center gap-2 bg-primary/15 border border-primary/30 rounded-full px-4 py-1.5 mb-3'>
-          <span className='w-1.5 h-1.5 rounded-full bg-primary animate-pulse' />
-          <span className='text-xs font-medium text-foreground/70 uppercase tracking-widest'>
-            Overview
-          </span>
-        </div>
-        <h1 className='text-3xl font-bold text-foreground'>Dashboard</h1>
-        <p className='text-muted-foreground mt-1'>
-          Welcome back,{' '}
-          <strong className='text-foreground font-medium'>{session?.user?.name}</strong>
-        </p>
-      </div>
+    <div>
+      <DashboardHeader
+        title={ui.dashboard}
+        description={`${ui.welcomeBack}, ${session?.user?.name ?? ''}`}
+      />
 
-      {/* Stats grid */}
-      <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4'>
+      <div className='mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4'>
         {stats.map(stat => (
-          <div
-            key={stat.label}
-            className={`p-6 rounded-2xl border transition-all duration-200 hover:-translate-y-0.5
-              ${
-                stat.accent
-                  ? 'bg-foreground text-background border-foreground'
-                  : 'bg-background border-border hover:border-primary/30'
-              }`}
-          >
-            <div className='flex items-start justify-between mb-4'>
-              <div
-                className={`w-10 h-10 rounded-xl flex items-center justify-center
-                ${stat.accent ? 'bg-primary/20' : 'bg-muted'}`}
-              >
-                <stat.icon
-                  className={`w-5 h-5 ${stat.accent ? 'text-primary' : 'text-muted-foreground'}`}
-                />
-              </div>
-              <span
-                className={`text-xs uppercase tracking-widest ${stat.accent ? 'text-background/50' : 'text-muted-foreground'}`}
-              >
-                {stat.label}
-              </span>
-            </div>
-            <div
-              className={`text-3xl font-bold mb-1 ${stat.accent ? 'text-primary' : 'text-foreground'}`}
-            >
-              {stat.value}
-            </div>
-            <div
-              className={`text-xs ${stat.accent ? 'text-background/50' : 'text-muted-foreground'}`}
-            >
-              {stat.sub}
-            </div>
-          </div>
+          <StatCard key={stat.label} {...stat} />
         ))}
       </div>
 
-      <div className='grid grid-cols-1 xl:grid-cols-3 gap-6'>
-        {/* Recent orders */}
-        <div className='xl:col-span-2 bg-background rounded-2xl border border-border p-6'>
-          <div className='flex items-center justify-between mb-6'>
-            <h2 className='text-base font-bold'>Recent Orders</h2>
-            <div className='flex items-center gap-1.5 text-xs text-muted-foreground'>
-              <Clock className='w-3 h-3' />
-              Latest 5
+      {pipeline.length > 0 && (
+        <Panel className='mb-5 px-5 py-4'>
+          <div className='mb-3 flex flex-wrap items-center justify-between gap-3'>
+            <span className='text-muted-foreground text-[11px] font-medium tracking-widest uppercase'>
+              {ui.breakdown}
+            </span>
+            <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
+              {pipeline.map(({ status, count }) => (
+                <span key={status} className='flex items-center gap-1.5'>
+                  <StatusChip status={status} label={statusLabel(status, translations)} />
+                  <span className='text-xs font-bold tabular-nums'>{count}</span>
+                </span>
+              ))}
             </div>
           </div>
-          <div className='space-y-3'>
+          <div aria-hidden className='bg-haze flex h-2 overflow-hidden rounded-full'>
+            {pipeline.map(({ status, count }) => (
+              <span
+                key={status}
+                className={statusTone(status).dot}
+                style={{ width: `${(count / orders.length) * 100}%` }}
+              />
+            ))}
+          </div>
+        </Panel>
+      )}
+
+      <div className='grid grid-cols-1 gap-5 xl:grid-cols-3'>
+        <Panel className='xl:col-span-2'>
+          <PanelHeader
+            title={ui.recentOrders}
+            meta={
+              <span className='flex items-center gap-1.5'>
+                <Clock className='h-3 w-3' />
+                {ui.latestFive}
+              </span>
+            }
+          />
+          <div className='divide-border/70 divide-y'>
             {recentOrders.length > 0 ? (
               recentOrders.map((order: Order) => (
                 <div
                   key={order.id}
-                  className='flex items-center justify-between p-3 rounded-xl bg-muted/30 hover:bg-muted/60 transition-colors'
+                  className='flex flex-wrap items-center justify-between gap-3 px-5 py-3.5'
                 >
-                  <div className='flex items-center gap-3'>
-                    <div className='w-8 h-8 rounded-lg bg-muted flex items-center justify-center'>
-                      <ShoppingBag className='w-3.5 h-3.5 text-muted-foreground' />
-                    </div>
-                    <div>
-                      <p className='text-sm font-medium text-foreground truncate max-w-[160px]'>
-                        {order.userEmail ?? 'Guest'}
-                      </p>
-                      <p className='text-xs text-muted-foreground'>
-                        {order.city}, {order.country}
+                  <div className='flex min-w-0 items-center gap-3'>
+                    <span className='bg-brand-soft flex h-9 w-9 shrink-0 items-center justify-center rounded-full'>
+                      <ShoppingBag className='text-brand h-3.5 w-3.5' />
+                    </span>
+                    <div className='min-w-0'>
+                      <p className='truncate text-sm font-semibold'>{order.userEmail ?? ui.guest}</p>
+                      <p className='text-muted-foreground truncate text-xs'>
+                        {[order.city, order.country].filter(Boolean).join(', ')}
                       </p>
                     </div>
                   </div>
-                  <div className='flex items-center gap-3'>
-                    <span
-                      className={`text-[10px] font-medium px-2 py-1 rounded-full uppercase tracking-wider ${statusColors[order.status]}`}
-                    >
-                      {order.status.replace(/_/g, ' ')}
-                    </span>
-                    <span className='text-sm font-semibold text-foreground'>
+                  <div className='flex shrink-0 items-center gap-3'>
+                    <StatusChip
+                      status={order.status as OrderStatus}
+                      label={statusLabel(order.status as OrderStatus, translations)}
+                    />
+                    <span className='text-sm font-bold tabular-nums'>
                       {formatCurrency(order.totalPrice)}
                     </span>
                   </div>
                 </div>
               ))
             ) : (
-              <p className='text-sm text-muted-foreground text-center py-8'>No orders yet</p>
+              <p className='text-muted-foreground py-10 text-center text-sm'>{ui.noOrders}</p>
             )}
           </div>
-        </div>
+        </Panel>
 
-        {/* Profile card */}
-        <div className='bg-background rounded-2xl border border-border p-6'>
-          <h2 className='text-base font-bold mb-6'>My Profile</h2>
-          <EditUserForm user={session?.user as any} translations={translations} />
-        </div>
+        <Panel>
+          <PanelHeader title={ui.myProfile} />
+          <div className='p-5'>
+            <EditUserForm user={session?.user as any} translations={translations} />
+          </div>
+        </Panel>
       </div>
     </div>
   )

@@ -13,6 +13,7 @@ export enum Routes {
   MENU = 'menu',
   ORDERS = 'orders',
   ABOUT = 'about',
+  BLOG = 'blog',
   CONTACT = 'contact',
   AUTH = 'auth',
   CART = 'cart',

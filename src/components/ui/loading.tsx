@@ -15,7 +15,7 @@ export const Loading = ({
       data-testid='loading'
       {...props}
     >
-      <div className='relative items-center block w-full h-full p-6 bg-primary/50 dark:bg-[rgb(var(--bg-color),0.7)] rounded-md shadow-md'>
+      <div className='relative items-center block w-full h-full p-6 bg-brand-soft0 dark:bg-[rgb(var(--bg-color),0.7)] rounded-md shadow-md'>
         <div
           role='status'
           className='absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2 flex items-center justify-center'
@@ -25,7 +25,7 @@ export const Loading = ({
           ) : (
             <LoadingSpin />
           )}
-          <span className='sr-only'>Loading...</span>
+          <span className='sr-only'>{''}</span>
         </div>
       </div>
     </div>
@@ -63,10 +63,10 @@ export function LoadingPage() {
       data-testid='loading'
       className='flex space-x-2 justify-center items-center fixed inset-0 z-[100] backdrop-blur-lg bg-white dark:bg-dash-dark'
     >
-      <span className='sr-only'>Loading...</span>
-      <div className='h-8 w-8 bg-primary dark:bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
-      <div className='h-8 w-8 bg-primary dark:bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
-      <div className='h-8 w-8 bg-primary dark:bg-gray-400 rounded-full animate-bounce'></div>
+      <span className='sr-only'>{''}</span>
+      <div className='h-8 w-8 bg-brand dark:bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+      <div className='h-8 w-8 bg-brand dark:bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+      <div className='h-8 w-8 bg-brand dark:bg-gray-400 rounded-full animate-bounce'></div>
     </div>
   )
 }

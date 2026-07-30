@@ -56,7 +56,7 @@ function EditCategory({
     <Dialog>
       <DialogTrigger asChild>
         <Button variant={'secondary'}>
-          <EditIcon className='hover:bg-primary' />
+          <EditIcon className='hover:bg-brand' />
         </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[425px]'>
@@ -65,25 +65,40 @@ function EditCategory({
             {translations.admin.categories.form.editName}
           </DialogTitle>
         </DialogHeader>
-        <form action={action} className='pt-4'>
-          <div className='flex items-center gap-4'>
-            <Label htmlFor='category-name'>{translations.admin.categories.form.name.label}</Label>
-            <div className='flex-1 relative'>
-              <Input
-                type='text'
-                id='categoryName'
-                name='categoryName'
-                defaultValue={category.name}
-                placeholder={translations.admin.categories.form.name.placeholder}
-              />
-              {state.error?.categoryName && (
-                <p className='text-sm text-destructive absolute top-12'>
-                  {state.error?.categoryName}
-                </p>
-              )}
-            </div>
+        <form action={action} className='space-y-4 pt-4'>
+          <div className='space-y-1.5'>
+            <Label htmlFor='categoryName'>{translations.admin.categories.form.name.label}</Label>
+            <Input
+              type='text'
+              id='categoryName'
+              name='categoryName'
+              defaultValue={category.name}
+              placeholder={translations.admin.categories.form.name.placeholder}
+            />
+            {state.error?.categoryName && (
+              <p className='text-sm text-destructive'>{state.error?.categoryName}</p>
+            )}
           </div>
-          <DialogFooter className='mt-10'>
+
+          {/* Optional — blank falls back to the English name on Arabic pages. */}
+          <div className='space-y-1.5'>
+            <Label htmlFor='categoryNameAr'>
+              {translations.admin.categories.form.nameAr.label}
+            </Label>
+            <Input
+              type='text'
+              id='categoryNameAr'
+              name='categoryNameAr'
+              dir='rtl'
+              defaultValue={category.nameAr ?? ''}
+              placeholder={translations.admin.categories.form.nameAr.placeholder}
+            />
+            <p className='text-xs text-muted-foreground'>
+              {translations.admin.categories.form.nameAr.hint}
+            </p>
+          </div>
+
+          <DialogFooter className='mt-6'>
             <Button type='submit' disabled={pending}>
               {pending ? <Loader /> : translations.save}
             </Button>

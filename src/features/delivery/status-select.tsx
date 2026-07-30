@@ -49,7 +49,7 @@ export default function DeliveryStatusSelect({
     return (
       <button
         onClick={handlePickUp}
-        className='flex items-center gap-1.5 px-3 py-1.5 bg-primary text-foreground rounded-xl text-xs font-medium hover:bg-primary/80 active:scale-[0.97] transition-all'
+        className='flex items-center gap-1.5 px-3 py-1.5 bg-brand text-foreground rounded-sm text-xs font-medium hover:bg-brand/80 active:scale-[0.97] transition-all'
       >
         🚴 Pick up
       </button>
@@ -60,7 +60,7 @@ export default function DeliveryStatusSelect({
     return (
       <button
         onClick={handleDeliver}
-        className='flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-background rounded-xl text-xs font-medium hover:bg-foreground/90 active:scale-[0.97] transition-all'
+        className='flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-background rounded-sm text-xs font-medium hover:bg-foreground/90 active:scale-[0.97] transition-all'
       >
         ✅ Mark delivered
       </button>
@@ -69,7 +69,7 @@ export default function DeliveryStatusSelect({
 
   if (status === OrderStatus.DELIVERED) {
     return (
-      <span className='text-[10px] font-medium px-2.5 py-1 rounded-full bg-primary/15 text-foreground uppercase tracking-wider'>
+      <span className='text-[10px] font-medium px-2.5 py-1 rounded-full bg-brand-soft text-foreground uppercase tracking-wider'>
         Delivered ✓
       </span>
     )

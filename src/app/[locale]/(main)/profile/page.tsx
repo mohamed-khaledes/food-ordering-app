@@ -1,4 +1,6 @@
 import { Pages, Routes } from '@/constants/enums'
+import Banner from '@/components/layouts/banner'
+import PartnersStrip from '@/components/layouts/partners-strip'
 import EditUserForm from '@/features/profile/form'
 import { Locale } from '@/i18n.config'
 import { getTrans } from '@/lib/translations/server'
@@ -6,6 +8,19 @@ import { authOptions } from '@/server/auth'
 import { UserRole } from '@prisma/client'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
+
+import type { Metadata } from 'next'
+import { privateMetadata } from '@/constants/seo'
+
+// Not for the index — see `privateMetadata`.
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  return privateMetadata({ locale, path: '/profile', title: 'Your Profile' })
+}
 
 async function ProfilePage({ params }: { params: Promise<{ locale: string }> }) {
   const session = await getServerSession(authOptions)
@@ -19,16 +34,21 @@ async function ProfilePage({ params }: { params: Promise<{ locale: string }> }) 
     redirect(`/${locale}/${Routes.ADMIN}`)
   }
   return (
-    <main>
-      <section className='section-gap'>
-        <div className='container'>
-          <h1 className='text-primary text-center font-bold text-4xl italic mb-10'>
-            {translations.profile.title}
-          </h1>
+    <>
+      <Banner
+        title={translations.profile.title}
+        crumbs={[
+          { label: translations.global.home, href: '/' },
+          { label: translations.global.profile }
+        ]}
+      />
+      <section className='container section-y'>
+        <div className='mx-auto w-full max-w-2xl border border-border bg-background p-8 md:p-10'>
           <EditUserForm user={session?.user} translations={translations} />
         </div>
       </section>
-    </main>
+      <PartnersStrip />
+    </>
   )
 }
 

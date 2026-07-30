@@ -32,7 +32,7 @@ export default function ToggleDeliveryRole({
     <button
       onClick={handleToggle}
       disabled={loading}
-      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all active:scale-[0.97] disabled:opacity-50
+      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-all active:scale-[0.97] disabled:opacity-50
         ${
           isDelivery
             ? 'border border-destructive/30 text-destructive hover:bg-destructive/10'

@@ -6,9 +6,11 @@ import FormFields from '@/components/fields/form-fields'
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
+import { useTrans } from '@/lib/translations/client'
 
 function SigninForm() {
   const { getFormFields, onSubmit, error, isLoading, translations, formRef } = useSigninForm()
+  const { authExtra } = useTrans()
   const [googleLoading, setGoogleLoading] = useState(false)
   const [appleLoading, setAppleLoading] = useState(false)
 
@@ -33,7 +35,7 @@ function SigninForm() {
           type='button'
           onClick={handleGoogle}
           disabled={googleLoading}
-          className='w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-border bg-background hover:bg-muted/50 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+          className='flex w-full items-center justify-center gap-3 border border-border bg-background px-4 py-3 transition-colors hover:border-brand hover:bg-haze disabled:cursor-not-allowed disabled:opacity-50'
         >
           {googleLoading ? (
             <Loader2 className='w-4 h-4 animate-spin text-muted-foreground' />
@@ -57,7 +59,7 @@ function SigninForm() {
               />
             </svg>
           )}
-          <span className='text-sm font-medium text-foreground'>Continue with Google</span>
+          <span className='text-sm font-medium text-foreground'>{authExtra.continueWithGoogle}</span>
         </button>
 
         {/* Apple */}
@@ -81,7 +83,7 @@ function SigninForm() {
       {/* Divider */}
       <div className='flex items-center gap-3'>
         <div className='flex-1 h-px bg-border' />
-        <span className='text-xs text-muted-foreground uppercase tracking-widest'>or</span>
+        <span className='text-xs text-muted-foreground uppercase tracking-widest'>{authExtra.or}</span>
         <div className='flex-1 h-px bg-border' />
       </div>
 
@@ -89,29 +91,22 @@ function SigninForm() {
       <form onSubmit={onSubmit} ref={formRef} className='flex flex-col gap-4'>
         {getFormFields()?.map((field: IFormField) => (
           <div key={field.name} className='flex flex-col gap-1.5'>
-            <label className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>
-              {field.label}
-            </label>
             <FormFields {...field} error={error} />
           </div>
         ))}
 
         {/* Global error */}
         {error && !getFormFields().some((f: IFormField) => f.name === (error?.field as any)) && (
-          <div className='flex items-center gap-2 px-3 py-2.5 bg-destructive/10 border border-destructive/20 rounded-xl'>
-            <span className='w-1.5 h-1.5 rounded-full bg-destructive flex-shrink-0' />
+          <div className='flex items-center gap-2 border border-destructive/20 bg-destructive/10 px-3 py-2.5'>
+            <span className='h-1.5 w-1.5 shrink-0 rounded-full bg-destructive' />
             <p className='text-xs text-destructive'>{error.message}</p>
           </div>
         )}
 
         {/* Submit */}
-        <button
-          type='submit'
-          disabled={isLoading}
-          className='w-full flex items-center justify-center py-3 rounded-xl bg-foreground text-background hover:bg-foreground/90 active:scale-[0.98] transition-all font-medium mt-1 disabled:opacity-50'
-        >
+        <button type='submit' disabled={isLoading} className='btn-brand-outline mt-1 w-full py-3'>
           {isLoading ? (
-            <Loader2 className='w-4 h-4 animate-spin' />
+            <Loader2 className='h-4 w-4 animate-spin' />
           ) : (
             translations.auth.login.submit
           )}

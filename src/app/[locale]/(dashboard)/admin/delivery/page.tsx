@@ -7,46 +7,39 @@ import { Pages, Routes } from '@/constants/enums'
 import DeleteUserButton from '@/features/admin/users/delete-btn'
 import { Edit } from 'lucide-react'
 import ToggleDeliveryRole from '@/features/admin/delivery/toggle-role'
+import DashboardHeader from '@/features/admin/page-header'
 
 async function DeliveryMenPage() {
-  const allUsers = await getUsers()
+  const [allUsers, t] = await Promise.all([getUsers(), getTrans()])
+  const d = t.adminUi.delivery
   const deliveryMen = allUsers.filter((u: User) => u.role === UserRole.DELIVERY)
   const regularUsers = allUsers.filter((u: User) => u.role === UserRole.USER)
 
   return (
-    <div className='space-y-6'>
-      {/* Header */}
-      <div>
-        <div className='inline-flex items-center gap-2 bg-primary/15 border border-primary/30 rounded-full px-4 py-1.5 mb-3'>
-          <span className='w-1.5 h-1.5 rounded-full bg-primary' />
-          <span className='text-xs font-medium text-foreground/70 uppercase tracking-widest'>
-            Manage
-          </span>
-        </div>
-        <h1 className='text-3xl font-bold'>Delivery Men</h1>
-        <p className='text-muted-foreground mt-1'>
-          {deliveryMen.length} delivery {deliveryMen.length === 1 ? 'man' : 'men'} active
-        </p>
-      </div>
+    <div>
+      <DashboardHeader
+title={d.title}
+description={`${deliveryMen.length} ${d.activeCount}`}
+      />
 
-      <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
+      <div className='grid grid-cols-1 gap-6 xl:grid-cols-2'>
         {/* Active delivery men */}
-        <div className='bg-background rounded-2xl border border-border overflow-hidden'>
+        <div className='overflow-hidden rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-16px_rgb(0_0_0/0.12)]'>
           <div className='px-6 py-4 border-b border-border flex items-center gap-2'>
-            <div className='w-2 h-2 rounded-full bg-primary animate-pulse' />
+            <div className='w-2 h-2 rounded-full bg-brand animate-pulse' />
             <h2 className='text-sm font-bold uppercase tracking-widest text-muted-foreground'>
-              Active delivery men ({deliveryMen.length})
+              {d.active} ({deliveryMen.length})
             </h2>
           </div>
 
           {deliveryMen.length === 0 ? (
             <div className='flex flex-col items-center justify-center py-16 gap-3'>
-              <div className='w-12 h-12 rounded-2xl bg-muted flex items-center justify-center'>
+              <div className='flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft'>
                 <Truck className='w-5 h-5 text-muted-foreground' />
               </div>
-              <p className='text-sm text-muted-foreground'>No delivery men assigned yet</p>
+              <p className='text-sm text-muted-foreground'>{d.none}</p>
               <p className='text-xs text-muted-foreground'>
-                Assign users from the list on the right
+                {d.assignHint}
               </p>
             </div>
           ) : (
@@ -57,7 +50,7 @@ async function DeliveryMenPage() {
                   className='flex items-center justify-between px-6 py-4 hover:bg-muted/20 transition-colors'
                 >
                   <div className='flex items-center gap-3'>
-                    <div className='w-9 h-9 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0'>
+                    <div className='w-9 h-9 rounded-full bg-brand-soft flex items-center justify-center flex-shrink-0'>
                       <span className='text-sm font-bold text-foreground'>
                         {(user.name || 'U').charAt(0).toUpperCase()}
                       </span>
@@ -69,8 +62,8 @@ async function DeliveryMenPage() {
                     </div>
                   </div>
                   <div className='flex items-center gap-2'>
-                    <div className='flex items-center gap-1.5 px-2.5 py-1 bg-primary/15 border border-primary/30 rounded-full'>
-                      <span className='w-1 h-1 rounded-full bg-primary' />
+                    <div className='flex items-center gap-1.5 px-2.5 py-1 bg-brand-soft border border-brand/40 rounded-full'>
+                      <span className='w-1 h-1 rounded-full bg-brand' />
                       <span className='text-[10px] font-medium text-foreground uppercase tracking-widest'>
                         Delivery
                       </span>
@@ -85,20 +78,20 @@ async function DeliveryMenPage() {
         </div>
 
         {/* Users to assign */}
-        <div className='bg-background rounded-2xl border border-border overflow-hidden'>
+        <div className='overflow-hidden rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-16px_rgb(0_0_0/0.12)]'>
           <div className='px-6 py-4 border-b border-border flex items-center gap-2'>
             <div className='w-2 h-2 rounded-full bg-muted-foreground' />
             <h2 className='text-sm font-bold uppercase tracking-widest text-muted-foreground'>
-              Assign from users ({regularUsers.length})
+              {d.assignFrom} ({regularUsers.length})
             </h2>
           </div>
 
           {regularUsers.length === 0 ? (
             <div className='flex flex-col items-center justify-center py-16 gap-3'>
-              <div className='w-12 h-12 rounded-2xl bg-muted flex items-center justify-center'>
+              <div className='flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft'>
                 <Users className='w-5 h-5 text-muted-foreground' />
               </div>
-              <p className='text-sm text-muted-foreground'>No regular users found</p>
+              <p className='text-sm text-muted-foreground'>{d.noRegular}</p>
             </div>
           ) : (
             <ul className='divide-y divide-border'>

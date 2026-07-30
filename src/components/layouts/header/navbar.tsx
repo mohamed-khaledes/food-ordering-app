@@ -7,6 +7,7 @@ import Link from '@/components/link'
 import { useTrans } from '@/lib/translations/client'
 
 const NAV_ITEMS = [
+  { id: 'home', href: '' },
   { id: 'menu', href: Routes.MENU },
   { id: 'orders', href: Routes.ORDERS },
   { id: 'about', href: Routes.ABOUT },
@@ -24,25 +25,22 @@ function Navbar({ initialSession }: { initialSession: Session | null }) {
   }))
 
   return (
-    <nav>
-      <ul className='flex items-center gap-1'>
+    <nav className='hidden md:block'>
+      <ul className='flex items-center gap-7 lg:gap-9'>
         {links.map(link => {
-          const isActive = pathname.startsWith(`/${locale}/${link.href}`)
+          const isActive =
+            link.href === ''
+              ? pathname === `/${locale}` || pathname === `/${locale}/`
+              : pathname.startsWith(`/${locale}/${link.href}`)
           return (
             <li key={link.id}>
               <Link
                 href={`/${link.href}`}
-                className={`relative px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200
-                  ${
-                    isActive
-                      ? 'text-foreground bg-primary/15'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-                  }`}
+                className={`text-[15px] transition-colors duration-200 hover:text-brand ${
+                  isActive ? 'font-medium text-brand' : 'text-foreground/80'
+                }`}
               >
                 {link.title}
-                {isActive && (
-                  <span className='absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary' />
-                )}
               </Link>
             </li>
           )

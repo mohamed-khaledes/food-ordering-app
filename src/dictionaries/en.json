@@ -6,7 +6,8 @@
       "description": "Chef-crafted meals with locally sourced ingredients, delivered to your door in minutes. No compromise — just great food.",
       "orderNow": "Order now",
       "learnMore": "Learn more",
-      "explore menu": "explore menu"
+      "explore menu": "explore menu",
+      "genuine": "100% genuine products"
     },
     "bestSeller": {
       "checkOut": "check out",
@@ -39,7 +40,15 @@
     "signOut": "Sign Out",
     "profile": "Profile",
     "admin": "Admin",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "cart": "Cart",
+    "more": "More",
+    "homeShort": "Home",
+    "bottomNav": "Main navigation",
+    "language": "Language",
+    "guest": "Guest",
+    "guestHint": "Sign in to track your orders",
+    "closeMenu": "Close menu"
   },
   "auth": {
     "login": {
@@ -171,7 +180,11 @@
       "categories": "Categories",
       "menuItems": "Menu Items",
       "users": "Users",
-      "orders": "Orders"
+      "orders": "Orders",
+      "dashboard": "Dashboard",
+      "menu-items": "Menu Items",
+      "blogs": "Blogs",
+      "delivery": "Delivery Men"
     },
     "categories": {
       "form": {
@@ -182,6 +195,11 @@
           "validation": {
             "required": "Category Name is required"
           }
+        },
+        "nameAr": {
+          "label": "Category Name (Arabic)",
+          "placeholder": "اسم التصنيف",
+          "hint": "Leave blank to reuse the English name."
         }
       }
     },
@@ -224,6 +242,16 @@
           "validation": {
             "required": "Product image is required & the size limit is 250kb"
           }
+        },
+        "nameAr": {
+          "label": "Product Name (Arabic)",
+          "placeholder": "اسم المنتج",
+          "hint": "Shown on Arabic pages. Leave blank to reuse the English name."
+        },
+        "descriptionAr": {
+          "label": "Description (Arabic)",
+          "placeholder": "وصف المنتج",
+          "hint": "Shown on Arabic pages. Leave blank to reuse the English description."
         }
       }
     }
@@ -291,5 +319,444 @@
     "name": "Name",
     "message": "Message",
     "send": "send"
+  },
+  "sections": {
+    "featured": {
+      "subtitle": "Chef-crafted and prepared fresh every day — the picks our customers come back for."
+    },
+    "promos": {
+      "hotSales": "Hot sales",
+      "mealPlans": "Meal plans",
+      "buyNow": "Buy now",
+      "items": [
+        {
+          "title": "Big Sale",
+          "subtitle": "Fresh bowls & juices"
+        },
+        {
+          "title": "Save 20%",
+          "subtitle": "Every order"
+        },
+        {
+          "title": "Up To 20%",
+          "subtitle": "Every package"
+        }
+      ]
+    },
+    "whyUs": {
+      "subtitle": "Every decision we make starts with one question: is this good for you?",
+      "items": [
+        {
+          "title": "Eat More Healthfully",
+          "text": "Balanced, nutritionist-approved meals cooked fresh the day they ship."
+        },
+        {
+          "title": "Curated Products",
+          "text": "Every dish is chosen by our chefs — nothing generic, nothing filler."
+        },
+        {
+          "title": "Pesticide Free Goods",
+          "text": "Produce comes from farms we visit, vet and re-check each season."
+        },
+        {
+          "title": "Flexibility Returns",
+          "text": "Change a size, add extras or cancel an order in a couple of taps."
+        }
+      ]
+    },
+    "facilities": {
+      "title": "Product Facilities",
+      "subtitle": "What you get with every order, from the kitchen to your door.",
+      "items": [
+        {
+          "title": "Eat Healthy Food",
+          "text": "Balanced plates portioned by our in-house nutritionists."
+        },
+        {
+          "title": "Pesticide Free",
+          "text": "Produce sourced from farms we visit and vet ourselves."
+        },
+        {
+          "title": "Sweet Exotic Food",
+          "text": "Seasonal recipes rotated weekly so the menu stays fresh."
+        },
+        {
+          "title": "Order Flexibility",
+          "text": "Change sizes, add extras or reschedule in a few taps."
+        },
+        {
+          "title": "Livestock Product",
+          "text": "Meat and dairy traced back to named, audited suppliers."
+        },
+        {
+          "title": "Variety & Selection",
+          "text": "Bowls, mains, juices and packages across every category."
+        }
+      ]
+    },
+    "hotDeals": {
+      "eyebrow": "Todays Hot Deals",
+      "title": "Family Combo Package",
+      "description": "A full day of chef-cooked meals for four, bundled at a lower price. Resets every night at midnight.",
+      "shopNow": "Shop now",
+      "dealOfDay": "Deal of the day",
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "seconds": "Seconds"
+    },
+    "categories": {
+      "title": "Top Categories",
+      "subtitle": "Browse the kitchen by category and jump straight to what you feel like eating.",
+      "itemsCount": "items"
+    },
+    "faq": {
+      "title": "Some Questions",
+      "subtitle": "The things people ask us most before their first order.",
+      "items": [
+        {
+          "q": "How fresh is the food when it arrives?",
+          "a": "Every meal is cooked the same day it ships. Nothing is frozen, and nothing sits in a warehouse."
+        },
+        {
+          "q": "Can I customise sizes and extras?",
+          "a": "Yes. Pick a size and add any extras on the product dialog before adding the meal to your cart."
+        },
+        {
+          "q": "Which areas do you deliver to?",
+          "a": "We currently deliver across Greater Cairo, with new governorates being added regularly."
+        },
+        {
+          "q": "How do I pay for my order?",
+          "a": "Checkout runs through Paymob, so you can pay securely with any local or international card."
+        }
+      ]
+    },
+    "counters": {
+      "items": [
+        {
+          "value": "560",
+          "label": "Good reviews"
+        },
+        {
+          "value": "197",
+          "label": "Menu items"
+        },
+        {
+          "value": "268",
+          "label": "Partner farms"
+        },
+        {
+          "value": "340",
+          "label": "Daily orders"
+        }
+      ]
+    },
+    "features": {
+      "items": [
+        {
+          "title": "Curated meals",
+          "text": "Hand-picked by our chefs"
+        },
+        {
+          "title": "Made fresh",
+          "text": "Cooked the day it ships"
+        },
+        {
+          "title": "100% natural",
+          "text": "No preservatives, ever"
+        },
+        {
+          "title": "Fast shipping",
+          "text": "Delivered in ~30 minutes"
+        }
+      ]
+    },
+    "testimonials": {
+      "title": "Client Testimonial",
+      "subtitle": "What people say after their first month of ordering with us.",
+      "previous": "Previous testimonial",
+      "next": "Next testimonial",
+      "items": [
+        {
+          "name": "Lurch Schpellchek",
+          "role": "UI/UX designer",
+          "quote": "I order four times a week and the food still surprises me. Everything arrives hot, the portions are honest, and swapping sizes or extras takes about ten seconds."
+        },
+        {
+          "name": "Amira Fathy",
+          "role": "Product manager",
+          "quote": "The weekly rotation means I never get bored, and I can actually see what is in every dish. It replaced my lunch routine entirely and my budget barely noticed."
+        },
+        {
+          "name": "Karim Adel",
+          "role": "Software engineer",
+          "quote": "Delivery has never once been late. The tracking is clear, the driver always calls, and the packaging holds heat far better than anything else I have tried."
+        }
+      ]
+    },
+    "team": {
+      "title": "Team Members",
+      "subtitle": "The people who plan, cook and check every meal that leaves our kitchen.",
+      "items": [
+        {
+          "name": "John Abraham",
+          "role": "Head chef"
+        },
+        {
+          "name": "Nasir Hossain",
+          "role": "Kitchen manager"
+        },
+        {
+          "name": "Mehedi Mohamed",
+          "role": "Nutritionist"
+        }
+      ]
+    },
+    "blog": {
+      "title": "Latest Blog",
+      "subtitle": "Notes from our kitchen on eating well, sourcing better and cooking simply.",
+      "readMore": "Read more",
+      "views": "views"
+    },
+    "contact": {
+      "heading": "Feel free to contact us for any query.",
+      "phoneLabel": "Phone number",
+      "mailLabel": "Mail address",
+      "officeLabel": "Office address"
+    }
+  },
+  "shop": {
+    "heading": "Organic fresh food & juices",
+    "resultsFor": "Results for",
+    "resultsCount": "results",
+    "resultCount": "result",
+    "perPage": "Per page",
+    "sortBy": "Sort by",
+    "sort": {
+      "best": "Best match",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low",
+      "name": "Name A–Z"
+    },
+    "gridView": "Grid view",
+    "listView": "List view",
+    "search": "Search",
+    "searchAria": "Search meals",
+    "filters": "Filters",
+    "all": "All",
+    "noMatch": "No meals match your filters",
+    "clearFilters": "Clear filters",
+    "pagination": "Pagination",
+    "showResults": "Show results",
+    "closeFilters": "Close filters"
+  },
+  "filters": {
+    "categories": "Product Categories",
+    "price": "Price Filter",
+    "size": "Filter By Size",
+    "tags": "Related Tags",
+    "reset": "Reset filters",
+    "from": "From",
+    "to": "to",
+    "maxPrice": "Maximum price"
+  },
+  "product": {
+    "addToCart": "Add to cart",
+    "viewDetails": "View details",
+    "previousImage": "Previous image",
+    "nextImage": "Next image",
+    "trending": "Trending Products",
+    "trendingSubtitle": "More from the same category, picked fresh today.",
+    "tabs": {
+      "description": "Description",
+      "additional": "Additional Info",
+      "reviews": "Reviews"
+    },
+    "about": "About this meal",
+    "moreDetails": "More details",
+    "noOptions": "No sizes or extras configured for this meal.",
+    "noReviews": "Reviews aren't collected yet.",
+    "sizeRow": "Size",
+    "extraRow": "Extra",
+    "basePrice": "Base price",
+    "pickSize": "Pick your size",
+    "anyExtras": "Any extras?",
+    "inCart": "in cart"
+  },
+  "checkout": {
+    "cashOnDelivery": "Cash on delivery",
+    "payWithCard": "Pay with card",
+    "deliveryDetails": "Delivery details",
+    "cardPayment": "Card payment",
+    "contactInformation": "Contact information",
+    "shippingAddress": "Shipping address",
+    "fromYourAccount": "From your account",
+    "paySecurely": "Pay securely",
+    "securedBy": "Secured by Paymob · 256-bit SSL encryption",
+    "signInPrompt": "Please",
+    "signInLink": "sign in",
+    "signInSuffix": "to place an order"
+  },
+  "payment": {
+    "successTitle": "Payment successful!",
+    "successSubtitle": "Your order has been confirmed and is being prepared",
+    "orderDetails": "Order details",
+    "deliveryTo": "Delivery to",
+    "paymentStatus": "Payment status",
+    "noOrderFallback": "Your payment was received. Check your email for order details.",
+    "failedTitle": "Payment failed",
+    "failedSubtitle": "We couldn't process your payment. No charges were made.",
+    "reasonsTitle": "This can happen because of",
+    "reasons": [
+      "Insufficient funds on the card",
+      "Card details entered incorrectly",
+      "Transaction was declined by your bank",
+      "Payment session expired"
+    ],
+    "tryAgain": "Try again",
+    "backToHome": "Back to home"
+  },
+  "orders": {
+    "title": "My Orders",
+    "subtitle": "Track all your orders in real time.",
+    "none": "You have no orders yet",
+    "deliveryMan": "Delivery man",
+    "paid": "Paid",
+    "cancelled": "Cancelled",
+    "steps": {
+      "PENDING": "Pending",
+      "PAID": "Paid",
+      "PREPARING": "Preparing",
+      "OUT_FOR_DELIVERY": "Out for delivery",
+      "DELIVERED": "Delivered"
+    }
+  },
+  "notFound": {
+    "title": "Oops! The page you requested was not found!",
+    "subtitle": "Sorry, the page you are looking for doesn't exist.",
+    "back": "Back to home"
+  },
+  "search": {
+    "placeholder": "Find products",
+    "button": "Search",
+    "clear": "Clear",
+    "hint": "Press Enter to see matching meals on the menu."
+  },
+  "authExtra": {
+    "loginSubtitle": "Please login using account detail below.",
+    "registerSubtitle": "Create your account and start ordering.",
+    "continueWithGoogle": "Continue with Google",
+    "or": "or"
+  },
+  "adminUi": {
+    "dashboard": "Dashboard",
+    "welcomeBack": "Welcome back",
+    "totalRevenue": "Total Revenue",
+    "totalOrders": "Total Orders",
+    "totalUsers": "Total Users",
+    "menuItemsCount": "Menu Items",
+    "recentOrders": "Recent Orders",
+    "latestFive": "Latest 5",
+    "myProfile": "My Profile",
+    "noOrders": "No orders yet",
+    "noUsers": "No users found",
+    "adminPanel": "Admin Panel",
+    "deliveryPanel": "Delivery Panel",
+    "navigation": "Navigation",
+    "viewStorefront": "View storefront",
+    "systemOperational": "System operational",
+    "onDuty": "On duty",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "paidOrders": "paid orders",
+    "pending": "pending",
+    "registeredAccounts": "registered accounts",
+    "categoriesTotal": "categories total",
+    "itemsTotal": "items total",
+    "ordersTotal": "orders total",
+    "addNewCategory": "Add New Category",
+    "allCategories": "All Categories",
+    "table": {
+      "user": "User",
+      "role": "Role",
+      "joined": "Joined",
+      "actions": "Actions",
+      "customer": "Customer",
+      "date": "Date",
+      "status": "Status",
+      "deliveryMan": "Delivery man",
+      "total": "Total",
+      "post": "Post",
+      "created": "Created"
+    },
+    "delivery": {
+      "title": "Delivery Men",
+      "active": "Active delivery men",
+      "assignFrom": "Assign from users",
+      "none": "No delivery men assigned yet",
+      "assignHint": "Assign users from the list on the right",
+      "noRegular": "No regular users found",
+      "activeCount": "active"
+    },
+    "blogs": {
+      "title": "Blogs",
+      "newPost": "New post",
+      "editPost": "Edit post",
+      "writeFirst": "Write the first one",
+      "none": "No blog posts yet",
+      "postsTotal": "posts total",
+      "published": "Published",
+      "draft": "Draft",
+      "deleteConfirm": "Delete this post? This cannot be undone.",
+      "form": {
+        "title": "Title",
+        "slug": "Slug (optional — generated from the title)",
+        "image": "Cover image URL",
+        "author": "Author",
+        "excerpt": "Excerpt",
+        "content": "Content",
+        "publishedLabel": "Published (visible on the site)",
+        "create": "Create post",
+        "saveChanges": "Save changes",
+        "newDescription": "Write a new article for the blog."
+      }
+    },
+    "deliveryNav": {
+      "overview": "Overview",
+      "orders": "Orders",
+      "profile": "Profile"
+    },
+    "lang": {
+      "en": "English",
+      "ar": "Arabic",
+      "missingAr": "No Arabic"
+    },
+    "guest": "Guest",
+    "paidTag": "Paid",
+    "unpaidTag": "Unpaid",
+    "orderRef": "Order",
+    "revenueHint": "from paid orders",
+    "awaitingAction": "Awaiting action",
+    "productImage": "Product image",
+    "productDetails": "Product details",
+    "editItem": "Edit item",
+    "newItem": "New item",
+    "changeImage": "Change",
+    "breakdown": "By status",
+    "statusUpdated": "Status updated",
+    "statusUpdateFailed": "Could not update the status"
+  },
+  "common": {
+    "loading": "Loading...",
+    "comingSoon": "Coming Soon",
+    "allSystems": "All systems operational",
+    "uploadImage": "Upload image",
+    "noDeliveryMen": "No delivery men",
+    "assignDelivery": "Assign delivery",
+    "adminAccess": "Admin access",
+    "manageInfo": "Manage your personal information",
+    "noAvailableOrders": "No available orders right now",
+    "noPickedOrders": "You haven't picked up any orders yet"
   }
 }

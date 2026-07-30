@@ -1,29 +1,19 @@
 'use client'
 import { OrderStatus } from '@prisma/client'
 import { useState } from 'react'
-// import { updateOrderStatus } from '@/features/orders/_actions/orders'
 import Toast from '@/components/ui/toast'
 import Loader from '@/components/ui/loader'
 import { updateOrderStatus } from '@/features/orders/_actions/orders'
+import { useTrans } from '@/lib/translations/client'
+import { statusLabel, statusTone, STATUS_ORDER } from '../order-status'
+import { cn } from '@/lib/utils'
+import { ChevronDown } from 'lucide-react'
 
-const STATUS_OPTIONS = [
-  { value: OrderStatus.PENDING, label: 'Pending' },
-  { value: OrderStatus.PAID, label: 'Paid' },
-  { value: OrderStatus.PREPARING, label: 'Preparing' },
-  { value: OrderStatus.OUT_FOR_DELIVERY, label: 'Out for delivery' },
-  { value: OrderStatus.DELIVERED, label: 'Delivered' },
-  { value: OrderStatus.CANCELLED, label: 'Cancelled' }
-]
-
-const STATUS_COLORS: Record<string, string> = {
-  PENDING: 'bg-amber-100 text-amber-700',
-  PAID: 'bg-green-100 text-green-700',
-  PREPARING: 'bg-blue-100 text-blue-700',
-  OUT_FOR_DELIVERY: 'bg-purple-100 text-purple-700',
-  DELIVERED: 'bg-primary/15 text-foreground',
-  CANCELLED: 'bg-red-100 text-red-700'
-}
-
+/**
+ * Inline state editor. It reads as the same chip used elsewhere in the
+ * dashboard, with a chevron to signal it's editable. The options and the toast
+ * messages were hardcoded English before.
+ */
 export default function StatusSelect({
   orderId,
   currentStatus
@@ -31,37 +21,52 @@ export default function StatusSelect({
   orderId: string
   currentStatus: OrderStatus
 }) {
+  const t = useTrans()
   const [status, setStatus] = useState(currentStatus)
   const [loading, setLoading] = useState(false)
+  const tone = statusTone(status)
 
   const handleChange = async (newStatus: OrderStatus) => {
     setLoading(true)
     try {
       await updateOrderStatus(orderId, newStatus)
       setStatus(newStatus)
-      Toast('Status updated', 'success')
+      Toast(t.adminUi.statusUpdated, 'success')
     } catch {
-      Toast('Failed to update status', 'error')
+      Toast(t.adminUi.statusUpdateFailed, 'error')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className='relative flex items-center gap-2'>
-      {loading && <Loader />}
-      <select
-        value={status}
-        onChange={e => handleChange(e.target.value as OrderStatus)}
-        disabled={loading}
-        className={`text-[10px] font-medium px-2.5 py-1.5 rounded-full uppercase tracking-wider border-none outline-none cursor-pointer appearance-none ${STATUS_COLORS[status]}`}
+    <div className='flex items-center gap-2'>
+      <span
+        className={cn(
+          'relative inline-flex items-center gap-1.5 rounded-full py-1 ps-2.5 pe-7 text-[11px] font-semibold',
+          tone.chip,
+          loading && 'opacity-60'
+        )}
       >
-        {STATUS_OPTIONS.map(opt => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
+        <span aria-hidden className={cn('h-1.5 w-1.5 shrink-0 rounded-full', tone.dot)} />
+        {statusLabel(status, t)}
+        <ChevronDown aria-hidden className='pointer-events-none absolute end-2 h-3 w-3' />
+        {/* The real control sits on top, transparent, so the chip stays the visual. */}
+        <select
+          value={status}
+          onChange={e => handleChange(e.target.value as OrderStatus)}
+          disabled={loading}
+          aria-label={t.adminUi.table.status}
+          className='absolute inset-0 cursor-pointer appearance-none bg-transparent opacity-0'
+        >
+          {STATUS_ORDER.map(option => (
+            <option key={option} value={option}>
+              {statusLabel(option, t)}
+            </option>
+          ))}
+        </select>
+      </span>
+      {loading && <Loader />}
     </div>
   )
 }

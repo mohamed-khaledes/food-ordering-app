@@ -6,9 +6,9 @@ import DeleteCategory from './delete'
 async function CategoryItem({ category }: { category: Category }) {
   const translations = await getTrans()
   return (
-    <li className='flex items-center justify-between px-4 py-3 rounded-xl border border-border hover:border-primary/30 hover:bg-muted/30 transition-all duration-200 group'>
+    <li className='flex items-center justify-between px-4 py-3 rounded-sm border border-border hover:border-brand/40 hover:bg-muted/30 transition-all duration-200 group'>
       <div className='flex items-center gap-3'>
-        <div className='w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors'>
+        <div className='w-8 h-8 rounded-lg bg-brand-soft flex items-center justify-center group-hover:bg-brand-soft transition-colors'>
           <span className='text-xs font-bold text-foreground'>
             {category.name.charAt(0).toUpperCase()}
           </span>

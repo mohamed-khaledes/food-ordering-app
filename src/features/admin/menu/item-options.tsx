@@ -188,7 +188,7 @@ const SelectName = ({
             <SelectItem
               key={index}
               value={name}
-              className='hover:!bg-primary hover:!text-white !text-accent !bg-transparent'
+              className='hover:!bg-brand hover:!text-white !text-accent !bg-transparent'
             >
               {name}
             </SelectItem>
