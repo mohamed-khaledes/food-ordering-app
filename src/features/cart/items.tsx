@@ -1,23 +1,14 @@
 'use client'
 
-import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { Minus, Plus, Trash2 } from 'lucide-react'
 import Image from 'next/image'
-import { useEffect } from 'react'
-import { addCartItem, removeCartItem, removeItemFromCart, selectCartItems } from './slice'
 import { formatCurrency } from '@/lib/helpers'
-import { deliveryFee, getSubTotal } from './hooks'
+import { useCartItems } from './hooks'
 import { useTrans } from '@/lib/translations/client'
 
 function CartItems() {
-  const cart = useAppSelector(selectCartItems)
-  const dispatch = useAppDispatch()
-  const subTotal = getSubTotal(cart)
+  const { cart, subTotal, deliveryFee, total, increase, decrease, remove } = useCartItems()
   const { global } = useTrans()
-
-  useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cart))
-  }, [cart])
 
   return (
     <div className='space-y-6'>
@@ -64,25 +55,14 @@ function CartItems() {
               <div className='mt-3 flex items-center justify-between'>
                 <div className='flex items-center gap-2'>
                   <button
-                    onClick={() => dispatch(removeCartItem({ id: item.id }))}
+                    onClick={() => decrease(item.id)}
                     className='flex h-7 w-7 items-center justify-center border border-border transition-colors hover:border-brand hover:text-brand'
                   >
                     <Minus className='h-3 w-3' />
                   </button>
                   <span className='w-5 text-center text-sm font-semibold'>{item.quantity}</span>
                   <button
-                    onClick={() =>
-                      dispatch(
-                        addCartItem({
-                          basePrice: item.basePrice,
-                          id: item.id,
-                          image: item.image,
-                          name: item.name,
-                          extras: item.extras,
-                          size: item.size
-                        })
-                      )
-                    }
+                    onClick={() => increase(item)}
                     className='flex h-7 w-7 items-center justify-center border border-border transition-colors hover:border-brand hover:text-brand'
                   >
                     <Plus className='h-3 w-3' />
@@ -90,7 +70,7 @@ function CartItems() {
                 </div>
 
                 <button
-                  onClick={() => dispatch(removeItemFromCart({ id: item.id }))}
+                  onClick={() => remove(item.id)}
                   className='flex h-7 w-7 items-center justify-center border border-destructive/30 text-destructive transition-colors hover:bg-destructive/10'
                 >
                   <Trash2 className='h-3 w-3' />
@@ -113,9 +93,7 @@ function CartItems() {
         </div>
         <div className='flex items-center justify-between pt-1'>
           <span className='font-bold text-foreground'>{global.total}</span>
-          <span className='text-lg font-bold text-brand'>
-            {formatCurrency(subTotal + deliveryFee)}
-          </span>
+          <span className='text-lg font-bold text-brand'>{formatCurrency(total)}</span>
         </div>
       </div>
     </div>

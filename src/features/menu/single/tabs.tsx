@@ -1,12 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { Container } from '@/components/ui/container'
 import { useTrans } from '@/lib/translations/client'
-
-const TABS = ['Description', 'Additional Info', 'Reviews'] as const
-type Tab = (typeof TABS)[number]
+import { useProductTabs } from './hooks'
 
 /** Description / Additional Info / Reviews tab strip below the product. */
 const ProductTabs = ({
@@ -19,18 +16,13 @@ const ProductTabs = ({
   extras: { name: string; price: number }[]
 }) => {
   const { product } = useTrans()
-  const [active, setActive] = useState<Tab>('Description')
-  const LABELS: Record<Tab, string> = {
-    Description: product.tabs.description,
-    'Additional Info': product.tabs.additional,
-    Reviews: product.tabs.reviews
-  }
+  const { active, setActive, labels, tabs } = useProductTabs()
 
   return (
     <section className='bg-[#f8f8fb] py-14 md:py-20'>
       <Container>
         <div className='mb-8 flex flex-wrap gap-8'>
-          {TABS.map(tab => (
+          {tabs.map(tab => (
             <button
               key={tab}
               onClick={() => setActive(tab)}
@@ -40,7 +32,7 @@ const ProductTabs = ({
                   : 'border-transparent text-foreground/70 hover:text-brand'
               }`}
             >
-              {LABELS[tab]}
+              {labels[tab]}
             </button>
           ))}
         </div>

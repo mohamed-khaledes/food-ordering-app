@@ -1,16 +1,14 @@
 'use client'
 
-import { Button, buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { Pages, Routes } from '@/constants/enums'
-import useFormFields from '@/hooks/useFormFields'
 import { IFormField } from '@/types/app'
 import { Translations } from '@/types/translations'
 import { useTrans } from '@/lib/translations/client'
 import { CameraIcon, Trash2 } from 'lucide-react'
 import Image from 'next/image'
-import { useActionState, useEffect, useState } from 'react'
 import SelectCategory from './select-category'
-import { Category, Extras, Sizes } from '@prisma/client'
+import { Category } from '@prisma/client'
 import {
   Accordion,
   AccordionContent,
@@ -19,12 +17,11 @@ import {
 } from '@/components/ui/accordion'
 import Link from '@/components/link'
 import { useParams } from 'next/navigation'
-import { addProduct, deleteProduct, updateProduct } from './_actions/product'
 import Loader from '@/components/ui/loader'
-import Toast from '@/components/ui/toast'
-import ItemOptions, { ItemOptionsKeys } from './item-options'
+import ItemOptions from './item-options'
 import { ProductWithRelations } from '@/features/home/featured/type'
 import FormFields from '@/components/fields/form-fields'
+import { ItemOptionsKeys, useDeleteProduct, useMenuItemForm } from './hooks'
 
 function MenuForm({
   translations,
@@ -35,57 +32,20 @@ function MenuForm({
   categories: Category[]
   product?: ProductWithRelations
 }) {
-  const [selectedImage, setSelectedImage] = useState(product ? product.image : '')
-  const [categoryId, setCategoryId] = useState(product ? product.categoryId : categories[0].id)
-  const [sizes, setSizes] = useState<Partial<Sizes>[]>(product ? product.sizes : [])
-  const [extras, setExtras] = useState<Partial<Extras>[]>(product ? product.extras : [])
-  const { getFormFields } = useFormFields({
-    slug: `${Routes.ADMIN}/${Pages.MENU_ITEMS}`,
-    translations
-  })
-
-  const formData = new FormData()
-  Object.entries(product ?? {}).forEach(([key, value]) => {
-    if (value !== null && value !== undefined && key !== 'image') {
-      formData.append(key, value.toString())
-    }
-  })
-
-  const initialState: {
-    message?: string
-    error?: {
-      image?: string[]
-      name?: string[]
-      description?: string[]
-      basePrice?: string[]
-      categoryId?: string[]
-    }
-    status?: number | null
-    formData?: FormData | null
-  } = {
-    message: '',
-    error: {},
-    status: null,
-    formData: null
-  }
-  const [state, action, pending] = useActionState(
-    product
-      ? (updateProduct.bind(null, {
-          productId: product.id,
-          options: { sizes, extras }
-        }) as any)
-      : (addProduct.bind(null, {
-          categoryId,
-          options: { sizes, extras }
-        }) as any),
-    initialState
-  )
-
-  useEffect(() => {
-    if (state.message && state.status && !pending) {
-      Toast(state.message, state.status === 201 || state.status === 200 ? 'success' : 'error')
-    }
-  }, [pending, state.message, state.status])
+  const {
+    image,
+    categoryId,
+    setCategoryId,
+    sizes,
+    setSizes,
+    extras,
+    setExtras,
+    getFormFields,
+    defaults,
+    state,
+    action,
+    pending
+  } = useMenuItemForm({ translations, categories, product })
 
   return (
     <div className='space-y-6'>
@@ -109,7 +69,7 @@ function MenuForm({
             <h2 className='text-sm font-bold uppercase tracking-widest text-muted-foreground self-start'>
               {translations.adminUi.productImage}
             </h2>
-            <UploadImage selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+            <UploadImage preview={image.preview} onFileChange={image.onFileChange} />
             {state?.error?.image && (
               <div className='flex items-center gap-2 px-3 py-2 bg-destructive/10 border border-destructive/20 rounded-sm w-full'>
                 <span className='w-1.5 h-1.5 rounded-full bg-destructive flex-shrink-0' />
@@ -125,7 +85,7 @@ function MenuForm({
                 {translations.adminUi.productDetails}
               </h2>
               {getFormFields().map((field: IFormField) => {
-                const fieldValue = state.formData?.get(field.name) ?? formData.get(field.name)
+                const fieldValue = state.formData?.get(field.name) ?? defaults.get(field.name)
                 return (
                   <div key={field.name} className='flex flex-col gap-1.5'>
                     <label className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>
@@ -207,28 +167,20 @@ export default MenuForm
 
 // ─── Upload Image ─────────────────────────────────────────
 const UploadImage = ({
-  selectedImage,
-  setSelectedImage
+  preview,
+  onFileChange
 }: {
-  selectedImage: string
-  setSelectedImage: React.Dispatch<React.SetStateAction<string>>
+  preview: string
+  onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }) => {
   const translations = useTrans()
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files && event.target.files[0]
-    if (file) {
-      const url = URL.createObjectURL(file)
-      setSelectedImage(url)
-    }
-  }
 
   return (
     <div className='relative group'>
       <div className='w-40 h-40 rounded-none overflow-hidden border-2 border-dashed border-border group-hover:border-brand transition-colors bg-muted/30 flex items-center justify-center'>
-        {selectedImage ? (
+        {preview ? (
           <Image
-            src={selectedImage}
+            src={preview}
             alt='Product image'
             width={160}
             height={160}
@@ -247,7 +199,7 @@ const UploadImage = ({
         accept='image/*'
         className='hidden'
         id='image-upload'
-        onChange={handleImageChange}
+        onChange={onFileChange}
         name='image'
       />
       <label
@@ -273,29 +225,7 @@ const FormActions = ({
   product?: ProductWithRelations
 }) => {
   const { locale } = useParams()
-  const [deleteState, setDeleteState] = useState({
-    pending: false,
-    status: null as null | number,
-    message: ''
-  })
-
-  const handleDelete = async (id: string) => {
-    try {
-      setDeleteState(prev => ({ ...prev, pending: true }))
-      const res = await deleteProduct(id)
-      setDeleteState(prev => ({ ...prev, status: res.status, message: res.message }))
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setDeleteState(prev => ({ ...prev, pending: false }))
-    }
-  }
-
-  useEffect(() => {
-    if (deleteState.message && deleteState.status) {
-      Toast(deleteState.message, deleteState.status === 200 ? 'success' : 'error')
-    }
-  }, [deleteState.message, deleteState.status])
+  const { deleteProduct, pending: deleting } = useDeleteProduct()
 
   return (
     <div className='rounded-2xl border border-border/70 bg-background p-6 flex flex-wrap gap-3 shadow-[0_1px_2px_rgb(0_0_0/0.04)]'>
@@ -310,11 +240,11 @@ const FormActions = ({
       {product && (
         <button
           type='button'
-          disabled={deleteState.pending}
-          onClick={() => handleDelete(product.id)}
+          disabled={deleting}
+          onClick={() => deleteProduct(product.id)}
           className='flex items-center gap-2 px-4 py-2 rounded-sm border border-destructive/30 text-destructive hover:bg-destructive/10 transition-all text-sm font-medium disabled:opacity-50'
         >
-          {deleteState.pending ? (
+          {deleting ? (
             <Loader />
           ) : (
             <>

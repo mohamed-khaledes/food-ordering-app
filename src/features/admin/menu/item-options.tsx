@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Translations } from '@/types/translations'
-import { Extras, ExtraIngredients, ProductSizes, Sizes } from '@prisma/client'
+import { Extras, ProductSizes, Sizes } from '@prisma/client'
 import { Plus, Trash2 } from 'lucide-react'
 import {
   Select,
@@ -15,47 +16,9 @@ import {
 } from '@/components/ui/select'
 import { useParams } from 'next/navigation'
 import { Languages } from '@/constants/enums'
+import { ItemOptionsKeys, useItemOptions } from './hooks'
 
-export enum ItemOptionsKeys {
-  SIZES,
-  EXTRAS
-}
-
-const sizesNames = [ProductSizes.SMALL, ProductSizes.MEDIUM, ProductSizes.LARGE]
-
-const extrasNames = [
-  ExtraIngredients.CHEESE,
-  ExtraIngredients.BACON,
-  ExtraIngredients.ONION,
-  ExtraIngredients.PEPPER,
-  ExtraIngredients.TOMATO
-]
-
-function handleOptions(
-  setState:
-    | React.Dispatch<React.SetStateAction<Partial<Sizes>[]>>
-    | React.Dispatch<React.SetStateAction<Partial<Extras>[]>>
-) {
-  const addOption = () => {
-    setState((prev: any) => {
-      return [...prev, { name: '', price: 0 }]
-    })
-  }
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>, index: number, fieldName: string) => {
-    const newValue = e.target.value
-    setState((prev: any) => {
-      const newSizes = [...prev]
-      newSizes[index][fieldName] = newValue
-      return newSizes
-    })
-  }
-  const removeOption = (indexToRemove: number) => {
-    setState((prev: any) => {
-      return prev.filter((_: any, index: number) => index !== indexToRemove)
-    })
-  }
-  return { addOption, onChange, removeOption }
-}
+export { ItemOptionsKeys }
 
 function ItemOptions({
   state,
@@ -70,61 +33,54 @@ function ItemOptions({
   translations: Translations
   optionKey: ItemOptionsKeys
 }) {
-  const { addOption, onChange, removeOption } = handleOptions(setState)
+  const { addOption, onChange, removeOption, availableNames, hasAvailableOptions } = useItemOptions(
+    optionKey,
+    state,
+    setState
+  )
 
-  const isThereAvailableOptions = () => {
-    switch (optionKey) {
-      case ItemOptionsKeys.SIZES:
-        return sizesNames.length > state.length
-      case ItemOptionsKeys.EXTRAS:
-        return extrasNames.length > state.length
-    }
-  }
   return (
     <div className='w-full'>
       {state.length > 0 && (
         <ul className='w-full'>
-          {state.map((item, index) => {
-            return (
-              <li key={index} className='flex gap-2 mb-2'>
-                <div className='space-y-1 basis-1/2'>
-                  <Label>name</Label>
-                  <SelectName
-                    item={item}
-                    onChange={onChange}
-                    index={index}
-                    currentState={state}
-                    optionKey={optionKey}
-                  />
-                </div>
-                <div className='space-y-1 basis-1/2'>
-                  <Label>Extra Price</Label>
-                  <Input
-                    type='number'
-                    placeholder='0'
-                    min={0}
-                    name='price'
-                    value={item.price}
-                    onChange={e => onChange(e, index, 'price')}
-                    className='bg-white focus:!ring-0'
-                  />
-                </div>
-                <div className='flex items-center'>
-                  <Button
-                    type='button'
-                    variant='outline'
-                    className='bg-red-500 text-white'
-                    onClick={() => removeOption(index)}
-                  >
-                    <Trash2 />
-                  </Button>
-                </div>
-              </li>
-            )
-          })}
+          {state.map((item, index) => (
+            <li key={index} className='flex gap-2 mb-2'>
+              <div className='space-y-1 basis-1/2'>
+                <Label>name</Label>
+                <SelectName
+                  item={item}
+                  onChange={onChange}
+                  index={index}
+                  names={availableNames(item.name)}
+                />
+              </div>
+              <div className='space-y-1 basis-1/2'>
+                <Label>Extra Price</Label>
+                <Input
+                  type='number'
+                  placeholder='0'
+                  min={0}
+                  name='price'
+                  value={item.price}
+                  onChange={e => onChange(e, index, 'price')}
+                  className='bg-white focus:!ring-0'
+                />
+              </div>
+              <div className='flex items-center'>
+                <Button
+                  type='button'
+                  variant='outline'
+                  className='bg-red-500 text-white'
+                  onClick={() => removeOption(index)}
+                >
+                  <Trash2 />
+                </Button>
+              </div>
+            </li>
+          ))}
         </ul>
       )}
-      {isThereAvailableOptions() && (
+      {hasAvailableOptions && (
         <Button type='button' variant='outline' className='w-full' onClick={addOption}>
           <Plus />
           {optionKey === ItemOptionsKeys.SIZES
@@ -142,37 +98,20 @@ const SelectName = ({
   onChange,
   index,
   item,
-  currentState,
-  optionKey
+  names
 }: {
   index: number
   item: Partial<Sizes> | Partial<Extras>
-  currentState: Partial<Sizes>[] | Partial<Extras>[]
-  optionKey: ItemOptionsKeys
+  /** Names still free, plus this row's own — see `useItemOptions`. */
+  names: (ProductSizes | Extras['name'])[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (e: any, index: any, fieldName: any) => void
 }) => {
   const { locale } = useParams()
 
-  const getNames = () => {
-    switch (optionKey) {
-      case ItemOptionsKeys.SIZES:
-        const filteredSizes = sizesNames.filter(size => !currentState.some(s => s.name === size))
-        return filteredSizes
-      case ItemOptionsKeys.EXTRAS:
-        const filteredExtras = extrasNames.filter(
-          extra => !currentState.some(e => e.name === extra)
-        )
-        return filteredExtras
-    }
-  }
-
-  const names = getNames()
-
   return (
     <Select
-      onValueChange={(value: any) => {
-        onChange({ target: { value } }, index, 'name')
-      }}
+      onValueChange={value => onChange({ target: { value } }, index, 'name')}
       defaultValue={item.name ? item.name : 'select...'}
     >
       <SelectTrigger
@@ -184,9 +123,9 @@ const SelectName = ({
       </SelectTrigger>
       <SelectContent className='bg-transparent border-none z-50 w-full'>
         <SelectGroup className='bg-background text-accent z-50'>
-          {names.map((name, index) => (
+          {names.map(name => (
             <SelectItem
-              key={index}
+              key={name}
               value={name}
               className='hover:!bg-brand hover:!text-white !text-accent !bg-transparent'
             >

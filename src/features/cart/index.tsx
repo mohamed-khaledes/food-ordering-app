@@ -1,11 +1,10 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 import CartItems from './items'
 import CheckoutForm from './form'
 import { Banknote, CreditCard, ShoppingCart } from 'lucide-react'
 import { useTrans } from '@/lib/translations/client'
-import { useAppSelector } from '@/redux/hooks'
-import { selectCartItems } from './slice'
+import { useCheckout } from './hooks'
 import Banner from '@/components/layouts/banner'
 import PartnersStrip from '@/components/layouts/partners-strip'
 import Link from '@/components/link'
@@ -14,8 +13,7 @@ import { Container } from '@/components/ui/container'
 
 const Cart = () => {
   const { global, checkout } = useTrans()
-  const [payType, setPayType] = useState<'card' | 'cash'>('cash')
-  const cart = useAppSelector(selectCartItems)
+  const { payType, setPayType, isEmpty } = useCheckout()
 
   return (
     <section>
@@ -24,7 +22,7 @@ const Cart = () => {
         crumbs={[{ label: global.home, href: '/' }, { label: global.checkout }]}
       />
 
-      {!cart || cart.length === 0 ? (
+      {isEmpty ? (
         <div className='flex flex-col items-center justify-center gap-4 py-28'>
           <div className='flex h-16 w-16 items-center justify-center rounded-full bg-muted'>
             <ShoppingCart className='h-7 w-7 text-muted-foreground' />

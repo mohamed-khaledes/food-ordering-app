@@ -4,30 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Loader from '@/components/ui/loader'
 import { Translations } from '@/types/translations'
-import { useActionState, useEffect } from 'react'
-import { addCategory } from './_actions/category'
-import Toast from '@/components/ui/toast'
-
-type InitialStateType = {
-  message?: string
-  error?: any
-  status?: number | null
-}
-
-const initialState: InitialStateType = {
-  message: '',
-  error: {},
-  status: null
-}
+import { useAddCategoryForm } from './hooks'
 
 function CategoryForm({ translations }: { translations: Translations }) {
-  const [state, action, pending] = useActionState(addCategory, initialState)
-
-  useEffect(() => {
-    if (state.message) {
-      Toast(state.message, state.status === 201 ? 'success' : 'error')
-    }
-  }, [state.message, state.status])
+  const { state, action, pending } = useAddCategoryForm()
 
   return (
     <form action={action} className='space-y-4'>

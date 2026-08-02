@@ -1,43 +1,24 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from '@/components/link'
 import { Routes } from '@/constants/enums'
 import { Container } from '@/components/ui/container'
 import { useTrans } from '@/lib/translations/client'
+import { useCountdown } from './hooks'
 import dealImg from '../../../public/assets/items/Teriyaki Chicken Bowl.png'
-
-/** Ends at the next midnight, so the countdown always has something to count. */
-const nextMidnight = () => {
-  const end = new Date()
-  end.setHours(24, 0, 0, 0)
-  return end.getTime()
-}
-
-const pad = (n: number) => String(Math.max(0, n)).padStart(2, '0')
 
 const Countdown = ({
   labels
 }: {
   labels: { days: string; hours: string; minutes: string; seconds: string }
 }) => {
-  const [remaining, setRemaining] = useState<number | null>(null)
+  const { started, days, hours, minutes, seconds } = useCountdown()
 
-  // Start on the client only — a server-rendered clock would hydrate mismatched.
-  useEffect(() => {
-    const target = nextMidnight()
-    const tick = () => setRemaining(target - Date.now())
-    tick()
-    const id = setInterval(tick, 1000)
-    return () => clearInterval(id)
-  }, [])
-
-  const total = Math.max(0, remaining ?? 0)
   const units = [
-    { label: labels.days, value: Math.floor(total / 86_400_000) },
-    { label: labels.hours, value: Math.floor(total / 3_600_000) % 24 },
-    { label: labels.minutes, value: Math.floor(total / 60_000) % 60 },
-    { label: labels.seconds, value: Math.floor(total / 1000) % 60 }
+    { label: labels.days, value: days },
+    { label: labels.hours, value: hours },
+    { label: labels.minutes, value: minutes },
+    { label: labels.seconds, value: seconds }
   ]
 
   return (
@@ -49,7 +30,7 @@ const Countdown = ({
               i === 2 ? 'bg-brand text-white' : 'bg-background text-brand shadow-sm'
             }`}
           >
-            {remaining === null ? '––' : pad(unit.value)}
+            {started ? unit.value : '––'}
           </span>
           <span className='text-xs text-muted-foreground'>{unit.label}</span>
         </div>

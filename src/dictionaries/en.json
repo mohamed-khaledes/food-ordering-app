@@ -745,7 +745,19 @@
     "changeImage": "Change",
     "breakdown": "By status",
     "statusUpdated": "Status updated",
-    "statusUpdateFailed": "Could not update the status"
+    "statusUpdateFailed": "Could not update the status",
+    "deliveryAssigned": "Delivery man assigned",
+    "deliveryAssignFailed": "Could not assign the delivery man",
+    "roleAssigned": "Assigned as delivery man",
+    "roleRemoved": "Role changed back to user",
+    "roleUpdateFailed": "Could not update the role",
+    "orderPickedUp": "Order picked up",
+    "orderDelivered": "Order delivered",
+    "pickUp": "Pick up",
+    "markDelivered": "Mark delivered",
+    "deliveredTag": "Delivered",
+    "assignRole": "Assign",
+    "removeRole": "Remove"
   },
   "common": {
     "loading": "Loading...",
@@ -755,6 +767,8 @@
     "noDeliveryMen": "No delivery men",
     "assignDelivery": "Assign delivery",
     "adminAccess": "Admin access",
+    "adminAccessHint": "Grant full admin privileges to this user",
+    "readOnly": "Read only",
     "manageInfo": "Manage your personal information",
     "noAvailableOrders": "No available orders right now",
     "noPickedOrders": "You haven't picked up any orders yet"

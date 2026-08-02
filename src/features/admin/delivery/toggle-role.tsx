@@ -1,10 +1,9 @@
 'use client'
 import { UserRole } from '@prisma/client'
-import { useState } from 'react'
-import { toggleDeliveryRole } from './_actions/delivery'
-import Toast from '@/components/ui/toast'
 import Loader from '@/components/ui/loader'
 import { Truck, X } from 'lucide-react'
+import { useTrans } from '@/lib/translations/client'
+import { useToggleDeliveryRole } from './hooks'
 
 export default function ToggleDeliveryRole({
   userId,
@@ -13,25 +12,13 @@ export default function ToggleDeliveryRole({
   userId: string
   currentRole: UserRole
 }) {
-  const [loading, setLoading] = useState(false)
-  const isDelivery = currentRole === UserRole.DELIVERY
-
-  const handleToggle = async () => {
-    setLoading(true)
-    try {
-      await toggleDeliveryRole(userId, isDelivery ? UserRole.USER : UserRole.DELIVERY)
-      Toast(isDelivery ? 'Role changed to user' : 'Assigned as delivery man', 'success')
-    } catch {
-      Toast('Failed to update role', 'error')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const t = useTrans()
+  const { isDelivery, pending, toggle } = useToggleDeliveryRole(userId, currentRole)
 
   return (
     <button
-      onClick={handleToggle}
-      disabled={loading}
+      onClick={toggle}
+      disabled={pending}
       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-all active:scale-[0.97] disabled:opacity-50
         ${
           isDelivery
@@ -39,15 +26,15 @@ export default function ToggleDeliveryRole({
             : 'bg-foreground text-background hover:bg-foreground/90'
         }`}
     >
-      {loading ? (
+      {pending ? (
         <Loader />
       ) : isDelivery ? (
         <>
-          <X className='w-3 h-3' /> Remove
+          <X className='w-3 h-3' /> {t.adminUi.removeRole}
         </>
       ) : (
         <>
-          <Truck className='w-3 h-3' /> Assign
+          <Truck className='w-3 h-3' /> {t.adminUi.assignRole}
         </>
       )}
     </button>

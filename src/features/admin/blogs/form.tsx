@@ -1,22 +1,10 @@
 'use client'
 
-import { useActionState, useEffect } from 'react'
-import { useRouter, useParams } from 'next/navigation'
 import { Blog } from '@prisma/client'
-import { createBlog, updateBlog } from './_actions/blog'
-import { Routes } from '@/constants/enums'
 import { IMAGES } from '@/constants/images'
 import { Loader2 } from 'lucide-react'
-import Toast from '@/components/ui/toast'
 import { useTrans } from '@/lib/translations/client'
-
-type State = {
-  status?: number
-  message?: string
-  error?: Record<string, string[] | undefined>
-}
-
-const initialState: State = {}
+import { useBlogForm } from './hooks'
 
 const Field = ({
   label,
@@ -42,27 +30,9 @@ const inputClass =
   'w-full border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-brand'
 
 const BlogForm = ({ blog }: { blog?: Blog }) => {
-  const router = useRouter()
-  const { locale } = useParams()
   const t = useTrans()
   const b = t.adminUi.blogs
-  const isEdit = Boolean(blog)
-
-  const action = isEdit ? updateBlog.bind(null, blog!.id) : createBlog
-  const [state, formAction, pending] = useActionState(action as any, initialState)
-
-  const result = state as State
-
-  useEffect(() => {
-    if (!result?.status) return
-    if (result.status === 200 || result.status === 201) {
-      Toast(result.message ?? 'Saved', 'success')
-      router.push(`/${locale}/${Routes.ADMIN}/blogs`)
-      router.refresh()
-    } else if (result.status >= 500) {
-      Toast(result.message ?? 'Something went wrong', 'error')
-    }
-  }, [result, router, locale])
+  const { state: result, action: formAction, pending, isEdit, cancel } = useBlogForm(blog)
 
   return (
     <form action={formAction} className='flex flex-col gap-5'>
@@ -149,7 +119,7 @@ const BlogForm = ({ blog }: { blog?: Blog }) => {
         </button>
         <button
           type='button'
-          onClick={() => router.push(`/${locale}/${Routes.ADMIN}/blogs`)}
+          onClick={cancel}
           className='border border-border px-8 py-3 text-sm text-muted-foreground transition-colors hover:border-brand hover:text-brand'
         >
           {t.cancel}

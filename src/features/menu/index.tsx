@@ -1,9 +1,6 @@
 'use client'
-import { Product } from '@prisma/client'
 import Card from '../shared/card'
-import FiltersSidebar, { Filters } from './filters-sidebar'
-import { useEffect, useMemo, useState } from 'react'
-import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
+import FiltersSidebar from './filters-sidebar'
 import { LayoutGrid, List, Search, SlidersHorizontal, UtensilsCrossed, X } from 'lucide-react'
 import { useTrans } from '@/lib/translations/client'
 import { Sheet, SheetClose, SheetContent, SheetTitle } from '@/components/ui/sheet'
@@ -14,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { Directions, Languages } from '@/constants/enums'
 import { cn } from '@/lib/utils'
+import { PER_PAGE_OPTIONS, SortKey, useShopFilters } from './hooks'
 
 /**
  * Toolbar sizing for `SelectTrigger`. The height goes through the same
@@ -27,17 +24,6 @@ const TRIGGER =
   'data-[size=default]:h-11 sm:data-[size=default]:h-10 ' +
   'focus-visible:border-brand focus-visible:ring-0'
 
-type SortKey = 'best' | 'price-asc' | 'price-desc' | 'name'
-
-const PER_PAGE_OPTIONS = [8, 12, 24]
-
-const emptyFilters = (maxPrice: number): Filters => ({
-  categories: [],
-  maxPrice,
-  sizes: [],
-  extras: []
-})
-
 function Menu({ categories }: { categories: any[] }) {
   const { shop } = useTrans()
 
@@ -48,117 +34,31 @@ function Menu({ categories }: { categories: any[] }) {
     { value: 'name', label: shop.sort.name }
   ]
 
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const { locale } = useParams()
-  // Radix reads direction from a prop, not from the document's `dir`.
-  const dir = locale === Languages.ARABIC ? Directions.RTL : Directions.LTR
-
-  const allProducts = useMemo(
-    () =>
-      (categories ?? []).flatMap(category =>
-        (category?.Product ?? []).map((product: Product) => ({
-          ...product,
-          categoryName: category.name
-        }))
-      ),
-    [categories]
-  )
-
-  const priceBounds = useMemo(() => {
-    const prices = allProducts.map((p: any) => p.basePrice)
-    return {
-      min: 0,
-      max: prices.length ? Math.ceil(Math.max(...prices)) : 100
-    }
-  }, [allProducts])
-
-  const [filters, setFilters] = useState<Filters>(() => emptyFilters(priceBounds.max))
-  const [sort, setSort] = useState<SortKey>('best')
-  const [perPage, setPerPage] = useState(12)
-  const [layout, setLayout] = useState<'grid' | 'list'>('grid')
-  const [page, setPage] = useState(1)
-  const [showFilters, setShowFilters] = useState(false)
-
-  // The header popup and this page share one source of truth: the `q` param.
-  const urlQuery = searchParams.get('q') ?? ''
-  const [query, setQuery] = useState(urlQuery)
-  useEffect(() => {
-    setQuery(urlQuery)
-    setPage(1)
-  }, [urlQuery])
-
-  // Price ceiling is only known once products load.
-  useEffect(() => {
-    setFilters(current => ({ ...current, maxPrice: priceBounds.max }))
-  }, [priceBounds.max])
-
-  /** Push the local search box back into the URL so both inputs agree. */
-  const commitQuery = (value: string) => {
-    setQuery(value)
-    setPage(1)
-    const params = new URLSearchParams(searchParams.toString())
-    if (value.trim()) params.set('q', value.trim())
-    else params.delete('q')
-    const qs = params.toString()
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
-  }
-
-  const products = useMemo(() => {
-    let list = allProducts
-
-    if (filters.categories.length > 0) {
-      list = list.filter((p: any) => filters.categories.includes(p.categoryName))
-    }
-
-    if (query.trim()) {
-      const needle = query.trim().toLowerCase()
-      list = list.filter(
-        (p: any) =>
-          p.name?.toLowerCase().includes(needle) || p.description?.toLowerCase().includes(needle)
-      )
-    }
-
-    list = list.filter((p: any) => p.basePrice <= filters.maxPrice)
-
-    if (filters.sizes.length > 0) {
-      list = list.filter((p: any) => p.sizes?.some((s: any) => filters.sizes.includes(s.name)))
-    }
-
-    if (filters.extras.length > 0) {
-      list = list.filter((p: any) => p.extras?.some((e: any) => filters.extras.includes(e.name)))
-    }
-
-    const sorted = [...list]
-    if (sort === 'price-asc') sorted.sort((a: any, b: any) => a.basePrice - b.basePrice)
-    if (sort === 'price-desc') sorted.sort((a: any, b: any) => b.basePrice - a.basePrice)
-    if (sort === 'name') sorted.sort((a: any, b: any) => a.name.localeCompare(b.name))
-    return sorted
-  }, [allProducts, filters, query, sort])
-
-  const totalPages = Math.max(1, Math.ceil(products.length / perPage))
-  const currentPage = Math.min(page, totalPages)
-  const visible = products.slice((currentPage - 1) * perPage, currentPage * perPage)
-
-  const sidebarCategories = (categories ?? []).map(c => ({
-    id: c.id,
-    name: c.name,
-    count: c.Product?.length ?? 0
-  }))
-
-  /** Badge on the mobile filter button, so a collapsed sheet still shows state. */
-  const activeFilterCount =
-    filters.categories.length +
-    filters.sizes.length +
-    filters.extras.length +
-    (filters.maxPrice < priceBounds.max ? 1 : 0)
-
-  const reset = () => {
-    setFilters(emptyFilters(priceBounds.max))
-    setSort('best')
-    commitQuery('')
-  }
+  const {
+    dir,
+    query,
+    setQuery,
+    commitQuery,
+    filters,
+    applyFilters,
+    priceBounds,
+    activeFilterCount,
+    sort,
+    changeSort,
+    perPage,
+    changePerPage,
+    layout,
+    setLayout,
+    showFilters,
+    setShowFilters,
+    products,
+    visible,
+    sidebarCategories,
+    currentPage,
+    totalPages,
+    setPage,
+    reset
+  } = useShopFilters(categories)
 
   if (!categories || categories.length < 1) {
     return (
@@ -231,10 +131,7 @@ function Menu({ categories }: { categories: any[] }) {
           <Select
             dir={dir}
             value={sort}
-            onValueChange={value => {
-              setSort(value as SortKey)
-              setPage(1)
-            }}
+            onValueChange={value => changeSort(value as SortKey)}
           >
             <SelectTrigger aria-label={shop.sortBy} className={cn(TRIGGER, 'flex-1 sm:flex-none')}>
               <span className='flex min-w-0 items-center gap-2'>
@@ -257,10 +154,7 @@ function Menu({ categories }: { categories: any[] }) {
           <Select
             dir={dir}
             value={String(perPage)}
-            onValueChange={value => {
-              setPerPage(Number(value))
-              setPage(1)
-            }}
+            onValueChange={value => changePerPage(Number(value))}
           >
             <SelectTrigger aria-label={shop.perPage} className={cn(TRIGGER, 'shrink-0')}>
               <span className='flex min-w-0 items-center gap-2'>
@@ -326,10 +220,7 @@ function Menu({ categories }: { categories: any[] }) {
               categories={sidebarCategories}
               filters={filters}
               priceBounds={priceBounds}
-              onChange={next => {
-                setFilters(next)
-                setPage(1)
-              }}
+              onChange={applyFilters}
               onReset={reset}
             />
           </div>
@@ -354,10 +245,7 @@ function Menu({ categories }: { categories: any[] }) {
             categories={sidebarCategories}
             filters={filters}
             priceBounds={priceBounds}
-            onChange={next => {
-              setFilters(next)
-              setPage(1)
-            }}
+            onChange={applyFilters}
             onReset={reset}
           />
         </div>

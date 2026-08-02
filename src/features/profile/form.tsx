@@ -1,19 +1,15 @@
 'use client'
-import { InputTypes, Routes } from '@/constants/enums'
-import useFormFields from '@/hooks/useFormFields'
+import { InputTypes } from '@/constants/enums'
 import { IFormField } from '@/types/app'
 import { Translations } from '@/types/translations'
 import { Session } from 'next-auth'
 import Image from 'next/image'
 import { UserRole } from '@prisma/client'
-import { useActionState, useEffect, useState } from 'react'
 import { CameraIcon, Save } from 'lucide-react'
-import { useSession } from 'next-auth/react'
 import FormFields from '@/components/fields/form-fields'
 import Loader from '@/components/ui/loader'
 import { Checkbox } from '@/components/ui/checkbox'
-import Toast from '@/components/ui/toast'
-import { updateProfile } from './_actions/profile'
+import { useProfileForm } from './hooks'
 
 function EditUserForm({
   translations,
@@ -22,47 +18,25 @@ function EditUserForm({
   translations: Translations
   user: Session['user']
 }) {
-  const session = useSession()
-  const formData = new FormData()
-
-  Object.entries(user || {}).forEach(([key, value]) => {
-    if (value !== null && value !== undefined && key !== 'image') {
-      formData.append(key, value.toString())
-    }
-  })
-
-  const initialState: {
-    message?: string
-    error?: any
-    status?: number | null
-    formData?: FormData | null
-  } = { message: '', error: {}, status: null, formData }
-
-  const [selectedImage, setSelectedImage] = useState(user?.image ?? '')
-  const [isAdmin, setIsAdmin] = useState(user?.role === UserRole.ADMIN)
-  const [state, action, pending] = useActionState(
-    updateProfile.bind(null, isAdmin) as any,
-    initialState
-  )
-  const { getFormFields } = useFormFields({ slug: Routes.PROFILE, translations })
-
-  useEffect(() => {
-    if (state.message && state.status && !pending) {
-      Toast(state.message, state.status === 200 ? 'success' : 'error')
-    }
-  }, [pending, state.message, state.status])
-
-  useEffect(() => {
-    setSelectedImage(user?.image as string)
-  }, [user?.image])
+  const {
+    image,
+    isAdmin,
+    toggleAdmin,
+    canEditRole,
+    getFormFields,
+    defaults,
+    state,
+    action,
+    pending
+  } = useProfileForm(user, translations)
 
   return (
     <form action={action} className='space-y-6'>
       {/* Avatar upload */}
       <div className='flex items-center gap-5'>
         <UploadImage
-          selectedImage={selectedImage}
-          setSelectedImage={setSelectedImage}
+          preview={image.preview}
+          onFileChange={image.onFileChange}
           name={user?.name}
         />
         <div>
@@ -89,7 +63,7 @@ function EditUserForm({
       {/* Fields */}
       <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
         {getFormFields().map((field: IFormField) => {
-          const fieldValue = state?.formData?.get(field.name) ?? formData.get(field.name)
+          const fieldValue = state?.formData?.get(field.name) ?? defaults.get(field.name)
           const isEmail = field.type === InputTypes.EMAIL
           return (
             <div
@@ -105,7 +79,7 @@ function EditUserForm({
                   {field.label}
                   {isEmail && (
                     <span className='ml-2 text-[10px] normal-case bg-muted px-1.5 py-0.5 rounded text-muted-foreground'>
-                      Read only
+                      {translations.common.readOnly}
                     </span>
                   )}
                 </label>
@@ -122,20 +96,13 @@ function EditUserForm({
       </div>
 
       {/* Admin toggle */}
-      {session?.data?.user.role === UserRole.ADMIN && (
+      {canEditRole && (
         <div className='flex items-center justify-between px-4 py-3 rounded-sm border border-border bg-muted/30'>
           <div>
             <p className='text-sm font-medium text-foreground'>{translations.common.adminAccess}</p>
-            <p className='text-xs text-muted-foreground'>
-              Grant full admin privileges to this user
-            </p>
+            <p className='text-xs text-muted-foreground'>{translations.common.adminAccessHint}</p>
           </div>
-          <Checkbox
-            name='admin'
-            checked={isAdmin}
-            onClick={() => setIsAdmin(!isAdmin)}
-            className='w-5 h-5'
-          />
+          <Checkbox name='admin' checked={isAdmin} onClick={toggleAdmin} className='w-5 h-5' />
         </div>
       )}
 
@@ -169,53 +136,46 @@ export default EditUserForm
 
 // ─── Upload Image ─────────────────────────────────────────
 const UploadImage = ({
-  selectedImage,
-  setSelectedImage,
+  preview,
+  onFileChange,
   name
 }: {
-  selectedImage: string
-  setSelectedImage: React.Dispatch<React.SetStateAction<string>>
+  preview: string
+  onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   name?: string | null
-}) => {
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) setSelectedImage(URL.createObjectURL(file))
-  }
-
-  return (
-    <div className='relative group flex-shrink-0'>
-      <div className='w-16 h-16 rounded-none overflow-hidden border border-border bg-muted flex items-center justify-center'>
-        {selectedImage ? (
-          <Image
-            src={selectedImage}
-            alt={name ?? 'avatar'}
-            width={64}
-            height={64}
-            className='w-full h-full object-cover'
-          />
-        ) : (
-          <span className='text-xl font-bold text-muted-foreground'>
-            {(name ?? 'U').charAt(0).toUpperCase()}
-          </span>
-        )}
-      </div>
-
-      {/* Hover overlay */}
-      <label
-        htmlFor='profile-image-upload'
-        className='absolute inset-0 rounded-none flex items-center justify-center bg-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
-      >
-        <CameraIcon className='w-5 h-5 text-white' />
-      </label>
-
-      <input
-        type='file'
-        accept='image/*'
-        className='hidden'
-        id='profile-image-upload'
-        onChange={handleImageChange}
-        name='image'
-      />
+}) => (
+  <div className='relative group flex-shrink-0'>
+    <div className='w-16 h-16 rounded-none overflow-hidden border border-border bg-muted flex items-center justify-center'>
+      {preview ? (
+        <Image
+          src={preview}
+          alt={name ?? 'avatar'}
+          width={64}
+          height={64}
+          className='w-full h-full object-cover'
+        />
+      ) : (
+        <span className='text-xl font-bold text-muted-foreground'>
+          {(name ?? 'U').charAt(0).toUpperCase()}
+        </span>
+      )}
     </div>
-  )
-}
+
+    {/* Hover overlay */}
+    <label
+      htmlFor='profile-image-upload'
+      className='absolute inset-0 rounded-none flex items-center justify-center bg-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
+    >
+      <CameraIcon className='w-5 h-5 text-white' />
+    </label>
+
+    <input
+      type='file'
+      accept='image/*'
+      className='hidden'
+      id='profile-image-upload'
+      onChange={onFileChange}
+      name='image'
+    />
+  </div>
+)

@@ -15,23 +15,9 @@ import { Languages } from '@/constants/enums'
 import { Translations } from '@/types/translations'
 import { Category } from '@prisma/client'
 import { EditIcon } from 'lucide-react'
-import { ValidationError } from 'next/dist/compiled/amphtml-validator'
 import { useParams } from 'next/navigation'
-import { useActionState, useEffect } from 'react'
 import Loader from '@/components/ui/loader'
-import { updateCategory } from './_actions/category'
-import Toast from '@/components/ui/toast'
-
-type InitialStateType = {
-  message?: string
-  error?: ValidationError
-  status?: number | null
-}
-const initialState: InitialStateType = {
-  message: '',
-  error: {},
-  status: null
-}
+import { useEditCategoryForm } from './hooks'
 
 function EditCategory({
   translations,
@@ -41,16 +27,7 @@ function EditCategory({
   category: Category
 }) {
   const { locale } = useParams()
-  const [state, action, pending] = useActionState(
-    updateCategory.bind(null, category.id),
-    initialState
-  )
-
-  useEffect(() => {
-    if (state.message) {
-      Toast(state.message, state.status === 201 ? 'success' : 'error')
-    }
-  }, [state.message, state.status])
+  const { state, action, pending } = useEditCategoryForm(category.id)
 
   return (
     <Dialog>

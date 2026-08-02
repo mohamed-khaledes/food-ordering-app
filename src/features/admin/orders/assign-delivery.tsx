@@ -1,9 +1,7 @@
 'use client'
-import { useState } from 'react'
-import Toast from '@/components/ui/toast'
 import Loader from '@/components/ui/loader'
-import { assignDeliveryMan } from '@/features/orders/_actions/orders'
 import { useTrans } from '@/lib/translations/client'
+import { useAssignDelivery } from './hooks'
 
 type DeliveryMan = { id: string; name: string; email: string }
 
@@ -17,21 +15,7 @@ export default function AssignDelivery({
   currentDeliveryManId?: string | null
 }) {
   const t = useTrans()
-  const [selected, setSelected] = useState(currentDeliveryManId ?? '')
-  const [loading, setLoading] = useState(false)
-
-  const handleAssign = async (deliveryManId: string) => {
-    setLoading(true)
-    try {
-      await assignDeliveryMan(orderId, deliveryManId)
-      setSelected(deliveryManId)
-      Toast('Delivery man assigned', 'success')
-    } catch {
-      Toast('Failed to assign', 'error')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const { selected, assign, pending } = useAssignDelivery(orderId, currentDeliveryManId)
 
   if (deliveryMen.length === 0) {
     return <span className='text-xs text-muted-foreground'>{t.common.noDeliveryMen}</span>
@@ -39,11 +23,11 @@ export default function AssignDelivery({
 
   return (
     <div className='flex items-center gap-2'>
-      {loading && <Loader />}
+      {pending && <Loader />}
       <select
         value={selected}
-        onChange={e => handleAssign(e.target.value)}
-        disabled={loading}
+        onChange={e => assign(e.target.value)}
+        disabled={pending}
         className='text-xs px-2.5 py-1.5 rounded-lg border border-border bg-background text-foreground outline-none cursor-pointer focus:border-brand transition-colors'
       >
         <option value=''>{t.common.assignDelivery}</option>

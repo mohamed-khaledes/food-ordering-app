@@ -2,46 +2,13 @@
 
 import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-react'
-import { useState } from 'react'
-import { deleteCategory } from './_actions/category'
-
-type StateType = {
-  isLoading: boolean
-  message: string
-  status: number | null
-}
+import { useDeleteCategory } from './hooks'
 
 function DeleteCategory({ id }: { id: string }) {
-  const [state, setState] = useState<StateType>({
-    isLoading: false,
-    message: '',
-    status: null
-  })
+  const { remove, pending } = useDeleteCategory(id)
 
-  const handleDelete = async () => {
-    try {
-      setState(prev => {
-        return { ...prev, isLoading: true }
-      })
-      const res = await deleteCategory(id)
-      setState(prev => {
-        return { ...prev, message: res.message, status: res.status }
-      })
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setState(prev => {
-        return { ...prev, isLoading: false }
-      })
-    }
-  }
   return (
-    <Button
-      variant='secondary'
-      className='bg-red-500'
-      disabled={state.isLoading}
-      onClick={handleDelete}
-    >
+    <Button variant='secondary' className='bg-red-500' disabled={pending} onClick={remove}>
       <Trash2 className='text-white' />
     </Button>
   )

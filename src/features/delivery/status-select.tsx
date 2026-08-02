@@ -1,9 +1,8 @@
 'use client'
 import { OrderStatus } from '@prisma/client'
-import { useState } from 'react'
-import Toast from '@/components/ui/toast'
 import Loader from '@/components/ui/loader'
-import { updateOrderStatus } from '../orders/_actions/orders'
+import { useTrans } from '@/lib/translations/client'
+import { useDeliveryHandoff } from './hooks'
 
 export default function DeliveryStatusSelect({
   orderId,
@@ -14,36 +13,10 @@ export default function DeliveryStatusSelect({
   currentStatus: OrderStatus
   pickUp?: boolean
 }) {
-  const [status, setStatus] = useState(currentStatus)
-  const [loading, setLoading] = useState(false)
+  const t = useTrans()
+  const { status, pending, pickUp: handlePickUp, deliver } = useDeliveryHandoff(orderId, currentStatus)
 
-  const handlePickUp = async () => {
-    setLoading(true)
-    try {
-      await updateOrderStatus(orderId, OrderStatus.OUT_FOR_DELIVERY)
-      setStatus(OrderStatus.OUT_FOR_DELIVERY)
-      Toast('Order picked up!', 'success')
-    } catch {
-      Toast('Failed', 'error')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleDeliver = async () => {
-    setLoading(true)
-    try {
-      await updateOrderStatus(orderId, OrderStatus.DELIVERED)
-      setStatus(OrderStatus.DELIVERED)
-      Toast('Order delivered!', 'success')
-    } catch {
-      Toast('Failed', 'error')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (loading) return <Loader />
+  if (pending) return <Loader />
 
   if (pickUp) {
     return (
@@ -51,7 +24,7 @@ export default function DeliveryStatusSelect({
         onClick={handlePickUp}
         className='flex items-center gap-1.5 px-3 py-1.5 bg-brand text-foreground rounded-sm text-xs font-medium hover:bg-brand/80 active:scale-[0.97] transition-all'
       >
-        🚴 Pick up
+        🚴 {t.adminUi.pickUp}
       </button>
     )
   }
@@ -59,10 +32,10 @@ export default function DeliveryStatusSelect({
   if (status === OrderStatus.OUT_FOR_DELIVERY) {
     return (
       <button
-        onClick={handleDeliver}
+        onClick={deliver}
         className='flex items-center gap-1.5 px-3 py-1.5 bg-foreground text-background rounded-sm text-xs font-medium hover:bg-foreground/90 active:scale-[0.97] transition-all'
       >
-        ✅ Mark delivered
+        ✅ {t.adminUi.markDelivered}
       </button>
     )
   }
@@ -70,7 +43,7 @@ export default function DeliveryStatusSelect({
   if (status === OrderStatus.DELIVERED) {
     return (
       <span className='text-[10px] font-medium px-2.5 py-1 rounded-full bg-brand-soft text-foreground uppercase tracking-wider'>
-        Delivered ✓
+        {t.adminUi.deliveredTag} ✓
       </span>
     )
   }

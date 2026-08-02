@@ -1,5 +1,5 @@
 'use client'
-import { CartItem, selectCartItems, clearCart } from './slice'
+import { CartItem, selectCartItems, clearCart, addCartItem, removeCartItem, removeItemFromCart } from './slice'
 import { FormEvent, useEffect, useState } from 'react'
 import { TCreateOrder } from './type'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
@@ -23,6 +23,51 @@ export const getSubTotal = (cart: CartItem[]) =>
   }, 0)
 
 export const getTotalAmount = (cart: CartItem[]) => getSubTotal(cart) + deliveryFee
+
+/**
+ * The order summary list: contents, running totals, and the quantity controls.
+ *
+ * The cart is mirrored into `localStorage` on every change so a reload doesn't
+ * lose it — the Redux store itself is memory-only.
+ */
+export function useCartItems() {
+  const cart = useAppSelector(selectCartItems)
+  const dispatch = useAppDispatch()
+  const subTotal = getSubTotal(cart)
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cart))
+  }, [cart])
+
+  return {
+    cart,
+    subTotal,
+    deliveryFee,
+    total: subTotal + deliveryFee,
+    /** Adding an identical line bumps its quantity rather than duplicating it. */
+    increase: (item: CartItem) =>
+      dispatch(
+        addCartItem({
+          basePrice: item.basePrice,
+          id: item.id,
+          image: item.image,
+          name: item.name,
+          extras: item.extras,
+          size: item.size
+        })
+      ),
+    decrease: (id: string) => dispatch(removeCartItem({ id })),
+    remove: (id: string) => dispatch(removeItemFromCart({ id }))
+  }
+}
+
+/** Checkout payment method, and whether there's anything to check out. */
+export function useCheckout() {
+  const [payType, setPayType] = useState<'card' | 'cash'>('cash')
+  const cart = useAppSelector(selectCartItems)
+
+  return { payType, setPayType, cart, isEmpty: !cart || cart.length === 0 }
+}
 
 export function useCreateOrder() {
   const { data: session } = useSession()

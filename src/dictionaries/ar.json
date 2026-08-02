@@ -745,7 +745,19 @@
     "changeImage": "تغيير",
     "breakdown": "حسب الحالة",
     "statusUpdated": "تم تحديث الحالة",
-    "statusUpdateFailed": "تعذّر تحديث الحالة"
+    "statusUpdateFailed": "تعذّر تحديث الحالة",
+    "deliveryAssigned": "تم تعيين المندوب",
+    "deliveryAssignFailed": "تعذّر تعيين المندوب",
+    "roleAssigned": "تم التعيين كمندوب توصيل",
+    "roleRemoved": "تمت إعادته إلى مستخدم عادي",
+    "roleUpdateFailed": "تعذّر تحديث الصلاحية",
+    "orderPickedUp": "تم استلام الطلب",
+    "orderDelivered": "تم توصيل الطلب",
+    "pickUp": "استلام",
+    "markDelivered": "تأكيد التوصيل",
+    "deliveredTag": "تم التوصيل",
+    "assignRole": "تعيين",
+    "removeRole": "إزالة"
   },
   "common": {
     "loading": "جارٍ التحميل...",
@@ -755,6 +767,8 @@
     "noDeliveryMen": "لا يوجد مندوبون",
     "assignDelivery": "تعيين مندوب",
     "adminAccess": "صلاحية الإدارة",
+    "adminAccessHint": "منح هذا المستخدم صلاحيات الإدارة الكاملة",
+    "readOnly": "للقراءة فقط",
     "manageInfo": "إدارة بياناتك الشخصية",
     "noAvailableOrders": "لا توجد طلبات متاحة الآن",
     "noPickedOrders": "لم تستلم أي طلبات بعد"

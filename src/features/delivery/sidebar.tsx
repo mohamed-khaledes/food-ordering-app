@@ -1,33 +1,13 @@
 'use client'
 import Link from '@/components/link'
 import { Translations } from '@/types/translations'
-import { useParams, usePathname } from 'next/navigation'
-import {
-  LayoutDashboard,
-  ShoppingBag,
-  User,
-  Menu,
-  X,
-  ChevronRight,
-  ExternalLink
-} from 'lucide-react'
-import { useState } from 'react'
+import { Menu, X, ChevronRight, ExternalLink } from 'lucide-react'
 import Logo from '@/components/ui/logo'
-
-const NAV_ITEMS = [
-  { id: 'overview', icon: LayoutDashboard, href: 'dashboard' },
-  { id: 'orders', icon: ShoppingBag, href: 'dashboard/orders' },
-  { id: 'profile', icon: User, href: 'dashboard/profile' }
-] as const
+import { useDeliverySidebar } from './hooks'
 
 export default function DeliverySidebar({ translations }: { translations: Translations }) {
-  const pathname = usePathname()
-  const { locale } = useParams()
-  const [open, setOpen] = useState(false)
   const ui = translations.adminUi
-
-  const isActive = (href: string) =>
-    pathname === `/${locale}/${href}` || pathname.startsWith(`/${locale}/${href}/`)
+  const { navItems, open, setOpen, close } = useDeliverySidebar(translations)
 
   return (
     <>
@@ -46,7 +26,7 @@ aria-label={ui.openMenu}
       {open && (
         <div
           className='fixed inset-0 z-40 bg-ink/40 backdrop-blur-sm lg:hidden'
-          onClick={() => setOpen(false)}
+          onClick={close}
         />
       )}
 
@@ -64,8 +44,8 @@ aria-label={ui.openMenu}
           </Link>
           <button
             className='flex h-7 w-7 items-center justify-center text-white/60 transition-colors hover:text-white lg:hidden'
-            onClick={() => setOpen(false)}
-  aria-label={ui.closeMenu}
+            onClick={close}
+            aria-label={ui.closeMenu}
           >
             <X className='h-4 w-4' />
           </button>
@@ -77,27 +57,24 @@ aria-label={ui.openMenu}
             {ui.navigation}
           </p>
           <ul className='flex flex-col gap-1'>
-            {NAV_ITEMS.map(item => {
-              const active = isActive(item.href)
-              return (
-                <li key={item.id}>
-                  <Link
-                    href={`/${item.href}`}
-                    onClick={() => setOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors duration-200
+            {navItems.map(item => (
+              <li key={item.id}>
+                <Link
+                  href={`/${item.href}`}
+                  onClick={close}
+                  className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors duration-200
                       ${
-                        active
+                        item.active
                           ? 'bg-brand text-white'
                           : 'text-white/60 hover:bg-white/5 hover:text-white'
                       }`}
-                  >
-                    <item.icon className='h-4 w-4 shrink-0' />
-                    <span className='flex-1'>{ui.deliveryNav[item.id]}</span>
-                    {active && <ChevronRight className='h-3 w-3 rtl:rotate-180' />}
-                  </Link>
-                </li>
-              )
-            })}
+                >
+                  <item.icon className='h-4 w-4 shrink-0' />
+                  <span className='flex-1'>{item.title}</span>
+                  {item.active && <ChevronRight className='h-3 w-3 rtl:rotate-180' />}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
 
